@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.freesbet">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".Apuesta"
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
+        <activity
+            android:name=".Premios"
+            android:label="@string/title_activity_premios"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Registro" />
+        <activity android:name=".LaunchCheckUsuario" />
+        <activity
+            android:name=".Ajustes"
+            android:label="@string/title_activity_ajustes"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Invita"
+            android:label="@string/title_activity_invita"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Supremacia"
+            android:label="@string/title_activity_supremacia"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Bdm"
+            android:label="@string/title_activity_bdm"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Redbull"
+            android:label="@string/title_activity_redbull"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Fms"
+            android:label="@string/title_activity_fms"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Home"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".intro.activity_welcome">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/todos">
+        <item
+            android:id="@+id/opcion_todos"
+            android:icon="@drawable/ic_todos"
+            android:title="Todos" />
+    </group>
+
+    <item android:id="@+id/ligas" android:title="Ligas" >
+        <menu>
+            <item
+                android:id="@+id/opcion_menu_fms"
+                android:icon="@drawable/ic_fms_icono_menu"
+                app:showAsAction="always"
+                android:title="FMS"
+                />
+
+        </menu>
+    </item>
+
+
+    <item android:id="@+id/competiciones" android:title="Competiciones">
+        <menu>
+            <item
+                android:id="@+id/opcion_menu_redbull"
+                android:icon="@drawable/ic_red_bull"
+                android:title="Red Bull" />
+            <item
+                android:id="@+id/opcion_menu_bdm"
+                android:icon="@drawable/ic_bdm"
+                android:title="BDM" />
+            <item
+                android:id="@+id/opcion_supremaciamc"
+                android:icon="@drawable/ic_supremacia"
+                android:title="Supremacía MC" />
+        </menu>
+    </item>
+    <group android:id="@+id/otros">
+        <item
+            android:id="@+id/opcion_premios"
+            android:icon="@drawable/ic_premios"
+            android:title="Premios" />
+        <item
+            android:id="@+id/opcion_ivita_amigos"
+            android:icon="@drawable/ic_invita_amigos"
+            android:title="Invita amigos" />
+        <item
+            android:id="@+id/opcion_ajustes_cuenta"
+            android:icon="@drawable/ic_ajustes_cuenta"
+            android:title="Ajustes de cuenta" />
+        <item
+            android:id="@+id/opcion_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Cerrar sesión" />
+    </group>
+
+
+</menu>

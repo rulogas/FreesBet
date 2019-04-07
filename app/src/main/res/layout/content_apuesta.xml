@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Apuesta" >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Apuesta"
+
+        >
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/fondo"
+                android:elevation="10dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imageView_header_apuesta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="200dp"
+                        android:background="@drawable/fondo_header"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <TextView
+                        android:id="@+id/textView_liga"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Liga"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_corner"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
+
+                        app:layout_constraintHorizontal_bias="0.041"
+                        app:layout_constraintStart_toStartOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_header_apuesta"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView_apuesta_zona"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:text="Fms - España"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+
+
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
+
+                        app:layout_constraintHorizontal_bias="0.231"
+                        app:layout_constraintStart_toStartOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_header_apuesta"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView_apuesta_ayuda"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner_ayuda"
+                        android:text="?"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+
+
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
+
+                        app:layout_constraintHorizontal_bias="0.959"
+                        app:layout_constraintStart_toStartOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_header_apuesta"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintStart_toStartOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintVertical_bias="0.38">
+
+                        <TextView
+                            android:id="@+id/textView_apuesta_header_competidor_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chuty"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView_vs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="vs"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="20dp" />
+
+                        <TextView
+                            android:id="@+id/textView_apuesta_header_competidor_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Walls"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView_apuesta_fecha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+
+                        android:layout_marginBottom="20dp"
+                        android:text="08/04/2019"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintStart_toStartOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                        app:layout_constraintVertical_bias="0.314" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
+                        app:layout_constraintVertical_bias="0.027"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="15dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="¿Quién ganará?" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Cuota"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="7dp"
+                                    />
+                            </RelativeLayout>
+
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Chuty"
+                                    android:layout_centerVertical="true"/>
+
+                                <android.support.v7.widget.AppCompatButton
+                                    android:id="@+id/button_cuota1"
+                                    android:layout_width="60dp"
+                                    android:layout_height="40dp"
+                                    android:elevation="10dp"
+                                    android:layout_alignParentRight="true"
+                                    android:background="@drawable/botones_apuesta"
+                                    android:text="1.25"
+                                    android:textSize="18sp"
+                                    android:textColor="@android:color/white"
+                                    android:tooltipText="Apuesta"
+                                    />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@android:color/darker_gray"
+                                android:layout_margin="5dp"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Walls"
+                                    android:layout_centerVertical="true"/>
+
+                                <android.support.v7.widget.AppCompatButton
+                                    android:id="@+id/button_cuota2"
+                                    android:layout_width="60dp"
+                                    android:layout_height="40dp"
+                                    android:elevation="10dp"
+                                    android:layout_alignParentRight="true"
+                                    android:background="@drawable/botones_apuesta"
+                                    android:text="2.25"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="18sp"/>
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="8dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
+                    app:layout_constraintVertical_bias="0.027"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Jugadores: 1000" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_jugadores"
+                                android:layout_alignParentRight="true"
+
+                                />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_porcentajes_competidor1"
+                                android:text="Chuty"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="70%"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:layout_alignParentRight="true"
+                                />
+
+                        </RelativeLayout>
+                        <ProgressBar
+                            android:id="@+id/determinateBar"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:progress="70"
+                            android:layout_below="@+id/textView_porcentajes_competidor1"
+                            android:progressBackgroundTint="@android:color/white"
+                            android:progressTint="@android:color/holo_green_light"
+                            android:layout_marginBottom="8dp"
+                            />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_margin="5dp"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            >
+
+                            <TextView
+                                android:id="@+id/textView_porcentajes_competidor2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Walls"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10%"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:layout_alignParentRight="true"/>
+
+
+                        </RelativeLayout>
+
+                        <ProgressBar
+                            android:id="@+id/determinateBar2"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:progress="10"
+                            android:layout_below="@+id/textView_porcentajes_competidor1"
+                            android:progressBackgroundTint="@android:color/white"
+                            android:progressTint="@android:color/holo_green_light"
+                            />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="8dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
+                    app:layout_constraintVertical_bias="0.027"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:layout_marginBottom="5dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Los más gallos" />
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+
+
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/circleview_image1"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginRight="16dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:src="@drawable/ic_fms_icono_menu"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView_apuesta_masChulos1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toRightOf="@id/circleview_image1"
+                                android:text="usuario 1"
+                                android:layout_marginTop="5dp"
+                                android:textStyle="bold"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_apuesta_masChulos1_coins"
+                                android:text="100000 coins a Chuty"
+                                android:layout_toRightOf="@+id/circleview_image1"
+                                android:layout_alignBottom="@id/circleview_image1"
+                                android:layout_marginBottom="5dp"
+                                />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_margin="10dp"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+
+
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/circleview_image3"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginRight="16dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:src="@drawable/ic_fms_icono_menu"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView_apuesta_masChulos3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toRightOf="@id/circleview_image3"
+                                android:text="usuario 1"
+                                android:layout_marginTop="5dp"
+                                android:textStyle="bold"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_apuesta_masChulos3_coins"
+                                android:text="100000 coins a Chuty"
+                                android:layout_toRightOf="@+id/circleview_image3"
+                                android:layout_alignBottom="@id/circleview_image3"
+                                android:layout_marginBottom="5dp"
+                                />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_margin="10dp"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+
+
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/circleview_image2"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginRight="16dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:src="@drawable/ic_fms_icono_menu"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView_apuesta_masChulos2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toRightOf="@id/circleview_image2"
+                                android:text="usuario 1"
+                                android:layout_marginTop="5dp"
+                                android:textStyle="bold"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_apuesta_masChulos2_coins"
+                                android:text="100000 coins a Chuty"
+                                android:layout_toRightOf="@+id/circleview_image2"
+                                android:layout_alignBottom="@id/circleview_image2"
+                                android:layout_marginBottom="5dp"
+                                />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_margin="10dp"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+
+
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/circleview_image4"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginRight="16dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:src="@drawable/ic_fms_icono_menu"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView_apuesta_masChulos4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toRightOf="@id/circleview_image4"
+                                android:text="usuario 1"
+                                android:layout_marginTop="5dp"
+                                android:textStyle="bold"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_apuesta_masChulos4_coins"
+                                android:text="100000 coins a Chuty"
+                                android:layout_toRightOf="@+id/circleview_image4"
+                                android:layout_alignBottom="@id/circleview_image4"
+                                android:layout_marginBottom="5dp"
+                                />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

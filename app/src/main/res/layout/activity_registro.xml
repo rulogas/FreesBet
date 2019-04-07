@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Registro"
+    android:background="@drawable/fondo_login"
+    android:gravity="center"
+    android:theme="@style/AppTheme.NoActionBar">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="147dp"
+            android:src="@drawable/logo" />
+
+        <!-- Email Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Nombre de usuario"
+                app:backgroundTint="@android:color/white"
+                android:textColor="@android:color/white"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Email Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Correo electrónico"
+                app:backgroundTint="@android:color/white"
+                android:textColor="@android:color/white"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Password Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+            >
+            <EditText android:id="@+id/input_contrasena"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Contraseña"
+                android:textColorHint="@android:color/white"
+                app:backgroundTint="@android:color/white"
+                android:textColor="@android:color/white"/>/>
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+            <CheckBox
+                android:id="@+id/checkbox_terminos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="20dp"
+                android:textColor="@android:color/white"
+                android:buttonTint="@android:color/white"/>
+            <TextView
+                android:id="@+id/text_terminos1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="He leido y acepto los "
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textAlignment="textStart"/>
+            <TextView
+                android:id="@+id/text_terminos2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/textView_terminos"
+                android:gravity="center"
+                android:textColor="@android:color/holo_blue_light"
+                android:textAlignment="textStart"/>
+        </LinearLayout>
+
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_registro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrarse"
+            android:background="@color/fondoBoton"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/link_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enlace_login"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>
