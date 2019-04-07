@@ -10,6 +10,7 @@
     android:padding="15dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
     app:behavior_hideable="true"
+    android:gravity="center"
     >
 
         <RelativeLayout
@@ -116,7 +117,7 @@
             android:elevation="10dp"
             android:background="@drawable/botones_apuesta"
             android:text="Min"
-            android:textSize="18sp"
+            android:textSize="10sp"
             android:textColor="@android:color/white"
             android:tooltipText="Apuesta"
             />
@@ -139,13 +140,23 @@
             android:layout_height="40dp"
             android:elevation="10dp"
             android:background="@drawable/botones_apuesta"
-            android:text="Min"
-            android:textSize="18sp"
+            android:text="All-in"
+            android:textSize="10sp"
             android:textColor="@android:color/white"
             android:tooltipText="Apuesta"
             />
     </LinearLayout>
-
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/boton_jugar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:background="@drawable/botones_apuesta"
+        android:text="Jugar"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:tooltipText="Apuesta"
+        />
 
 
 </LinearLayout>

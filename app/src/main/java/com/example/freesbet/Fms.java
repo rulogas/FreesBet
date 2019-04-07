@@ -7,9 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,14 +21,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.freesbet.bases.CustomAdpaterSpinner;
-import com.example.freesbet.bases.Evento;
+import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 
@@ -55,7 +50,7 @@ public class Fms extends AppCompatActivity
     @BindView(R.id.recyclerView_eventos_fms)
     RecyclerView rv;
     ProgressDialog progressDialog;
-    private List<Evento> eventos = new ArrayList<>();
+    private List<EventoLista> eventos = new ArrayList<>();
     RVAdapter adapter;
 
     @Override
@@ -301,13 +296,13 @@ public class Fms extends AppCompatActivity
                 }*/
 
                 eventos = new ArrayList<>();
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1101153365428457477/xFoTQVHK_400x400.png","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1101153365428457477/xFoTQVHK_400x400.png","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
 
 
             } catch (Exception e) {

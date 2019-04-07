@@ -8,9 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".Apuesta" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -128,7 +126,8 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:textSize="20dp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            />
 
                         <TextView
                             android:id="@+id/textView_vs"
@@ -168,6 +167,7 @@
                         app:layout_constraintVertical_bias="0.314" />
 
                     <android.support.v7.widget.CardView
+                        android:id="@+id/cardView_apostar_liga"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
@@ -178,7 +178,10 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
                         app:layout_constraintVertical_bias="0.027"
+                        android:visibility="gone"
                         >
+
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -266,9 +269,116 @@
 
                     </android.support.v7.widget.CardView>
 
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cardView_apostar_competicion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
+                        app:layout_constraintVertical_bias="0.027"
+                        android:visibility="gone"
+                        >
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="15dp"
+                            android:gravity="center">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Jugadores" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="200"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="7dp"
+                                    />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bote acumulado"
+                                    android:textStyle="bold"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="28600"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="7dp"
+                                    android:textStyle="bold"
+                                    />
+                            </RelativeLayout>
+
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Elige un ganador"
+                                    android:layout_marginLeft="5dp"
+                                    android:textStyle="bold"
+                                    android:layout_centerVertical="true"/>
+
+                                <Spinner
+                                    android:id="@+id/spinner_competidores"
+                                    android:layout_width="150dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_height="wrap_content" />
+
+                            </RelativeLayout>
+
+
+                            <android.support.v7.widget.AppCompatButton
+                                android:id="@+id/button_jugar_competicion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:elevation="10dp"
+                                android:layout_marginTop="5dp"
+                                android:padding="5dp"
+                                android:background="@drawable/botones_apuesta"
+                                android:text="Juega por 400 coins"
+                                android:textColor="@android:color/white"
+                                />
+
+
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_apostar_finalizado"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -280,6 +390,91 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
                     app:layout_constraintVertical_bias="0.027"
+                    android:visibility="gone"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="15dp"
+                        android:gravity="center">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Finalizado"
+                                android:textSize="30sp"/>
+
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_texto_ganador"
+                                android:text="Ganador"
+                                android:layout_centerVertical="true"
+                                android:textSize="18sp"/>
+
+                            <TextView
+                                android:id="@+id/textView_ganador"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Chuty"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:layout_alignParentRight="true"
+                                />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_margin="5dp"/>
+
+                        <TextView
+                            android:id="@+id/textView_resultado_coins"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Has ganado 5000 coins"
+                            android:textSize="20sp"
+                            android:layout_marginTop="5dp"/>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_porcentajes_liga"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="8dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
+                    app:layout_constraintVertical_bias="0.027"
+                    android:visibility="gone"
                     >
 
                     <LinearLayout
@@ -389,6 +584,337 @@
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_porcentajes_competicion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="8dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
+                    app:layout_constraintVertical_bias="0.027"
+                    android:visibility="gone"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/textView_jugadas_generales"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Jugadas generales"
+                            android:layout_margin="5dp"
+                            android:textSize="18sp"/>
+                        <android.support.v7.widget.GridLayout
+                            android:id="@+id/grid_porcentajes_competicion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rowCount="3"
+                            app:columnCount="4"
+
+                            >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                   />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion7"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor7"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion8"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor8"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion9"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor9"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion10"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor10"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion11"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor11"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    />
+                                <TextView
+                                    android:id="@+id/textView_porcentaje_competicion_competidor12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    />
+
+                            </LinearLayout>
+
+                        </android.support.v7.widget.GridLayout>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -418,7 +944,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Los más gallos" />
+                                android:text="Los más gallos"
+                                android:textSize="18sp"/>
 
                         </RelativeLayout>
 

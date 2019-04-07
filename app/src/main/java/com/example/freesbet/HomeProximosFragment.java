@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.freesbet.bases.Evento;
+import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 
 import java.net.HttpURLConnection;
@@ -19,14 +19,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeProximosFragment extends Fragment {
 
     RecyclerView rv;
     ProgressDialog progressDialog;
-    private List<Evento> eventos = new ArrayList<>();
+    private List<EventoLista> eventos = new ArrayList<>();
     RVAdapter adapter;
 
     /*@Override
@@ -117,13 +116,13 @@ public class HomeProximosFragment extends Fragment {
                 }*/
 
                 eventos = new ArrayList<>();
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Papo vs Trueno", "FMS - Argentina", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
-                eventos.add(new Evento(1,"Azcino vs RC", "FMS - Mexico", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Nitro vs Kaiser", "FMS - Chile", "https://pbs.twimg.com/profile_images/1101153365428457477/xFoTQVHK_400x400.png","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new Evento(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Papo vs Trueno", "FMS - Argentina", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Azcino vs RC", "FMS - Mexico", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Nitro vs Kaiser", "FMS - Chile", "https://pbs.twimg.com/profile_images/1101153365428457477/xFoTQVHK_400x400.png","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
+                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
 
 
             } catch (Exception e) {

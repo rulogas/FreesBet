@@ -2,6 +2,7 @@ package com.example.freesbet.bases;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,18 +14,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.freesbet.Apuesta;
 import com.example.freesbet.R;
-import com.facebook.appevents.codeless.internal.EventBinding;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
 
-    static List<Evento> eventos;
+    static List<EventoLista> eventos;
     private Context mContext;
+    SharedPreferences sharedpreferences;
 
-    public RVAdapter(List<Evento> eventos,Context mContext){
+    public RVAdapter(List<EventoLista> eventos, Context mContext){
         this.eventos = eventos;
         this.mContext = mContext;
     }
@@ -62,8 +61,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
 
     @Override
     public void onBindViewHolder(EventoViewHolder eventoViewHolder, final int i) {
-        eventoViewHolder.batalla.setText(eventos.get(i).batalla);
-        eventoViewHolder.nombre.setText(eventos.get(i).nombre);
+        eventoViewHolder.batalla.setText(eventos.get(i).nombre);
+        eventoViewHolder.nombre.setText(eventos.get(i).zona);
         Glide.with(mContext)
                 .load(eventos.get(i).urlImagen)
                 .into(eventoViewHolder.imagen);
@@ -74,6 +73,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
         eventoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sharedpreferences = mContext.getSharedPreferences("preferenciasUsuario", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putInt("eventoId", eventos.get(i).id);
+                editor.commit();
 
                 Intent intent = new Intent(mContext, Apuesta.class);
                 mContext.startActivity(intent);
