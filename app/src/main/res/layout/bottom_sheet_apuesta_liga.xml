@@ -43,12 +43,14 @@
                 android:layout_centerVertical="true"/>
 
             <EditText
+                android:id="@+id/editText_cantidad"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="200"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"
+                android:inputType="number"
                 />
 
         </RelativeLayout>
@@ -68,6 +70,7 @@
                 android:layout_centerVertical="true"/>
 
             <TextView
+                android:id="@+id/textView_cuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.2"
@@ -85,18 +88,20 @@
         >
 
         <TextView
-            android:id="@+id/textView_ganancia"
+            android:id="@+id/textView_texto_ganancia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ganancia potencial"
             android:layout_centerVertical="true"/>
 
         <TextView
+            android:id="@+id/textView_ganancia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+120"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@android:color/holo_green_light"
             android:layout_alignParentRight="true"/>
 
 
@@ -127,10 +132,8 @@
             android:layout_width="0dp"
             android:layout_weight="60"
             android:layout_height="wrap_content"
-            android:progress="20"
             android:progressTint="@android:color/holo_green_light"
-            android:minHeight="2dip"
-            android:maxHeight="2dip"
+
             />
 
         <android.support.v7.widget.AppCompatButton

@@ -123,8 +123,13 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         mButton_cuota1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialogFragment bsdFragment =
-                        BottomSheetDialogFragmentApuestaLiga.newInstance();
+                BottomSheetDialogFragmentApuestaLiga bsdFragment = new
+                        BottomSheetDialogFragmentApuestaLiga();
+                Bundle args = new Bundle();
+                args.putString("cuota",mButton_cuota1.getText().toString());
+                //Enviar puntos de usuario
+                args.putString("puntosUsuario","14500");
+                bsdFragment.setArguments(args);
                 bsdFragment.show(
                         Apuesta.this.getSupportFragmentManager(), "BSDialog");
             }
@@ -133,8 +138,13 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         mButton_cuota2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialogFragment bsdFragment =
-                        BottomSheetDialogFragmentApuestaLiga.newInstance();
+                BottomSheetDialogFragmentApuestaLiga bsdFragment = new
+                        BottomSheetDialogFragmentApuestaLiga();
+                Bundle args = new Bundle();
+                args.putString("cuota",mButton_cuota2.getText().toString());
+                //Enviar puntos de usuario
+                args.putString("puntosUsuario","14500");
+                bsdFragment.setArguments(args);
                 bsdFragment.show(
                         Apuesta.this.getSupportFragmentManager(), "BSDialog");
             }
@@ -302,7 +312,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
 
 
-                evento = new EventoApuesta(1,"Chuty vs walls","Fms - España","18/04/2019",200,"liga",competidores,2.25,1.20);
+                evento = new EventoApuesta(1,"Chuty vs walls","Fms - España","18/04/2019",200,"liga",competidores,1.20,2.25);
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Exception: " + e.getMessage();
@@ -313,20 +323,35 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
+            //comprobar si evento ha finalizado
+            // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
             //comprobar tipo evento mostrar layout liga o competición
                 if (evento.getTipo().equalsIgnoreCase("liga")){
 
-                    // liga
+                    // LIGA
                     /* mostrar datos y esconder cards competicion */
 
                     cardViewApostarLiga.setVisibility(View.VISIBLE);
+                    mButton_cuota1.setText(Double.toString(evento.getCuota1()));
+                    mButton_cuota2.setText(Double.toString(evento.getCuota2()));
+
+                    
                     cardViewPorcentajesLiga.setVisibility(View.VISIBLE);
+
+
 
                 }else if(evento.getTipo().equalsIgnoreCase("competicion")){
                     mCardview_apostar_competicion.setVisibility(View.VISIBLE);
+
                     // spinner competidores
+
                     CustomAdapterSpinnerCompetidores customAdapterSpinnerCompetidores = new CustomAdapterSpinnerCompetidores(Apuesta.this,competidores);
                     mSpinnerCompetidores.setAdapter(customAdapterSpinnerCompetidores);
+
+
+                    // COMPETICION
+                    /* esconder textos header, esconder cards liga, mostrar datos  */
+
 
                     // card porcentajes
                     mCardviewPorcentajesCompeticion.setVisibility(View.VISIBLE);
@@ -337,12 +362,11 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                       textoCompeticionPorcentaje.setText(porcentajes.get(i)+"%");
                       textoCompeticionPorcentajeCompetidor.setText(competidores.get(i));
                     }
+
+
                 }
 
-            // competicion
-                /* esconder textos header, esconder cards liga, mostrar datos  */
 
-            // comprobar si evento esta finalizado y mostrar card resultado deshabilitar botones cuota
 
         }
     }
