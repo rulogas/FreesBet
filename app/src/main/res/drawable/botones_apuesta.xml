@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item>
+    <item android:state_enabled="true">
         <layer-list>
             <item >
                 <shape>
@@ -11,6 +11,24 @@
             <item android:bottom="2dp" android:left="2dp">
                 <shape>
                     <solid android:color="#921B3279"></solid>
+
+                    <corners android:radius="4dp" />
+
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_enabled="false">
+        <layer-list>
+            <item >
+                <shape>
+                    <corners android:radius="4dp" />
+                    <solid android:color="#D6D6D6" />
+                </shape>
+            </item>
+            <item android:bottom="2dp" android:left="2dp">
+                <shape>
+                    <solid android:color="#481B3279"></solid>
 
                     <corners android:radius="4dp" />
 

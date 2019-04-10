@@ -29,7 +29,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,29 +53,98 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Apuesta extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
+    // HEADER
+    @BindView(R.id.textView_tipo)
+    TextView textViewTipo;
+    @BindView(R.id.textView_apuesta_zona)
+    TextView textViewApuestaZona;
+    @BindView(R.id.textView_vs)
+    TextView textViewVS;
+    @BindView(R.id.textView_apuesta_fecha)
+    TextView textViewFecha;
 
+    //LIGA
+    @BindView(R.id.textView_apuesta_header_competidor_1)
+    TextView textViewApuestaHeaderCompetidor1;
+    @BindView(R.id.textView_apuesta_header_competidor_2)
+    TextView textViewApuestaHeaderCompetidor2;
     @BindView(R.id.cardView_apostar_liga)
     CardView cardViewApostarLiga;
-    @BindView(R.id.cardView_porcentajes_liga)
-    CardView cardViewPorcentajesLiga;
+    @BindView(R.id.textView_apuesta_liga_competidor1)
+    TextView textViewApuestaLigaCompetidor1;
+    @BindView(R.id.textView_apuesta_liga_competidor2)
+    TextView textViewApuestaLigaCompetidor2;
     @BindView(R.id.button_cuota1)
     AppCompatButton mButton_cuota1;
     @BindView(R.id.button_cuota2)
     AppCompatButton mButton_cuota2;
 
+    @BindView(R.id.cardView_porcentajes_liga)
+    CardView cardViewPorcentajesLiga;
+    @BindView(R.id.textView_apuesta_liga_numJugadores)
+    TextView textViewApuestaLigaNumJugadores;
+    @BindView(R.id.textView_porcentajes_liga_competidor1)
+    TextView texViewPorcentajesLigaCompetidor1;
+    @BindView(R.id.textView_porcentajes_liga_competidor2)
+    TextView texViewPorcentajesLigaCompetidor2;
+    @BindView(R.id.textView_porcentajes_liga_competidor1_porcentaje)
+    TextView textViewPorcentajesLigaCompetidor1Porcentaje;
+    @BindView(R.id.textView_porcentajes_liga_competidor2_porcentaje)
+    TextView textViewPorcentajesLigaCompetidor2Porcentaje;
+
     // COMPETICION
-    @BindView(R.id.spinner_competidores)
-    Spinner mSpinnerCompetidores;
     @BindView(R.id.cardView_apostar_competicion)
     CardView mCardview_apostar_competicion;
+    @BindView(R.id.textView_bote)
+    TextView textViewBote;
+    @BindView(R.id.spinner_competidores)
+    Spinner mSpinnerCompetidores;
+    @BindView(R.id.textView_apuesta_competicion_numJugadores)
+    TextView textViewApuestaCompeticionNumJugadores;
     @BindView(R.id.button_jugar_competicion)
     AppCompatButton mButton_jugar_competicion;
     @BindView(R.id.cardView_porcentajes_competicion)
+
     CardView mCardviewPorcentajesCompeticion;
     @BindView(R.id.grid_porcentajes_competicion)
     GridLayout mGrid_porcentajes_competicion;
+
+    //USUARIOS
+    @BindView(R.id.circleview_image1)
+    CircleImageView fotoUsuario1Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos1)
+    TextView nombreUsuario1Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos1_coins)
+    TextView coinsUsuario1Apuesta;
+
+    @BindView(R.id.circleview_image2)
+    CircleImageView fotoUsuario2Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos2)
+    TextView nombreUsuario2Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos2_coins)
+    TextView coinsUsuario2Apuesta;
+
+    @BindView(R.id.circleview_image3)
+    CircleImageView fotoUsuario3Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos3)
+    TextView nombreUsuario3Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos3_coins)
+    TextView coinsUsuario3Apuesta;
+
+    @BindView(R.id.circleview_image4)
+    CircleImageView fotoUsuario4Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos4)
+    TextView nombreUsuario4Apuesta;
+    @BindView(R.id.textView_apuesta_masChulos4_coins)
+    TextView coinsUsuario4Apuesta;
+
+    @BindView(R.id.relativeLayout_apuesta_hecha_liga_advertencia)
+    RelativeLayout frameLayoutLigaApuestaHecha;
+    @BindView(R.id.relativeLayout_apuesta_competicion_hecha_advertencia)
+    RelativeLayout frameLayoutCompeticionApuestaHecha;
 
     String selecccionGanador;
 
@@ -153,7 +224,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         mButton_jugar_competicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                MyAsyncTasksApostarCompeticion myAsyncTasksApostarCompeticion = new MyAsyncTasksApostarCompeticion();
+                myAsyncTasksApostarCompeticion.execute();
             }
         });
 
@@ -258,11 +330,11 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
     }
 
     private void cargarEventoApuesta() {
-        Apuesta.MyAsyncTasks myAsyncTasks = new Apuesta.MyAsyncTasks();
+        MyAsyncTasksCargarEventoApuesta myAsyncTasks = new MyAsyncTasksCargarEventoApuesta();
         myAsyncTasks.execute();
     }
 
-    public class MyAsyncTasks extends AsyncTask<String, String, String> {
+    public class MyAsyncTasksCargarEventoApuesta extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -312,7 +384,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
 
 
-                evento = new EventoApuesta(1,"Chuty vs walls","Fms - España","18/04/2019",200,"liga",competidores,1.20,2.25);
+                evento = new EventoApuesta(1,"Chuty vs walls","Fms - España","18/04/2019",200,"Competicion",competidores,1.20,2.25);
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Exception: " + e.getMessage();
@@ -323,35 +395,56 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
+            textViewFecha.setText(evento.getFecha());
+            textViewTipo.setText(evento.getTipo());
+            textViewApuestaZona.setText(evento.getZona());
+
             //comprobar si evento ha finalizado
-            // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
+
             //comprobar tipo evento mostrar layout liga o competición
                 if (evento.getTipo().equalsIgnoreCase("liga")){
-
+                    // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
+                    // mostrar advertencia con datos y desactivar botones
+                        /*frameLayoutLigaApuestaHecha.setVisibility(View.VISIBLE);
+                        mButton_cuota1.setEnabled(false);
+                        mButton_cuota2.setEnabled(false);*/
                     // LIGA
                     /* mostrar datos y esconder cards competicion */
 
                     cardViewApostarLiga.setVisibility(View.VISIBLE);
+                    textViewApuestaLigaCompetidor1.setText(competidores.get(0));
+                    textViewApuestaLigaCompetidor2.setText(competidores.get(1));
                     mButton_cuota1.setText(Double.toString(evento.getCuota1()));
                     mButton_cuota2.setText(Double.toString(evento.getCuota2()));
 
-                    
                     cardViewPorcentajesLiga.setVisibility(View.VISIBLE);
+                    textViewApuestaLigaNumJugadores.setText("Jugadores: "+Integer.toString(evento.getNumeroJugadores()));
+                    texViewPorcentajesLigaCompetidor1.setText(competidores.get(0));
+                    texViewPorcentajesLigaCompetidor2.setText(competidores.get(1));
 
+                    // funcion porcentajes
 
+                    //funcion obtener apuestas mas caras nombre, imagen, coins, competidor
 
                 }else if(evento.getTipo().equalsIgnoreCase("competicion")){
+                    // COMPETICION
+                    // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
+                    // mostrar advertencia con datos y desactivar botones
+                        /*frameLayoutCompeticionApuestaHecha.setVisibility(View.VISIBLE);
+                        mButton_jugar_competicion.setEnabled(false);*/
+                    /* esconder textos header, esconder cards liga, mostrar datos  */
+                    textViewTipo.setText("Competición");
+                    textViewApuestaHeaderCompetidor1.setVisibility(View.GONE);
+                    textViewApuestaHeaderCompetidor2.setVisibility(View.GONE);
+                    textViewVS.setText(evento.getNombre());
+                    //card apostar competicion
                     mCardview_apostar_competicion.setVisibility(View.VISIBLE);
+                    textViewApuestaCompeticionNumJugadores.setText(Integer.toString(evento.getNumeroJugadores()));
+                    textViewBote.setText("20000");
 
                     // spinner competidores
-
                     CustomAdapterSpinnerCompetidores customAdapterSpinnerCompetidores = new CustomAdapterSpinnerCompetidores(Apuesta.this,competidores);
                     mSpinnerCompetidores.setAdapter(customAdapterSpinnerCompetidores);
-
-
-                    // COMPETICION
-                    /* esconder textos header, esconder cards liga, mostrar datos  */
-
 
                     // card porcentajes
                     mCardviewPorcentajesCompeticion.setVisibility(View.VISIBLE);
@@ -365,8 +458,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
 
                 }
-
-
+                // usuarios
 
         }
     }
@@ -381,4 +473,39 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         selecccionGanador = parent.getItemAtPosition(0).toString();
     }
 
+    public class MyAsyncTasksApostarCompeticion extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String current = "";
+            try {
+
+                // Firebase Restar 400 puntos y añadir apuesta
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            /*if (OK){
+
+            }*/
+            mButton_jugar_competicion.setEnabled(false);
+            frameLayoutCompeticionApuestaHecha.setVisibility(View.VISIBLE);
+
+        }
+    }
 }

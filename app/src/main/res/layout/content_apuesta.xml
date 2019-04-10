@@ -56,7 +56,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/textView_liga"
+                        android:id="@+id/textView_tipo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Liga"
@@ -75,17 +75,19 @@
                         android:id="@+id/textView_apuesta_zona"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+
                         android:background="@drawable/rounded_corner"
                         android:text="Fms - España"
+
+
                         android:textAlignment="center"
                         android:textColor="@android:color/white"
 
-
                         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
 
-                        app:layout_constraintHorizontal_bias="0.231"
-                        app:layout_constraintStart_toStartOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView_header_apuesta"
+                        app:layout_constraintHorizontal_bias="0.121"
+                        app:layout_constraintStart_toEndOf="@+id/textView_tipo"
                         app:layout_constraintTop_toTopOf="@+id/imageView_header_apuesta"
                         />
 
@@ -208,6 +210,23 @@
                                     />
                             </RelativeLayout>
 
+                            <RelativeLayout
+                                android:id="@+id/relativeLayout_apuesta_hecha_liga_advertencia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:background="#9C4CAF50"
+                                android:visibility="gone"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Has apostado en este evento. coins a competidor"
+                                    android:textColor="#FF9800"/>
+
+                            </RelativeLayout>
+
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -216,9 +235,10 @@
                                 >
 
                                 <TextView
+                                    android:id="@+id/textView_apuesta_liga_competidor1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Chuty"
+                                    android:text="Sin competidor"
                                     android:layout_centerVertical="true"/>
 
                                 <android.support.v7.widget.AppCompatButton
@@ -232,6 +252,7 @@
                                     android:textSize="18sp"
                                     android:textColor="@android:color/white"
                                     android:tooltipText="Apuesta"
+
                                     />
                             </RelativeLayout>
 
@@ -247,9 +268,10 @@
                                 >
 
                                 <TextView
+                                    android:id="@+id/textView_apuesta_liga_competidor2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Walls"
+                                    android:text="Sin competidor"
                                     android:layout_centerVertical="true"/>
 
                                 <android.support.v7.widget.AppCompatButton
@@ -281,7 +303,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
                         app:layout_constraintVertical_bias="0.027"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         >
 
 
@@ -304,12 +326,30 @@
                                     android:layout_height="wrap_content"
                                     android:text="Jugadores" />
                                 <TextView
+                                    android:id="@+id/textView_apuesta_competicion_numJugadores"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="200"
+                                    android:text="No hay jugadores"
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="7dp"
                                     />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/relativeLayout_apuesta_competicion_hecha_advertencia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:background="#9C4CAF50"
+                                android:visibility="gone"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Has jugado en este evento"
+                                    android:textColor="#FF9800"/>
+
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -324,9 +364,10 @@
                                     android:text="Bote acumulado"
                                     android:textStyle="bold"/>
                                 <TextView
+                                    android:id="@+id/textView_bote"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="28600"
+                                    android:text="No hay bote"
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="7dp"
                                     android:textStyle="bold"
@@ -490,6 +531,7 @@
                             >
 
                             <TextView
+                                android:id="@+id/textView_apuesta_liga_numJugadores"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Jugadores: 1000" />
@@ -498,7 +540,6 @@
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_jugadores"
                                 android:layout_alignParentRight="true"
-
                                 />
                         </RelativeLayout>
 
@@ -510,13 +551,15 @@
                             >
 
                             <TextView
+
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/textView_porcentajes_competidor1"
-                                android:text="Chuty"
+                                android:id="@+id/textView_porcentajes_liga_competidor1"
+                                android:text="Sin competidor"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/textView_porcentajes_liga_competidor1_porcentaje"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="70%"
@@ -550,13 +593,14 @@
                             >
 
                             <TextView
-                                android:id="@+id/textView_porcentajes_competidor2"
+                                android:id="@+id/textView_porcentajes_liga_competidor2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Walls"
+                                android:text="Sin competidor"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/textView_porcentajes_liga_competidor2_porcentaje"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="10%"
@@ -1010,55 +1054,6 @@
 
                             <de.hdodenhof.circleimageview.CircleImageView
                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/circleview_image3"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginRight="16dp"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentTop="true"
-                                android:src="@drawable/ic_fms_icono_menu"
-                                />
-
-                            <TextView
-                                android:id="@+id/textView_apuesta_masChulos3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_toRightOf="@id/circleview_image3"
-                                android:text="usuario 1"
-                                android:layout_marginTop="5dp"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/textView_apuesta_masChulos3_coins"
-                                android:text="100000 coins a Chuty"
-                                android:layout_toRightOf="@+id/circleview_image3"
-                                android:layout_alignBottom="@id/circleview_image3"
-                                android:layout_marginBottom="5dp"
-                                />
-
-                        </RelativeLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@android:color/darker_gray"
-                            android:layout_margin="10dp"/>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            >
-
-
-
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                xmlns:app="http://schemas.android.com/apk/res-auto"
                                 android:id="@+id/circleview_image2"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
@@ -1086,6 +1081,55 @@
                                 android:text="100000 coins a Chuty"
                                 android:layout_toRightOf="@+id/circleview_image2"
                                 android:layout_alignBottom="@id/circleview_image2"
+                                android:layout_marginBottom="5dp"
+                                />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_margin="10dp"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+
+
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/circleview_image3"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginRight="16dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:src="@drawable/ic_fms_icono_menu"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView_apuesta_masChulos3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toRightOf="@id/circleview_image3"
+                                android:text="usuario 1"
+                                android:layout_marginTop="5dp"
+                                android:textStyle="bold"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView_apuesta_masChulos3_coins"
+                                android:text="100000 coins a Chuty"
+                                android:layout_toRightOf="@+id/circleview_image3"
+                                android:layout_alignBottom="@id/circleview_image3"
                                 android:layout_marginBottom="5dp"
                                 />
 

@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
@@ -15,11 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.freesbet.widgets.General;
-import com.example.freesbet.widgets.Terminos;
 
 
 public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragment {
@@ -192,7 +190,12 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
             }else{
                 onLoginFailed();
             }*/
+
             dismiss();
+            getActivity().findViewById(R.id.button_cuota1).setEnabled(false);
+            getActivity().findViewById(R.id.button_cuota2).setEnabled(false);
+            RelativeLayout relativeLayout = getActivity().findViewById(R.id.relativeLayout_apuesta_hecha_liga_advertencia);
+            relativeLayout.setVisibility(View.VISIBLE);
 
         }
     }

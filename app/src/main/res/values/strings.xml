@@ -65,6 +65,7 @@ Esta compañía no venderá, cederá ni distribuirá la información personal qu
 FreesBet Se reserva el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento.
     </string>
     <string name="title_activity_premios">Premios</string>
+    <string name="check_apuesta">¿Estas seguro de tu apuesta? Solo puedes realizar una apuesta por evento</string>
 
 
 </resources>
