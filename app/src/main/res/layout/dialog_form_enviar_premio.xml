@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:background="@drawable/fondo_login"
+    android:gravity="center">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    android:textColor="@android:color/white"
+        android:text="¡Recibe tu premio!"
+        android:textSize="30dp"
+        android:layout_marginBottom="20dp"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText android:id="@+id/editText_nombreyapellidos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Nombre y apellidos"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:padding="15dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText android:id="@+id/editText_direccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Dirección postal: Calle, numero, piso, puerta"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:padding="15dp"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText android:id="@+id/textView_Ciudad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Ciudad"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:padding="15dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText android:id="@+id/textView_Provincia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Provincia/Región"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:padding="15dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText android:id="@+id/textView_cp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Código Postal"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:padding="15dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText android:id="@+id/textView_numero_telefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:hint="Número de teléfono"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:padding="15dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatButton
+            android:padding="5dp"
+            android:id="@+id/button_enviarpremio_cancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/fondo"
+            android:textColor="@android:color/white"
+            android:text="Cancelar"
+            android:layout_margin="10dp"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:padding="5dp"
+            android:id="@+id/button_enviarpremio_enviar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/fondo"
+            android:textColor="@android:color/white"
+            android:text="Recibir premio"/>
+    </LinearLayout>
+</LinearLayout>

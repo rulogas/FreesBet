@@ -23,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.TooltipCompat;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
+import android.transition.Transition;
+import android.transition.TransitionValues;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +45,7 @@ import com.example.freesbet.bases.EventoApuesta;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
+import com.example.freesbet.widgets.General;
 
 import org.w3c.dom.Text;
 
@@ -65,6 +68,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
     TextView textViewVS;
     @BindView(R.id.textView_apuesta_fecha)
     TextView textViewFecha;
+    @BindView(R.id.textView_apuesta_ayuda)
+    TextView textViewAyuda;
 
     //LIGA
     @BindView(R.id.textView_apuesta_header_competidor_1)
@@ -229,11 +234,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             }
         });
 
-
-
         cargarEventoApuesta();
-
-        mSpinnerCompetidores.setOnItemSelectedListener(this);
 
     }
 
@@ -384,7 +385,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
 
 
-                evento = new EventoApuesta(1,"Chuty vs walls","Fms - España","18/04/2019",200,"Competicion",competidores,1.20,2.25);
+                evento = new EventoApuesta(1,"Chuty vs walls","Fms - España","18/04/2019",200,"Liga",competidores,1.20,2.25);
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Exception: " + e.getMessage();
@@ -398,6 +399,30 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             textViewFecha.setText(evento.getFecha());
             textViewTipo.setText(evento.getTipo());
             textViewApuestaZona.setText(evento.getZona());
+            textViewAyuda.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (evento.getTipo().equalsIgnoreCase("liga")){
+                        General dialogFragment = new General();
+                        Bundle mensaje = new Bundle();
+                        mensaje.putString("titulo","Apuesta en una liga");
+                        mensaje.putString("mensaje","Apuesta a un competidor, una cantidad determinada de coins. Si ganas, la cantidad obtenida variará según la cuota de cada competidor. Se sigue las mismas normas que un sistema de apuestas estandar.");
+                        dialogFragment.setArguments(mensaje);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        dialogFragment.show(fragmentManager,"general");
+                    }
+                    else if(evento.getTipo().equalsIgnoreCase("competicion")){
+                        General dialogFragment = new General();
+
+                        Bundle mensaje = new Bundle();
+                        mensaje.putString("titulo","Apuesta en una competición");
+                        mensaje.putString("mensaje", "Apuesta 400 coins. Si aciertas en la elección del competidor recibirás parte del bote acumulado.");
+                        dialogFragment.setArguments(mensaje);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        dialogFragment.show(fragmentManager,"general");
+                    }
+                }
+            });
 
             //comprobar si evento ha finalizado
 
@@ -443,6 +468,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                     textViewBote.setText("20000");
 
                     // spinner competidores
+                    mSpinnerCompetidores.setOnItemSelectedListener(Apuesta.this);
                     CustomAdapterSpinnerCompetidores customAdapterSpinnerCompetidores = new CustomAdapterSpinnerCompetidores(Apuesta.this,competidores);
                     mSpinnerCompetidores.setAdapter(customAdapterSpinnerCompetidores);
 

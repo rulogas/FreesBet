@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/ImageView_imagen_premio"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:src="@drawable/sinimagen"
+                android:layout_margin="5dp"
+                android:background="@android:color/white"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:id="@+id/textView_nombrePremio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textAlignment="center"
+                android:text="Entradas: proxima jornada Fms España"
+                android:layout_margin="2dp"
+                />
+
+            <TextView
+                android:id="@+id/textView_coinsPremio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textAlignment="center"
+                android:text="Entradas: proxima jornada Fms España"
+                android:layout_margin="5dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_orange_light"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

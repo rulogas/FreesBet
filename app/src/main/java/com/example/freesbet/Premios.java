@@ -1,9 +1,11 @@
 package com.example.freesbet;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -11,18 +13,40 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
+import com.example.freesbet.bases.AdapterGridPremios;
+import com.example.freesbet.bases.EventoLista;
+import com.example.freesbet.bases.Premio;
+import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
+import com.example.freesbet.widgets.DialogFormEnviarPremio;
+import com.example.freesbet.widgets.General;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Premios extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
+
+    private List<Premio> premios;
+    ProgressDialog progressDialog;
+    AdapterGridPremios adapterGridPremios;
+    @BindView(R.id.gridView_premios)
+    GridView gridViewPremios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +78,9 @@ public class Premios extends AppCompatActivity
         competiciones.setTitle(stringCompeticiones);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        getPremios();
+
 
     }
 
@@ -156,5 +183,64 @@ public class Premios extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getPremios(){
+        MyAsyncTasksGetPremios myAsyncTasksGetPremios = new MyAsyncTasksGetPremios();
+        myAsyncTasksGetPremios.execute();
+    }
+
+    public class MyAsyncTasksGetPremios extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(Premios.this);
+            progressDialog.setMessage("Cargando Premios");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String current = "";
+
+                // obtener premios ordenados por coins
+
+            premios = new ArrayList<>();
+
+            premios.add(new Premio("1","Xiaomi Pocophone F1","https://images.playfulbet.com/system/uploads/prize/prize_image/325/41QXUJaM_jL.jpg",11500000));
+            premios.add(new Premio("2","PS4 Slim","https://images.playfulbet.com/system/uploads/prize/prize_image/225/prize_ps4slim.png",9900000));
+            premios.add(new Premio("3","BenQ XL2411Z 144Hz","https://images.playfulbet.com/system/uploads/prize/prize_image/168/prz_monitor_benq.png",7400000));
+            premios.add(new Premio("4","Xiaomi MI A2","https://images.playfulbet.com/system/uploads/prize/prize_image/324/Xiaomi-mi-A2-black-560x560.jpg",6000000));
+            premios.add(new Premio("5","Apple Airpods","https://images.playfulbet.com/system/uploads/prize/prize_image/299/51o9usvz11L._SL1000_.jpg",4300000));
+            premios.add(new Premio("7","Sudadera Oficial Red Bull Batalla de los Gallos","https://images.redbullshop.com/is/image/RedBullSalzburg/RB-product-detail/BDG18014_9A_1/Batalla-College-Jacket.jpg",3500000));
+            premios.add(new Premio("6","Gorra Oficial Urban Roosters","https://i2.wp.com/blog.urbanroosters.com/wp-content/uploads/2018/04/87-large_default.jpg",10000000));
+            premios.add(new Premio("8","Entradas - Proxima joranda FMS España","http://www.tedxupvalencia.com/wp-content/uploads/2015/10/ticket.png",500000));
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressDialog.dismiss();
+
+            // Cargar premios en grid
+            adapterGridPremios = new AdapterGridPremios(Premios.this, premios);
+            gridViewPremios.setAdapter(adapterGridPremios);
+            gridViewPremios.setOnItemClickListener(Premios.this);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Premio item = (Premio) parent.getItemAtPosition(position);
+        DialogFormEnviarPremio dialogFragment = new DialogFormEnviarPremio();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        dialogFragment.show(fragmentManager,"formEnviarPremio");
+
+
     }
 }

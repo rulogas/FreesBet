@@ -120,7 +120,8 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 if (campoCantidad.getText().toString().isEmpty()){
                     General dialogFragment = new General();
                     Bundle mensaje = new Bundle();
-                    mensaje.putString("mensaje","Debes introducir una cantidad");
+                    mensaje.putString("titulo","Error");
+                    mensaje.putString("mensaje","Debes introducir una cantidad.");
                     dialogFragment.setArguments(mensaje);
                     FragmentManager fragmentManager = getFragmentManager();
                     dialogFragment.show(fragmentManager,"general");
@@ -130,7 +131,8 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 if (Integer.parseInt(campoCantidad.getText().toString())<200){
                     General dialogFragment = new General();
                     Bundle mensaje = new Bundle();
-                    mensaje.putString("mensaje","Debes apostar como mínimo 200 coins ¡Arriesgate!");
+                    mensaje.putString("titulo","Error");
+                    mensaje.putString("mensaje","Debes apostar como mínimo 200 coins ¡Arriésgate!");
                     dialogFragment.setArguments(mensaje);
                     FragmentManager fragmentManager = getFragmentManager();
                     dialogFragment.show(fragmentManager,"general");
@@ -140,7 +142,8 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 if (Integer.parseInt(campoCantidad.getText().toString())>Integer.parseInt(puntosUsuario)){
                     General dialogFragment = new General();
                     Bundle mensaje = new Bundle();
-                    mensaje.putString("mensaje","Tus coins actuales son "+puntosUsuario+", no puedes apostar más");
+                    mensaje.putString("titulo","Error");
+                    mensaje.putString("mensaje","Tus coins actuales son "+puntosUsuario+", no puedes apostar más.");
                     dialogFragment.setArguments(mensaje);
                     FragmentManager fragmentManager = getFragmentManager();
                     dialogFragment.show(fragmentManager,"general");

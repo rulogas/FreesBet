@@ -10,7 +10,7 @@
     >
 
     <include
-        layout="@layout/content_home"
+        layout="@layout/content_premios"
         />
 
     <android.support.design.widget.NavigationView

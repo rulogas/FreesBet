@@ -9,11 +9,14 @@ import android.support.v7.app.AlertDialog;
 import com.example.freesbet.R;
 
 public class General extends DialogFragment {
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
+        String titulo = getArguments().getString("titulo");
         String mensaje = getArguments().getString("mensaje");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(titulo);
         builder.setMessage(mensaje)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
