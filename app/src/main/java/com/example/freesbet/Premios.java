@@ -235,12 +235,16 @@ public class Premios extends AppCompatActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        /*if(coins >= coste){
+
+        }else{
+            //error
+        }*/
         Premio item = (Premio) parent.getItemAtPosition(position);
         DialogFormEnviarPremio dialogFragment = new DialogFormEnviarPremio();
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         dialogFragment.show(fragmentManager,"formEnviarPremio");
-
-
     }
 }

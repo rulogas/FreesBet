@@ -62,7 +62,6 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().isEmpty()){
 
-
                     int cantidad = Integer.parseInt(campoCantidad.getText().toString());
                     int ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
                     textoGanancia.setText("+"+Integer.toString(+ganancia));

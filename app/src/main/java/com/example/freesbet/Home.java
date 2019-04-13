@@ -68,8 +68,7 @@ public class Home extends AppCompatActivity
 
         //View Pager
         mTabLayoutEventos.setupWithViewPager(mViewPagerEventos);
-        inicializarPager(mViewPagerEventos);
-
+        inicializarPager();
     }
 
     @Override
@@ -172,7 +171,7 @@ public class Home extends AppCompatActivity
         return true;
     }
 
-    private void inicializarPager(ViewPager viewPager){
+    private void inicializarPager(){
         TabViewPagerAdapter tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
         tabViewPagerAdapter.addFragment(new HomeProximosFragment(),"Próximos");
         tabViewPagerAdapter.addFragment(new HomePopularesFragment(),"Populares");

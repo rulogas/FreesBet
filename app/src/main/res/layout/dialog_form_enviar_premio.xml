@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         >
 
-        <EditText android:id="@+id/textView_Ciudad"
+        <EditText android:id="@+id/editText_Ciudad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         >
 
-        <EditText android:id="@+id/textView_Provincia"
+        <EditText android:id="@+id/editText_Provincia"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         >
 
-        <EditText android:id="@+id/textView_cp"
+        <EditText android:id="@+id/editText_cp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -103,7 +103,7 @@
         android:layout_height="wrap_content"
         >
 
-        <EditText android:id="@+id/textView_numero_telefono"
+        <EditText android:id="@+id/editText_numero_telefono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"

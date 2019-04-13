@@ -7,7 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.view.View;
@@ -20,12 +22,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.freesbet.bases.TabViewPagerAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Ajustes extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @BindView(R.id.tabs_ajustes)
+    TabLayout tabLayoutAjustes;
+    @BindView(R.id.pager_ajustes)
+    ViewPager viewPagerAjustes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,10 @@ public class Ajustes extends AppCompatActivity
         competiciones.setTitle(stringCompeticiones);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        tabLayoutAjustes.setupWithViewPager(viewPagerAjustes);
+        inicializarPager();
+
     }
 
     @Override
@@ -159,5 +172,12 @@ public class Ajustes extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void inicializarPager(){
+        TabViewPagerAdapter tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
+        tabViewPagerAdapter.addFragment(new PerfilFragment(),"Perfil");
+        tabViewPagerAdapter.addFragment(new ActividadFragment(),"Actividad");
+        viewPagerAjustes.setAdapter(tabViewPagerAdapter);
     }
 }
