@@ -31,7 +31,7 @@
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/circleview_image1"
+                    android:id="@+id/circleview_perfil_usuario"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
 
@@ -61,7 +61,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.066"
-                    app:layout_constraintStart_toEndOf="@+id/circleview_image1"
+                    app:layout_constraintStart_toEndOf="@+id/circleview_perfil_usuario"
                     app:layout_constraintTop_toBottomOf="@+id/imageView_header_apuesta"
                     app:layout_constraintVertical_bias="0.0" />
 
@@ -78,7 +78,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.031"
-                    app:layout_constraintStart_toEndOf="@+id/circleview_image1"
+                    app:layout_constraintStart_toEndOf="@+id/circleview_perfil_usuario"
                     app:layout_constraintTop_toBottomOf="@+id/textView_nombreUsuario"
                     app:layout_constraintVertical_bias="0.0" />
 
@@ -109,6 +109,7 @@
                         android:layout_marginBottom="10dp">
 
                         <TextView
+                            android:id="@+id/textView_numBanca"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -119,7 +120,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView_texto_banca"
                             android:layout_width="wrap_content"
 
                             android:layout_height="wrap_content"
@@ -265,8 +265,6 @@
                             android:textSize="15sp"
                             android:textStyle="bold"/>
 
-
-
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -333,7 +331,7 @@
 
                     </RelativeLayout>
                     <ProgressBar
-                        android:id="@+id/progressBar_evento_favorito3"
+                        android:id="@+id/progressBar_evento_favorito2"
                         style="@android:style/Widget.ProgressBar.Horizontal"
 
                         android:layout_width="match_parent"
@@ -371,7 +369,7 @@
 
                     </RelativeLayout>
                     <ProgressBar
-                        android:id="@+id/progressBar_evento_favorito"
+                        android:id="@+id/progressBar_evento_favorito3"
                         style="@android:style/Widget.ProgressBar.Horizontal"
 
                         android:layout_width="match_parent"

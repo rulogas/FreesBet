@@ -22,13 +22,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.TabViewPagerAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Ajustes extends AppCompatActivity
+public class Ajustes extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.tabs_ajustes)
@@ -36,8 +38,11 @@ public class Ajustes extends AppCompatActivity
     @BindView(R.id.pager_ajustes)
     ViewPager viewPagerAjustes;
 
+    public static CircleImageView circleImageViewHeaderPerfilUsuario;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajustes);
         ButterKnife.bind(this);
@@ -54,7 +59,7 @@ public class Ajustes extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
-
+        circleImageViewHeaderPerfilUsuario =findViewById(R.id.circleview_header_perfil_usuario);
         MenuItem ligas= menu.findItem(R.id.ligas);
         SpannableString stringLigas = new SpannableString(ligas.getTitle());
         stringLigas.setSpan(new TextAppearanceSpan(this, R.style.ColorOpcionesMenu), 0, stringLigas.length(), 0);
