@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.freesbet.bases.AdapterGridPremios;
+import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.Premio;
 import com.example.freesbet.bases.RVAdapter;
@@ -39,7 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class Premios extends AppCompatActivity
+public class Premios extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
     private List<Premio> premios;
@@ -49,7 +50,7 @@ public class Premios extends AppCompatActivity
     GridView gridViewPremios;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_premios);
         ButterKnife.bind(this);
@@ -91,6 +92,8 @@ public class Premios extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            startActivity(Premios.this,Home.class);
+            finish();
         }
     }
 
@@ -119,9 +122,9 @@ public class Premios extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

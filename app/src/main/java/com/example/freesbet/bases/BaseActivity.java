@@ -1,9 +1,11 @@
 package com.example.freesbet.bases;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -11,16 +13,22 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.freesbet.Ajustes;
+import com.example.freesbet.Fms;
 import com.example.freesbet.R;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +36,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-
+    public static Toolbar toolbar;
+    public static int coinsUsuario;
+    public static Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         /*requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
+
+
+
 
         invalidateOptionsMenu();
     }
@@ -61,7 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void setActionBar(@IdRes int idResToolbar) {
-        Toolbar toolbar = findViewById(idResToolbar);
+        toolbar = findViewById(idResToolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -80,11 +93,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case R.id.menuToolbar_coins:
+                startActivity(BaseActivity.this, Ajustes.class);
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getCoinsUsuario();
+        return super.onPrepareOptionsMenu(menu);
     }
 
     protected void showSnackBar(String message, View container) {
@@ -122,6 +143,38 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public NumberFormat getNumberFormatWithDec() {
         return new DecimalFormat("#,###,##0.00");
+    }
+
+
+    public static void getCoinsUsuario(){
+
+       //obtener coinsUsuario
+        Fms.MyAsyncTasksGetCoinsUsuario myAsyncTasksGetCoinsUsuario = new MyAsyncTasksGetCoinsUsuario();
+        myAsyncTasksGetCoinsUsuario.execute();
+
+    }
+
+    public static class MyAsyncTasksGetCoinsUsuario extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String current = "";
+
+            // Obtener coins del usuario
+
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            // mostrar puntos usuario
+
+            coinsUsuario = 4000;
+            menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(4000)+" Coins");
+
+        }
     }
 
 }

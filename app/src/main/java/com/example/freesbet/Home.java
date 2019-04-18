@@ -19,13 +19,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.TabViewPagerAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class Home extends AppCompatActivity
+public class Home extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -35,7 +36,7 @@ public class Home extends AppCompatActivity
     ViewPager mViewPagerEventos;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
@@ -106,9 +107,9 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

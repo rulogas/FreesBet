@@ -28,12 +28,6 @@ public class HomePopularesFragment extends Fragment {
     private List<EventoLista> eventos = new ArrayList<>();
     RVAdapter adapter;
 
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        rv = getActivity().findViewById(R.id.recyclerView_eventos_populares);
-    }*/
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

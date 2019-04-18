@@ -1,12 +1,18 @@
 package com.example.freesbet;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.example.freesbet.bases.AppFreesBet;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
@@ -67,17 +77,33 @@ public class PerfilFragment extends Fragment {
 
     ProgressDialog progressDialog;
 
-    CircleImageView circleImageViewHeaderUsario;
+    View headerView;
 
 
 
     private static final int PICK_IMAGE = 1;
     Uri imageUri;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_perfil,container,false);
 
+        // setear imagen header con glide para aumentar rendimiento
+        ImageView imageViewHeaderperfil = view.findViewById(R.id.imageView_header_perfil);
+        Glide.with(this).load(R.drawable.fondo_header).asBitmap().into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                Drawable drawable = new BitmapDrawable(getContext().getResources(), resource);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    imageViewHeaderperfil.setBackground(drawable);
+                }
+            }
+        });
+
+        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
         inicializarPerfil();
         getDatosUsuario();
 
@@ -120,7 +146,6 @@ public class PerfilFragment extends Fragment {
         textViewTextoEventoFavorito4 = view.findViewById(R.id.textView_texto_evento_favorito4);
         textViewPorcentajeEventoFavorito4 = view.findViewById(R.id.textView_porcentaje_evento_favorito4);
         progressBarEventoFavorito4 = view.findViewById(R.id.progressBar_evento_favorito4);
-        circleImageViewHeaderUsario =  Ajustes.circleImageViewHeaderPerfilUsuario;
     }
 
     private void getDatosUsuario(){
@@ -176,7 +201,10 @@ public class PerfilFragment extends Fragment {
         if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
             circleImageViewUsuario.setImageURI(imageUri);
-            circleImageViewHeaderUsario.setImageURI(imageUri);
+
+            CircleImageView circleImageView =  headerView.findViewById(R.id.circleview_header_perfil_usuario);
+            circleImageView.setImageURI(imageUri);
+
             // actualizar imagen perfil firebase
         }
     }

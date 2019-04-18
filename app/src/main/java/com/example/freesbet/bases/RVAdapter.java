@@ -73,12 +73,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
         eventoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedpreferences = mContext.getSharedPreferences("preferenciasUsuario", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putInt("eventoId", eventos.get(i).id);
-                editor.commit();
 
                 Intent intent = new Intent(mContext, Apuesta.class);
+                intent.putExtra("idEevnto",eventos.get(i).id);
                 mContext.startActivity(intent);
 
             }

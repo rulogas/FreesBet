@@ -59,7 +59,6 @@ public class Ajustes extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
-        circleImageViewHeaderPerfilUsuario =findViewById(R.id.circleview_header_perfil_usuario);
         MenuItem ligas= menu.findItem(R.id.ligas);
         SpannableString stringLigas = new SpannableString(ligas.getTitle());
         stringLigas.setSpan(new TextAppearanceSpan(this, R.style.ColorOpcionesMenu), 0, stringLigas.length(), 0);
@@ -83,7 +82,10 @@ public class Ajustes extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+
             super.onBackPressed();
+            startActivity(Ajustes.this,Home.class);
+            finish();
         }
     }
 
@@ -112,9 +114,9 @@ public class Ajustes extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -181,8 +183,10 @@ public class Ajustes extends BaseActivity
 
     private void inicializarPager(){
         TabViewPagerAdapter tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
+        PerfilFragment perfilFragment = new PerfilFragment();
         tabViewPagerAdapter.addFragment(new PerfilFragment(),"Perfil");
         tabViewPagerAdapter.addFragment(new ActividadFragment(),"Actividad");
         viewPagerAjustes.setAdapter(tabViewPagerAdapter);
     }
+
 }
