@@ -1,5 +1,6 @@
 package com.example.freesbet;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -21,7 +22,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.TabViewPagerAdapter;
 import com.example.freesbet.widgets.CheckLogout;
@@ -32,6 +35,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Ajustes extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    NavigationView navigationView;
+    public static Context mContext;
 
     @BindView(R.id.tabs_ajustes)
     TabLayout tabLayoutAjustes;
@@ -56,7 +62,7 @@ public class Ajustes extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
         MenuItem ligas= menu.findItem(R.id.ligas);
@@ -71,8 +77,12 @@ public class Ajustes extends BaseActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        cargarInfoUsuarioMenu();
+
         tabLayoutAjustes.setupWithViewPager(viewPagerAjustes);
         inicializarPager();
+        mContext = this;
+
 
     }
 
@@ -187,6 +197,14 @@ public class Ajustes extends BaseActivity
         tabViewPagerAdapter.addFragment(new PerfilFragment(),"Perfil");
         tabViewPagerAdapter.addFragment(new ActividadFragment(),"Actividad");
         viewPagerAjustes.setAdapter(tabViewPagerAdapter);
+    }
+
+    private void cargarInfoUsuarioMenu(){
+        View headerView = navigationView.getHeaderView(0);
+        TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
+        textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
     }
 
 }

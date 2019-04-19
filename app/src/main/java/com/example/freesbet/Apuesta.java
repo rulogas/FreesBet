@@ -38,6 +38,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.CustomAdapterSpinnerCompetidores;
 import com.example.freesbet.bases.CustomAdpaterSpinner;
@@ -59,6 +60,9 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Apuesta extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
+
+    NavigationView navigationView;
+
     // HEADER
     @BindView(R.id.textView_tipo)
     TextView textViewTipo;
@@ -179,7 +183,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
 
@@ -194,6 +198,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         competiciones.setTitle(stringCompeticiones);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        cargarInfoUsuarioMenu();
 
 
         mButton_cuota1.setOnClickListener(new View.OnClickListener() {
@@ -533,5 +539,13 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             frameLayoutCompeticionApuestaHecha.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    private void cargarInfoUsuarioMenu(){
+        View headerView = navigationView.getHeaderView(0);
+        TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
+        textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
     }
 }

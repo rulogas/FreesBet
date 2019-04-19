@@ -23,8 +23,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.CustomAdpaterSpinner;
 import com.example.freesbet.bases.EventoLista;
@@ -38,9 +40,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Supremacia extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    NavigationView navigationView;
 
     @BindView(R.id.spinner_supremacia)
     Spinner mSpinerPaises;
@@ -69,7 +74,7 @@ public class Supremacia extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
 
@@ -84,6 +89,8 @@ public class Supremacia extends BaseActivity
         competiciones.setTitle(stringCompeticiones);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        cargarInfoUsuarioMenu();
 
         inicializarSpinner();
 
@@ -318,5 +325,13 @@ public class Supremacia extends BaseActivity
             rv.setAdapter(adapter);
 
         }
+    }
+
+    private void cargarInfoUsuarioMenu(){
+        View headerView = navigationView.getHeaderView(0);
+        TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
+        textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
     }
 }

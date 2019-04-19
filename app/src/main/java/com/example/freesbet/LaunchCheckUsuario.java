@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.File;
 
 public class LaunchCheckUsuario extends AppCompatActivity {
@@ -20,22 +23,15 @@ public class LaunchCheckUsuario extends AppCompatActivity {
         setContentView(R.layout.activity_launch_check_usuario);
         iniciarLoader();
 
-        File f = new File("/data/data/com.example.freesbet/shared_prefs/preferenciasUsuario.xml");
-        if (f.exists()){
-            Log.d("TAG", "SharedPreferences preferenciasUsuario : existe");
-            SharedPreferences sharedpreferences = getSharedPreferences("preferenciasUsuario", Context.MODE_PRIVATE);
-            if (sharedpreferences.contains("correo")||sharedpreferences.contains("contrasena")){
-                Intent in = new Intent(LaunchCheckUsuario.this,Home.class);
-                nDialog.dismiss();
-                startActivity(in);
-            }
-            else{
-                Intent in = new Intent(LaunchCheckUsuario.this,MainActivity.class);
-                nDialog.dismiss();
-                startActivity(in);
-            }
-        }else{
-            Intent in = new Intent(LaunchCheckUsuario.this,MainActivity.class);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            Intent in = new Intent(LaunchCheckUsuario.this,Home.class);
+            nDialog.dismiss();
+            startActivity(in);
+        } else {
+            // No user is signed in
+            Intent in = new Intent(LaunchCheckUsuario.this,FirebaseUIActivity.class);
             nDialog.dismiss();
             startActivity(in);
         }

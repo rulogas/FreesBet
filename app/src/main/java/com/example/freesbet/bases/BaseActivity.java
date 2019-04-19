@@ -1,14 +1,17 @@
 package com.example.freesbet.bases;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +22,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.example.freesbet.Ajustes;
 import com.example.freesbet.Fms;
 import com.example.freesbet.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -40,6 +46,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static int coinsUsuario;
     public static Menu menu;
 
+    public static String nombreUsuario;
+    public static String emailUsuario;
+    public static Uri photoUrlUsuario;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
-
+        getInfoUsuario();
         invalidateOptionsMenu();
     }
 
@@ -174,6 +184,25 @@ public abstract class BaseActivity extends AppCompatActivity {
             coinsUsuario = 4000;
             menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(4000)+" Coins");
 
+        }
+    }
+
+    public static void getInfoUsuario(){
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            nombreUsuario = user.getDisplayName();
+            emailUsuario = user.getEmail();
+            photoUrlUsuario = user.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            String uid = user.getUid();
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -18,22 +19,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.TabViewPagerAdapter;
 import com.example.freesbet.widgets.CheckLogout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    NavigationView navigationView;
     @BindView(R.id.tabs_eventos)
     TabLayout mTabLayoutEventos;
     @BindView(R.id.pager_eventos)
     ViewPager mViewPagerEventos;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +60,7 @@ public class Home extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
 
@@ -67,9 +76,14 @@ public class Home extends BaseActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        // setear info usuario
+        cargarInfoUsuarioMenu();
+
         //View Pager
         mTabLayoutEventos.setupWithViewPager(mViewPagerEventos);
         inicializarPager();
+
+
     }
 
     @Override
@@ -178,4 +192,13 @@ public class Home extends BaseActivity
         tabViewPagerAdapter.addFragment(new HomePopularesFragment(),"Populares");
         mViewPagerEventos.setAdapter(tabViewPagerAdapter);
     }
+
+    private void cargarInfoUsuarioMenu(){
+        View headerView = navigationView.getHeaderView(0);
+        TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
+        textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+    }
+
 }

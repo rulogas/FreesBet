@@ -1,5 +1,6 @@
 package com.example.freesbet;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.freesbet.bases.BaseActivity;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.common.SignInButton;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,8 +29,8 @@ public class MainActivity extends BaseActivity {
     EditText _aliasText;
     @BindView(R.id.input_pin)
     EditText _pinText;
-    @BindView(R.id.sign_in_button)
-    SignInButton googleButton;
+    /*@BindView(R.id.sign_in_button)
+    SignInButton googleButton;*/
     @BindView(R.id.enlace_registro)
     TextView mTextViewRegistro;
     ProgressDialog progressDialog;
@@ -47,8 +46,10 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
+        hideStatusBar();
+
         showHomeUpButton();
-        googleButton.setSize(SignInButton.SIZE_STANDARD);
+        //googleButton.setSize(SignInButton.SIZE_STANDARD);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -64,6 +65,8 @@ public class MainActivity extends BaseActivity {
                 startActivity(MainActivity.this,Registro.class);
             }
         });
+
+
     }
 
     public void login() {
@@ -197,5 +200,12 @@ public class MainActivity extends BaseActivity {
                 onLoginFailed();
             }*/
         }
+    }
+
+    private void hideStatusBar(){
+        View decorView = getWindow().getDecorView();
+// Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 }

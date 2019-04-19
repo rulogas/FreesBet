@@ -27,8 +27,8 @@
     <string name="title_activity_invita">Invita</string>
     <string name="title_activity_ajustes">Ajustes</string>
 
-    <string name="facebook_app_id">2549215305309010</string>
-    <string name="fb_login_protocol_scheme">fb2549215305309010</string>
+    <!--<string name="facebook_app_id">2549215305309010</string>
+    <string name="fb_login_protocol_scheme">fb2549215305309010</string>-->
     <string name="enlace_registro"><u>Regístrate con FreesBet</u></string>
     <string name="enlace_login"><u>¿Ya tienes una cuenta? Inicia sesión</u></string>
 
@@ -68,6 +68,13 @@ FreesBet Se reserva el derecho de cambiar los términos de la presente Política
     <string name="check_apuesta">¿Estas seguro de tu apuesta? Solo puedes realizar una apuesta por evento</string>
     <string name="recibir_premio">Recibir premio</string>
     <string name="cancelar">Cancelar</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">2549215305309010</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb2549215305309010</string>
+    <!-- Twitter consumer key and secret -->
+    <string name="twitter_consumer_key" translatable="false">n1w7sQ5XJCg4PvF815og5iXbA</string>
+    <string name="twitter_consumer_secret" translatable="false">8ypngJF1bofYKge4Xx2VvsebihdPqs3J8IxkcsD2pR9rINl6dF</string>
 
 
 </resources>

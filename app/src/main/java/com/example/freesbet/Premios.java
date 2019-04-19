@@ -22,7 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.AdapterGridPremios;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.EventoLista;
@@ -39,10 +41,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Premios extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
+    NavigationView navigationView;
     private List<Premio> premios;
     ProgressDialog progressDialog;
     AdapterGridPremios adapterGridPremios;
@@ -64,7 +68,7 @@ public class Premios extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navigationView.getMenu();
 
@@ -79,6 +83,8 @@ public class Premios extends BaseActivity
         competiciones.setTitle(stringCompeticiones);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        cagarInfoUsuarioMenu();
 
         getPremios();
 
@@ -249,5 +255,13 @@ public class Premios extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         dialogFragment.show(fragmentManager,"formEnviarPremio");
+    }
+
+    private void cagarInfoUsuarioMenu(){
+        View headerView = navigationView.getHeaderView(0);
+        TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
+        textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
     }
 }

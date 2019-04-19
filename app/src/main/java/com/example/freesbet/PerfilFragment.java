@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,11 @@ import com.example.freesbet.bases.AppFreesBet;
 import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.w3c.dom.Text;
 
@@ -39,13 +45,22 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.freesbet.bases.BaseActivity.getInfoUsuario;
+import static com.example.freesbet.bases.BaseActivity.nombreUsuario;
+import static com.example.freesbet.bases.BaseActivity.photoUrlUsuario;
+import static com.firebase.ui.auth.AuthUI.TAG;
 
 
 public class PerfilFragment extends Fragment {
 
+    NavigationView navigationView;
+    View headerView;
+    CircleImageView circleImageViewMenuUsuario;
+
     View view;
 
     CircleImageView circleImageViewUsuario;
+    ImageView imageViewEditar;
     TextView textViewNombreUsuario;
     TextView textViewNivelUsuario;
 
@@ -77,7 +92,7 @@ public class PerfilFragment extends Fragment {
 
     ProgressDialog progressDialog;
 
-    View headerView;
+
 
 
 
@@ -103,11 +118,11 @@ public class PerfilFragment extends Fragment {
         });
 
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
-        headerView = navigationView.getHeaderView(0);
+
         inicializarPerfil();
         getDatosUsuario();
 
-        circleImageViewUsuario.setOnClickListener(new View.OnClickListener() {
+        imageViewEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
@@ -118,7 +133,11 @@ public class PerfilFragment extends Fragment {
     }
 
     private void inicializarPerfil(){
+        navigationView = getActivity().findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+        circleImageViewMenuUsuario =  headerView.findViewById(R.id.circleview_header_perfil_usuario);
         circleImageViewUsuario = view.findViewById(R.id.circleview_perfil_usuario);
+        imageViewEditar = view.findViewById(R.id.imageView_editar);
         textViewNombreUsuario = view.findViewById(R.id.textView_nombreUsuario);
         textViewNivelUsuario = view.findViewById(R.id.textView_ajustes_nivel);
 
@@ -178,6 +197,10 @@ public class PerfilFragment extends Fragment {
 
             //setear imagen usuario
 
+            Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
+
+            textViewNombreUsuario.setText(nombreUsuario);
+
             //setear nombre usuario y nivel
 
             //setear banca y porcentaje en juego
@@ -200,12 +223,33 @@ public class PerfilFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
-            circleImageViewUsuario.setImageURI(imageUri);
 
-            CircleImageView circleImageView =  headerView.findViewById(R.id.circleview_header_perfil_usuario);
-            circleImageView.setImageURI(imageUri);
+            actualizarImagen();
+
 
             // actualizar imagen perfil firebase
         }
+    }
+
+    private void actualizarImagen(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(imageUri)
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete( Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("Perfil", "Foto actualizada");
+                            getInfoUsuario();
+                            Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
+
+                            Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
+                        }
+                    }
+                });
     }
 }

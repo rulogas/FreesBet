@@ -11,7 +11,7 @@ public class AppFreesBet extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        mContext = this;
 
     }
 }

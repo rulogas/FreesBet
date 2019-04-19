@@ -47,6 +47,23 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.911" />
 
+                <ImageView
+                    android:id="@+id/imageView_editar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_edit_black_24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.211"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.948" />
+
                 <TextView
                     android:id="@+id/textView_nombreUsuario"
                     android:layout_width="wrap_content"
