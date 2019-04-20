@@ -37,6 +37,8 @@ public class Home extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
+    View headerView;
+    CircleImageView circleImageViewUsuarioMenu;
     @BindView(R.id.tabs_eventos)
     TabLayout mTabLayoutEventos;
     @BindView(R.id.pager_eventos)
@@ -78,6 +80,13 @@ public class Home extends BaseActivity
 
         // setear info usuario
         cargarInfoUsuarioMenu();
+
+        circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irPerfil();
+            }
+        });
 
         //View Pager
         mTabLayoutEventos.setupWithViewPager(mViewPagerEventos);
@@ -194,11 +203,21 @@ public class Home extends BaseActivity
     }
 
     private void cargarInfoUsuarioMenu(){
-        View headerView = navigationView.getHeaderView(0);
+        headerView = navigationView.getHeaderView(0);
         TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
-        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
-        Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+        circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        try{
+            Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void irPerfil(){
+        startActivity(Home.this,Ajustes.class);
+        finish();
     }
 
 }

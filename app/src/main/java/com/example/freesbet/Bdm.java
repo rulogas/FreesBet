@@ -46,6 +46,8 @@ public class Bdm extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
+    View headerView;
+    CircleImageView circleImageViewUsuarioMenu;
 
     @BindView(R.id.spinner_bdm)
     Spinner mSpinerPaises;
@@ -91,6 +93,13 @@ public class Bdm extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         cargarInfoUsuarioMenu();
+
+        circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irPerfil();
+            }
+        });
 
         inicializarSpinner();
 
@@ -326,10 +335,15 @@ public class Bdm extends BaseActivity
     }
 
     private void cargarInfoUsuarioMenu(){
-        View headerView = navigationView.getHeaderView(0);
+        headerView = navigationView.getHeaderView(0);
         TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
-        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+    }
+
+    private void irPerfil(){
+        startActivity(Bdm.this,Ajustes.class);
+        finish();
     }
 }

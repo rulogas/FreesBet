@@ -52,7 +52,7 @@
         <item
             android:id="@+id/opcion_ajustes_cuenta"
             android:icon="@drawable/ic_ajustes_cuenta"
-            android:title="Ajustes de cuenta" />
+            android:title="Perfil" />
         <item
             android:id="@+id/opcion_logout"
             android:icon="@drawable/ic_logout"

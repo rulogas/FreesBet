@@ -122,7 +122,7 @@ public class PerfilFragment extends Fragment {
         inicializarPerfil();
         getDatosUsuario();
 
-        imageViewEditar.setOnClickListener(new View.OnClickListener() {
+        circleImageViewUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();

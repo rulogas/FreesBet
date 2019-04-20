@@ -47,6 +47,9 @@ public class Premios extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
     NavigationView navigationView;
+    View headerView;
+    CircleImageView circleImageViewUsuarioMenu;
+
     private List<Premio> premios;
     ProgressDialog progressDialog;
     AdapterGridPremios adapterGridPremios;
@@ -85,6 +88,13 @@ public class Premios extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         cagarInfoUsuarioMenu();
+
+        circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irPerfil();
+            }
+        });
 
         getPremios();
 
@@ -258,10 +268,15 @@ public class Premios extends BaseActivity
     }
 
     private void cagarInfoUsuarioMenu(){
-        View headerView = navigationView.getHeaderView(0);
+        headerView = navigationView.getHeaderView(0);
         TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
-        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+    }
+
+    private void irPerfil(){
+        startActivity(Premios.this,Ajustes.class);
+        finish();
     }
 }

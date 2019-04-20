@@ -62,6 +62,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Apuesta extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
     NavigationView navigationView;
+    View headerView;
+    CircleImageView circleImageViewUsuarioMenu;
 
     // HEADER
     @BindView(R.id.textView_tipo)
@@ -200,6 +202,13 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         navigationView.setNavigationItemSelectedListener(this);
 
         cargarInfoUsuarioMenu();
+
+        circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irPerfil();
+            }
+        });
 
 
         mButton_cuota1.setOnClickListener(new View.OnClickListener() {
@@ -542,10 +551,15 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
     }
 
     private void cargarInfoUsuarioMenu(){
-        View headerView = navigationView.getHeaderView(0);
+        headerView = navigationView.getHeaderView(0);
         TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
-        CircleImageView circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+        circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+    }
+
+    private void irPerfil(){
+        startActivity(Apuesta.this,Ajustes.class);
+        finish();
     }
 }
