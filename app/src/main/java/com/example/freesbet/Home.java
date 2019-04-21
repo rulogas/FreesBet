@@ -1,11 +1,14 @@
 package com.example.freesbet;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -37,13 +40,11 @@ public class Home extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
-    View headerView;
-    CircleImageView circleImageViewUsuarioMenu;
     @BindView(R.id.tabs_eventos)
     TabLayout mTabLayoutEventos;
     @BindView(R.id.pager_eventos)
     ViewPager mViewPagerEventos;
-
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -64,6 +65,9 @@ public class Home extends BaseActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
+        // setear info usuario
+
+
         Menu menu = navigationView.getMenu();
 
         MenuItem ligas= menu.findItem(R.id.ligas);
@@ -78,15 +82,9 @@ public class Home extends BaseActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        // setear info usuario
-        cargarInfoUsuarioMenu();
 
-        circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                irPerfil();
-            }
-        });
+
+
 
         //View Pager
         mTabLayoutEventos.setupWithViewPager(mViewPagerEventos);
@@ -202,22 +200,7 @@ public class Home extends BaseActivity
         mViewPagerEventos.setAdapter(tabViewPagerAdapter);
     }
 
-    private void cargarInfoUsuarioMenu(){
-        headerView = navigationView.getHeaderView(0);
-        TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
-        textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
-        circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
-        try{
-            Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
-    private void irPerfil(){
-        startActivity(Home.this,Ajustes.class);
-        finish();
-    }
 
 }

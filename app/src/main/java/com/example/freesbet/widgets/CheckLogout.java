@@ -18,6 +18,7 @@ import com.example.freesbet.FirebaseUIActivity;
 import com.example.freesbet.R;
 import com.example.freesbet.MainActivity;
 import com.example.freesbet.bases.AppFreesBet;
+import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.BooVariable;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,10 +41,10 @@ public class CheckLogout extends DialogFragment {
         builder.setMessage(R.string.check_cerrarSesion)
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        AuthUI.getInstance()
-                                .signOut(getContext());
+                        AuthUI.getInstance().signOut(getContext());
                             Intent in = new Intent(getActivity(), FirebaseUIActivity.class);
                             startActivity(in);
+                        BaseActivity.photoUrlUsuario = null;
                             getActivity().finish();
 
 

@@ -30,14 +30,24 @@ import com.example.freesbet.Ajustes;
 import com.example.freesbet.Fms;
 import com.example.freesbet.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -62,6 +72,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static Uri photoUrlUsuario;
     public static String idUsuario;
 
+    public static StorageReference mStorageRef;
+    static ProgressDialog progressDialog;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 
         db = FirebaseFirestore.getInstance();
-
         getInfoUsuario();
+
         invalidateOptionsMenu();
     }
 
@@ -125,25 +139,30 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         this.menu = menu;
-        DocumentReference docRef = db.collection("usuarios").document(idUsuario);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("Usuario", "DocumentSnapshot data: " + document.getData());
-                        Map<String, Object> user = document.getData();
-                        coinsUsuario =((Long) user.get("coins")).intValue();
-                        menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
+
+
+            DocumentReference docRef = db.collection("usuarios").document(idUsuario);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("Usuario", "DocumentSnapshot data: " + document.getData());
+                            Map<String, Object> user = document.getData();
+                            coinsUsuario =((Long) user.get("coins")).intValue();
+                            menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
+                        } else {
+                            Log.d("Usuario", "No such document");
+                        }
                     } else {
-                        Log.d("Usuario", "No such document");
+                        Log.d("Usuario", "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d("Usuario", "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+
+
+
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -188,7 +207,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public static void getCoinsUsuario(){
 
-       //obtener coinsUsuario
+        //obtener coinsUsuario
         Fms.MyAsyncTasksGetCoinsUsuario myAsyncTasksGetCoinsUsuario = new MyAsyncTasksGetCoinsUsuario();
         myAsyncTasksGetCoinsUsuario.execute();
 
@@ -216,24 +235,153 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            // Name, email address, and profile photo Url
-            nombreUsuario = user.getDisplayName();
-            emailUsuario = user.getEmail();
-            photoUrlUsuario = user.getPhotoUrl();
-            if (photoUrlUsuario == null){
-                photoUrlUsuario = Uri.parse("android.resource://com.example.freesbet/drawable/usuario");
+            for (UserInfo profile : user.getProviderData()){
+                // Name, email address, and profile photo Url
+                nombreUsuario = user.getDisplayName();
+                emailUsuario = user.getEmail();
+                idUsuario = user.getUid();
+
+                getImagenUsuario();
+
+                // Check if user's email is verified
+                boolean emailVerified = user.isEmailVerified();
+
+                // The user's ID, unique to the Firebase project. Do NOT use this value to
+                // authenticate with your backend server, if you have one. Use
+                // FirebaseUser.getIdToken() instead.
+                String uid = user.getUid();
             }
-            idUsuario = user.getUid();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            String uid = user.getUid();
 
 
+        }
+    }
+
+    public static void getInfoUsuarioNuevo(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()){
+                // Name, email address, and profile photo Url
+                nombreUsuario = user.getDisplayName();
+                emailUsuario = user.getEmail();
+                idUsuario = user.getUid();
+                //obtener foto del provider
+                Uri photoUsuarioProvider;
+                photoUsuarioProvider = profile.getPhotoUrl();
+
+                if (photoUsuarioProvider != null){
+                    guardarImagenUsuarioUrl(photoUsuarioProvider.toString());
+                }else {
+                    photoUsuarioProvider = Uri.parse("android.resource://com.example.freesbet/drawable/usuario");
+                    guardarImagenUsuario(photoUsuarioProvider);
+                }
+
+
+
+                // Check if user's email is verified
+                boolean emailVerified = user.isEmailVerified();
+
+                // The user's ID, unique to the Firebase project. Do NOT use this value to
+                // authenticate with your backend server, if you have one. Use
+                // FirebaseUser.getIdToken() instead.
+                String uid = user.getUid();
+            }
+
+
+        }
+    }
+
+    public static void guardarImagenUsuario(Uri fotoUsuario){
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference userRef = mStorageRef.child("imagenes/usuarios/"+idUsuario+"/"+"imagen_usuario.jpg");
+
+        userRef.putFile(fotoUsuario)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        System.out.println("Imagen guardada");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
+    }
+
+    public static void getImagenUsuario(){
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorageRef.child("imagenes/usuarios/"+idUsuario+"/imagen_usuario.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+
+                photoUrlUsuario = uri;
+                System.out.println("uri obtenida");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+
+            }
+        });
+    }
+
+    public static void guardarImagenUsuarioUrl(String url){
+        MyAsyncTasksguardarImagenUsuarioUrl myAsyncTasksguardarImagenUsuarioUrl = new MyAsyncTasksguardarImagenUsuarioUrl(url);
+        myAsyncTasksguardarImagenUsuarioUrl.execute();
+
+    }
+
+    public static class MyAsyncTasksguardarImagenUsuarioUrl extends AsyncTask<String, String, String> {
+
+        String url;
+
+        public MyAsyncTasksguardarImagenUsuarioUrl(String url){
+            this.url = url;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+
+            URL urlImagen;
+            try {
+                urlImagen  = new URL(url);
+                HttpURLConnection connection  = null;
+
+                try {
+                    connection = (HttpURLConnection) urlImagen.openConnection();
+                    InputStream stream = connection.getInputStream();
+
+                    mStorageRef = FirebaseStorage.getInstance().getReference();
+                    StorageReference userRef = mStorageRef.child("imagenes/usuarios/"+idUsuario+"/"+"imagen_usuario.jpg");
+                    UploadTask uploadTask = userRef.putStream(stream);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                            System.out.println("ImagenURL guardada");
+
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 

@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.freesbet.bases.BaseActivity.getInfoUsuario;
+import static com.example.freesbet.bases.BaseActivity.getInfoUsuarioNuevo;
 import static com.example.freesbet.bases.BaseActivity.photoUrlUsuario;
 
 public class FirebaseUIActivity extends AppCompatActivity {
@@ -52,6 +54,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
                         .setAvailableProviders(providers)
                         .setLogo(R.drawable.logo)
                         .setTheme(R.style.LoginTheme)
+                        .setIsSmartLockEnabled(false)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -80,6 +83,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
                             if (document.exists()) {
                                 Log.d("Usuario", "Ya existe el usuario: " + document.getData());
                                 System.out.println("Ya existe el usuario: " + document.getData());
+                                getInfoUsuario();
                                 Intent in = new Intent(FirebaseUIActivity.this, Home.class);
                                 startActivity(in);
                                 finish();
@@ -126,6 +130,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Log.d("Usuario", "Usuario añadido");
                         System.out.println("Usuario añadido");
+                        getInfoUsuarioNuevo();
                         Intent in = new Intent(FirebaseUIActivity.this, Home.class);
                         startActivity(in);
                         finish();

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,10 +31,14 @@ import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
@@ -45,7 +50,10 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.freesbet.bases.BaseActivity.getImagenUsuario;
 import static com.example.freesbet.bases.BaseActivity.getInfoUsuario;
+import static com.example.freesbet.bases.BaseActivity.guardarImagenUsuario;
+import static com.example.freesbet.bases.BaseActivity.idUsuario;
 import static com.example.freesbet.bases.BaseActivity.nombreUsuario;
 import static com.example.freesbet.bases.BaseActivity.photoUrlUsuario;
 import static com.firebase.ui.auth.AuthUI.TAG;
@@ -224,32 +232,47 @@ public class PerfilFragment extends Fragment {
         if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
 
-            actualizarImagen();
+            progressDialog = new ProgressDialog(getContext());
+            progressDialog.setMessage("Guardando imagen");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
+            guardarImagenUsuario(imageUri);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getImagenUsuario();
+                }
+            }, 3000);
 
             // actualizar imagen perfil firebase
         }
     }
 
-    private void actualizarImagen(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private void getImagenUsuario(){
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorageRef.child("imagenes/usuarios/"+idUsuario+"/imagen_usuario.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
 
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(imageUri)
-                .build();
+                photoUrlUsuario = uri;
 
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete( Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("Perfil", "Foto actualizada");
-                            getInfoUsuario();
-                            Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
+                System.out.println("uri obtenida");
+                Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
 
-                            Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
-                        }
-                    }
-                });
+                Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
+                progressDialog.dismiss();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+
+            }
+        });
     }
+
+
 }
