@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.AppFreesBet;
+import com.example.freesbet.bases.BooVariable;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 
@@ -28,6 +28,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.freesbet.bases.BaseActivity.datosUsuarioActualizados;
+import static com.example.freesbet.bases.BaseActivity.nivelUsuario;
 import static com.example.freesbet.bases.BaseActivity.nombreUsuario;
 import static com.example.freesbet.bases.BaseActivity.photoUrlUsuario;
 
@@ -36,6 +38,7 @@ public class HomeProximosFragment extends Fragment {
     NavigationView navigationView;
     View headerView;
     TextView textViewNombreUsuarioHeaderMenu;
+    TextView textViewNivelUsuarioHeaderMenu;
     CircleImageView circleImageViewUsuarioMenu;
 
     RecyclerView rv;
@@ -56,11 +59,28 @@ public class HomeProximosFragment extends Fragment {
 
         navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
 
-        // setear info usuario
+        // inicializar header menu
 
         headerView = navigationView.getHeaderView(0);
         textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
+        textViewNivelUsuarioHeaderMenu = headerView.findViewById(R.id.textView_NivelUsuario_headerMenu);
         circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
+
+        // setear imagen menu cuando se guarda en firebase
+        datosUsuarioActualizados.setListener(new BooVariable.ChangeListener() {
+            @Override
+            public void onChange() {
+                if (datosUsuarioActualizados.isBoo()){
+                    Glide.with(AppFreesBet.mContext).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+                    textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+                    textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivelUsuario));
+                }
+            }
+        });
+        if (datosUsuarioActualizados.isBoo()){
+            Glide.with(AppFreesBet.mContext).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+            textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
+        }
 
         circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +89,6 @@ public class HomeProximosFragment extends Fragment {
             }
         });
 
-        //cargarInfoUsuarioMenu();
 
         rv =view.findViewById(R.id.recyclerView_eventos_proximos);
         getEventos();
@@ -173,34 +192,10 @@ public class HomeProximosFragment extends Fragment {
             adapter = new RVAdapter(eventos, getContext());
             rv.setAdapter(adapter);
 
-            textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    Glide.with(AppFreesBet.mContext).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
-                }
-            }, 5000);
             progressDialog.dismiss();
 
         }
     }
-
-    /*private void cargarInfoUsuarioMenu(){
-
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Cargando eventos");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-
-
-        // Esperar un segundo para cargar imagen de menu
-
-
-    }*/
 
     private void irPerfil(){
         Intent in = new Intent(getActivity(),Ajustes.class);

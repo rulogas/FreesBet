@@ -64,6 +64,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
     NavigationView navigationView;
     View headerView;
     CircleImageView circleImageViewUsuarioMenu;
+    TextView textViewNivelUsuarioHeaderMenu;
 
     // HEADER
     @BindView(R.id.textView_tipo)
@@ -556,6 +557,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
         circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+        textViewNivelUsuarioHeaderMenu = headerView.findViewById(R.id.textView_NivelUsuario_headerMenu);
+        textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivelUsuario));
     }
 
     private void irPerfil(){

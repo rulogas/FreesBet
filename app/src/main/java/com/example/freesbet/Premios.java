@@ -49,6 +49,7 @@ public class Premios extends BaseActivity
     NavigationView navigationView;
     View headerView;
     CircleImageView circleImageViewUsuarioMenu;
+    TextView textViewNivelUsuarioHeaderMenu;
 
     private List<Premio> premios;
     ProgressDialog progressDialog;
@@ -87,7 +88,7 @@ public class Premios extends BaseActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        cagarInfoUsuarioMenu();
+        cargarInfoUsuarioMenu();
 
         circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,12 +268,14 @@ public class Premios extends BaseActivity
         dialogFragment.show(fragmentManager,"formEnviarPremio");
     }
 
-    private void cagarInfoUsuarioMenu(){
+    private void cargarInfoUsuarioMenu(){
         headerView = navigationView.getHeaderView(0);
         TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
         circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+        textViewNivelUsuarioHeaderMenu = headerView.findViewById(R.id.textView_NivelUsuario_headerMenu);
+        textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivelUsuario));
     }
 
     private void irPerfil(){

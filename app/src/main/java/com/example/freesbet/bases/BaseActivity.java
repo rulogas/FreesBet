@@ -1,30 +1,24 @@
 package com.example.freesbet.bases;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
 import com.example.freesbet.Ajustes;
 import com.example.freesbet.Fms;
@@ -43,7 +37,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -51,18 +45,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static Toolbar toolbar;
     public static int coinsUsuario;
+    public static int nivelUsuario;
     public static Menu menu;
 
     public static FirebaseFirestore db;
@@ -75,6 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static StorageReference mStorageRef;
     static ProgressDialog progressDialog;
 
+    public static BooVariable datosUsuarioActualizados;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         /*requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
-
+        datosUsuarioActualizados = new BooVariable();
         db = FirebaseFirestore.getInstance();
         getInfoUsuario();
 
@@ -240,6 +231,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 nombreUsuario = user.getDisplayName();
                 emailUsuario = user.getEmail();
                 idUsuario = user.getUid();
+                getNivelUsuario();
 
                 getImagenUsuario();
 
@@ -264,6 +256,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 nombreUsuario = user.getDisplayName();
                 emailUsuario = user.getEmail();
                 idUsuario = user.getUid();
+                getNivelUsuario();
                 //obtener foto del provider
                 Uri photoUsuarioProvider;
                 photoUsuarioProvider = profile.getPhotoUrl();
@@ -271,10 +264,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (photoUsuarioProvider != null){
                     guardarImagenUsuarioUrl(photoUsuarioProvider.toString());
                 }else {
-                    photoUsuarioProvider = Uri.parse("android.resource://com.example.freesbet/drawable/usuario");
-                    guardarImagenUsuario(photoUsuarioProvider);
+                    Bitmap bitmapImagenUsuario = ((BitmapDrawable)ResourcesCompat.getDrawable(AppFreesBet.mContext.getResources(),R.drawable.usuario,null)).getBitmap();
+                    //photoUsuarioProvider = Uri.parse("android.resource://com.example.freesbet/drawable/usuario");
+                    guardarImagenUsuarioDefecto(bitmapImagenUsuario);
                 }
-
 
 
                 // Check if user's email is verified
@@ -300,6 +293,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
                         System.out.println("Imagen guardada");
+                        getImagenUsuario();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -320,6 +314,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 photoUrlUsuario = uri;
                 System.out.println("uri obtenida");
+                datosUsuarioActualizados.setBoo(true);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -371,6 +366,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                             // ...
                             System.out.println("ImagenURL guardada");
+                            getImagenUsuario();
 
                         }
                     });
@@ -383,6 +379,54 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    public static void guardarImagenUsuarioDefecto(Bitmap bitmapImagenUsuario){
+        // Get the data from an ImageView as bytes
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference userRef = mStorageRef.child("imagenes/usuarios/"+idUsuario+"/"+"imagen_usuario.jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmapImagenUsuario.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = userRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                System.out.println("Imagen por defecto guardada");
+                getImagenUsuario();
+            }
+        });
+    }
+
+    public static void getNivelUsuario(){
+        DocumentReference docRef = db.collection("usuarios").document(idUsuario);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("Usuario", "DocumentSnapshot data: " + document.getData());
+                        Map<String, Object> user = document.getData();
+                        nivelUsuario =((Long) user.get("nivel")).intValue();
+                        datosUsuarioActualizados.setBoo(true);
+                    } else {
+                        Log.d("Usuario", "No such document");
+                    }
+                } else {
+                    Log.d("Usuario", "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 }

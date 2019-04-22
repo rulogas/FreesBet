@@ -16,7 +16,7 @@
         android:layout_height="45dp"
         android:layout_weight="20"
         android:padding="5dp"
-        tools:srcCompat="@drawable/ic_filtrar" />
+        tools:srcCompat="@drawable/ic_todos" />
 
     <TextView
         android:id="@+id/textViewPais"

@@ -1,7 +1,6 @@
 package com.example.freesbet;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,12 +9,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,37 +22,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.example.freesbet.bases.AppFreesBet;
-import com.example.freesbet.bases.BaseActivity;
-import com.example.freesbet.bases.EventoLista;
-import com.example.freesbet.bases.RVAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.example.freesbet.bases.BooVariable;
 
-import org.w3c.dom.Text;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-
-import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.freesbet.bases.BaseActivity.getImagenUsuario;
-import static com.example.freesbet.bases.BaseActivity.getInfoUsuario;
 import static com.example.freesbet.bases.BaseActivity.guardarImagenUsuario;
-import static com.example.freesbet.bases.BaseActivity.idUsuario;
+import static com.example.freesbet.bases.BaseActivity.datosUsuarioActualizados;
 import static com.example.freesbet.bases.BaseActivity.nombreUsuario;
 import static com.example.freesbet.bases.BaseActivity.photoUrlUsuario;
-import static com.firebase.ui.auth.AuthUI.TAG;
 
 
 public class PerfilFragment extends Fragment {
@@ -115,7 +89,7 @@ public class PerfilFragment extends Fragment {
 
         // setear imagen header con glide para aumentar rendimiento
         ImageView imageViewHeaderperfil = view.findViewById(R.id.imageView_header_perfil);
-        Glide.with(this).load(R.drawable.fondo_header).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(this).load(R.drawable.fondo_login).asBitmap().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 Drawable drawable = new BitmapDrawable(getContext().getResources(), resource);
@@ -130,10 +104,25 @@ public class PerfilFragment extends Fragment {
         inicializarPerfil();
         getDatosUsuario();
 
+
+
         circleImageViewUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
+
+        datosUsuarioActualizados.setListener(new BooVariable.ChangeListener() {
+            @Override
+            public void onChange() {
+                if (datosUsuarioActualizados.isBoo()){
+                    Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
+
+                    Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
+
+                    progressDialog.dismiss();
+                }
             }
         });
 
@@ -237,42 +226,11 @@ public class PerfilFragment extends Fragment {
             progressDialog.setCancelable(false);
             progressDialog.show();
 
+            datosUsuarioActualizados.setBoo(false);
             guardarImagenUsuario(imageUri);
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getImagenUsuario();
-                }
-            }, 3000);
+
 
             // actualizar imagen perfil firebase
         }
     }
-
-    private void getImagenUsuario(){
-        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        mStorageRef.child("imagenes/usuarios/"+idUsuario+"/imagen_usuario.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Got the download URL for 'users/me/profile.png'
-
-                photoUrlUsuario = uri;
-
-                System.out.println("uri obtenida");
-                Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
-
-                Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
-                progressDialog.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-
-            }
-        });
-    }
-
-
 }

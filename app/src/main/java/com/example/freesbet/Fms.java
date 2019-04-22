@@ -48,6 +48,8 @@ public class Fms extends BaseActivity
     NavigationView navigationView;
     View headerView;
     CircleImageView circleImageViewUsuarioMenu;
+    TextView textViewNivelUsuarioHeaderMenu;
+
 
     @BindView(R.id.spinner_fms)
     Spinner mSpinerPaises;
@@ -234,7 +236,7 @@ public class Fms extends BaseActivity
 
     private void inicializarSpinner(){
         mNombresSpinner = new String[]{"Todos","España", "Argentina", "Mexico", "Chile"};
-        mUrlsImagenesSpinner = new String[]{"https://www.materialui.co/materialIcons/places/all_inclusive_black_192x192.png",
+        mUrlsImagenesSpinner = new String[]{"https://www.materialui.co/materialIcons/places/all_inclusive_white_192x192.png",
                 "http://flags.fmcdn.net/data/flags/w580/es.png",
                 "https://cdn.pixabay.com/photo/2013/07/13/14/14/argentina-162229_960_720.png",
                 "http://flags.fmcdn.net/data/flags/w580/mx.png",
@@ -348,6 +350,8 @@ public class Fms extends BaseActivity
         textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
         circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
+        textViewNivelUsuarioHeaderMenu = headerView.findViewById(R.id.textView_NivelUsuario_headerMenu);
+        textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivelUsuario));
     }
 
     private void irPerfil(){
