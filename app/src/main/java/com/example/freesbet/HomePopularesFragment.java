@@ -111,6 +111,7 @@ public class HomePopularesFragment extends Fragment {
                 }*/
 
                 eventos = new ArrayList<>();
+                /*
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
@@ -118,7 +119,7 @@ public class HomePopularesFragment extends Fragment {
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-
+                */
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -5,25 +5,38 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.freesbet.bases.AppFreesBet;
 import com.example.freesbet.bases.BooVariable;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -46,6 +59,9 @@ public class HomeProximosFragment extends Fragment {
     private List<EventoLista> eventos = new ArrayList<>();
     RVAdapter adapter;
 
+    //Firestore
+    FirebaseFirestore db;
+
     /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +72,8 @@ public class HomeProximosFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_proximos,container,false);
         ButterKnife.bind(getActivity());
+
+        db = FirebaseFirestore.getInstance();
 
         navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
 
@@ -91,8 +109,40 @@ public class HomeProximosFragment extends Fragment {
 
 
         rv =view.findViewById(R.id.recyclerView_eventos_proximos);
-        getEventos();
         initializeRecyclerView();
+        //getEventos();
+
+
+        db.collection("eventos")
+                .whereEqualTo("finalizado", false)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listener EventoLista", "Listen failed.", e);
+                            return;
+                        }
+                        eventos = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : value) {
+
+                            Log.d("EventoLista", document.getId() + " => " + document.getData());
+                            Map<String, Object> eventoListaDb = document.getData();
+                            List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
+                            int numeroJugadoresDb = listaApuestasDb.size();
+                            EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
+                                    (String)eventoListaDb.get("zona"),
+                                    (String)eventoListaDb.get("urlImagen"),
+                                    (String)eventoListaDb.get("fecha"),
+                                    numeroJugadoresDb);
+                            eventos.add(eventoLista);
+                        }
+                        adapter = new RVAdapter(eventos, getContext());
+                        rv.setAdapter(adapter);
+                        Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
+                    }
+                });
+
 
         return view;
     }
@@ -104,8 +154,44 @@ public class HomeProximosFragment extends Fragment {
     }
 
     private void getEventos() {
-        HomeProximosFragment.MyAsyncTasks myAsyncTasks = new HomeProximosFragment.MyAsyncTasks();
-        myAsyncTasks.execute();
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Cargando eventos");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        db.collection("eventos")
+                .whereEqualTo("finalizado", false)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            eventos = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("EventoLista", document.getId() + " => " + document.getData());
+                                Map<String, Object> eventoListaDb = document.getData();
+                                List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
+                                int numeroJugadoresDb = listaApuestasDb.size();
+                                EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
+                                        (String)eventoListaDb.get("zona"),
+                                        (String)eventoListaDb.get("urlImagen"),
+                                        (String)eventoListaDb.get("fecha"),
+                                        numeroJugadoresDb);
+                                eventos.add(eventoLista);
+                            }
+                            adapter = new RVAdapter(eventos, getContext());
+                            rv.setAdapter(adapter);
+
+                            progressDialog.dismiss();
+
+                        } else {
+                            Log.d("EventoLista", "Error getting documents: ", task.getException());
+                            Snackbar.make(getView(), "Error al cargar los eventos", Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                    }
+                });
     }
 
     public class MyAsyncTasks extends AsyncTask<String, String, String> {
@@ -113,10 +199,7 @@ public class HomeProximosFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("Cargando eventos");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+
         }
 
         @Override
@@ -166,7 +249,7 @@ public class HomeProximosFragment extends Fragment {
                         urlConnection.disconnect();
                     }
                 }*/
-
+                /*
                 eventos = new ArrayList<>();
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
                 eventos.add(new EventoLista(1,"Papo vs Trueno", "FMS - Argentina", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
@@ -176,7 +259,7 @@ public class HomeProximosFragment extends Fragment {
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
                 eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
 
-
+*/
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Exception: " + e.getMessage();
@@ -186,7 +269,6 @@ public class HomeProximosFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            progressDialog.dismiss();
 
             // Cargar eventos en lista
             adapter = new RVAdapter(eventos, getContext());

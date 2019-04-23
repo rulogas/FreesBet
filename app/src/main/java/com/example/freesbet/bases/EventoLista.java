@@ -3,7 +3,7 @@ package com.example.freesbet.bases;
 import java.util.ArrayList;
 
 public class EventoLista {
-    int id;
+    String id;
     String nombre;
     String zona;
     String urlImagen;
@@ -16,7 +16,7 @@ public class EventoLista {
 
 
 
-    public EventoLista(int id, String nombre, String zona, String urlImagen, String fecha, int numeroJugadores) {
+    public EventoLista(String id, String nombre, String zona, String urlImagen, String fecha, int numeroJugadores) {
         this.id = id;
         this.nombre = nombre;
         this.zona = zona;
