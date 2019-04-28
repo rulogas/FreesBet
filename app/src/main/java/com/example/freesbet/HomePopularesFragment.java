@@ -119,9 +119,4 @@ public class HomePopularesFragment extends Fragment {
         progressDialog.dismiss();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        registration.remove();
-    }
 }

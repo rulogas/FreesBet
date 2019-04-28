@@ -274,13 +274,6 @@ public class Fms extends BaseActivity
         rv.setLayoutManager(llm);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-
-    }
 
     private void getEventos(String filtroZona) {
         //Query
@@ -357,4 +350,5 @@ public class Fms extends BaseActivity
         startActivity(Fms.this,Ajustes.class);
         finish();
     }
+
 }

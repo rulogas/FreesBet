@@ -180,11 +180,6 @@ public class HomeProximosFragment extends Fragment {
             progressDialog.dismiss();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        registration.remove();
-    }
 
     private void irPerfil(){
         Intent in = new Intent(getActivity(),Ajustes.class);

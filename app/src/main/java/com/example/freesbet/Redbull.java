@@ -7,11 +7,13 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,11 +34,21 @@ import com.example.freesbet.bases.CustomAdpaterSpinner;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +73,12 @@ public class Redbull extends BaseActivity
     ProgressDialog progressDialog;
     private List<EventoLista> eventos = new ArrayList<>();
     RVAdapter adapter;
+    @BindView(R.id.textView_noHayEventos)
+    TextView textViewNohayEventos;
+
+    //Firestore
+    FirebaseFirestore db;
+    ListenerRegistration registration;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +122,9 @@ public class Redbull extends BaseActivity
 
         inicializarSpinner();
 
-        getEventos();
+        db = FirebaseFirestore.getInstance();
+
+
         initializeRecyclerView();
 
 
@@ -113,8 +133,10 @@ public class Redbull extends BaseActivity
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),mNombresSpinner[position],Toast.LENGTH_LONG).show();
-
+                if (registration != null){
+                    registration.remove();
+                }
+                getEventos(mNombresSpinner[position]);
             }
 
             @Override
@@ -244,98 +266,65 @@ public class Redbull extends BaseActivity
         rv.setLayoutManager(llm);
     }
 
-    private void getEventos() {
-        Redbull.MyAsyncTasks myAsyncTasks = new Redbull.MyAsyncTasks();
-        myAsyncTasks.execute();
-    }
-
-    public class MyAsyncTasks extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(Redbull.this);
-            progressDialog.setMessage("Cargando eventos");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+    private void getEventos(String filtroZona) {
+        //Query
+        Query query = null;
+        if (filtroZona.equalsIgnoreCase("todos")){
+            query = db.collection("eventos")
+                    .whereEqualTo("finalizado", false)
+                    .whereEqualTo("evento","Red Bull")
+                    .orderBy("fecha", Query.Direction.ASCENDING);
+        }else{
+            query = db.collection("eventos")
+                    .whereEqualTo("finalizado", false)
+                    .whereEqualTo("evento","Red Bull")
+                    .whereEqualTo("zona","Red Bull - "+filtroZona)
+                    .orderBy("fecha", Query.Direction.ASCENDING);
         }
+        registration =query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w("Listener EventoLista", "Listen failed.", e);
+                    return;
+                }
+                if (value != null && !value.isEmpty()){
+                    textViewNohayEventos.setVisibility(View.GONE);
+                    rv.setVisibility(View.VISIBLE);
+                    eventos.clear();
+                    for (QueryDocumentSnapshot document : value) {
 
-        @Override
-        protected String doInBackground(String... params) {
+                        Log.d("EventoLista", document.getId() + " => " + document.getData());
 
-            String current = "";
-            try {
-                URL url;
-                HttpURLConnection urlConnection = null;
-                /*
-                // Obtener eventos y añadirlos a lista
-                try {
-                    // Imei
-                    TelephonyManager telephonyManager = (TelephonyManager) MainActivity.this.getSystemService(Context.TELEPHONY_SERVICE);
-                    String imei = telephonyManager.getDeviceId();
+                        Map<String, Object> eventoListaDb = document.getData();
+                            /*List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
+                            int numeroJugadoresDb = listaApuestasDb.size();*/
+                        String pattern = "dd-MM-yyyy";
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-                    url = new URL( "http://192.168.1.10/api/control/arranque?imei="+imei+"&battery="+getBatteryPercentage(MainActivity.this));
+                        String fecha = simpleDateFormat.format((Date) eventoListaDb.get("fecha"));
 
-                    urlConnection = (HttpURLConnection) url
-                            .openConnection();
 
-                    InputStream in = urlConnection.getInputStream();
-
-                    InputStreamReader isw = new InputStreamReader(in);
-
-                    int data = isw.read();
-                    while (data != -1) {
-                        current += (char) data;
-                        data = isw.read();
+                        EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
+                                (String)eventoListaDb.get("zona"),
+                                (String)eventoListaDb.get("urlImagen"),
+                                fecha,
+                                ((Long)eventoListaDb.get("numeroApuestas")).intValue());
+                        eventos.add(eventoLista);
                     }
-                    // Devolver los datos al método onPostExecute
-                    return current;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(findViewById(R.id.drawer_layout), "Error. Comprueba tu conexión a internet", Snackbar.LENGTH_INDEFINITE)
-                            .setActionTextColor(Color.RED)
-                            .setAction("Reintentar", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    getZonas();
-                                }
-                            })
-                            .show();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }*/
-
-                eventos = new ArrayList<>();
-                /*
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1101153365428457477/xFoTQVHK_400x400.png","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                */
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
+                    adapter = new RVAdapter(eventos, Redbull.this);
+                    rv.setAdapter(adapter);
+                    Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
+                }
+                else{
+                    textViewNohayEventos.setVisibility(View.VISIBLE);
+                    rv.setVisibility(View.GONE);
+                }
             }
-            return current;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            progressDialog.dismiss();
-
-            // Cargar eventos en lista
-            adapter = new RVAdapter(eventos, Redbull.this);
-            rv.setAdapter(adapter);
-
-        }
+        });
     }
+
 
     private void cargarInfoUsuarioMenu(){
         headerView = navigationView.getHeaderView(0);
@@ -351,4 +340,5 @@ public class Redbull extends BaseActivity
         startActivity(Redbull.this,Ajustes.class);
         finish();
     }
+
 }
