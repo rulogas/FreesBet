@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "854156657139",
+    "firebase_url": "https://freesbet.firebaseio.com",
+    "project_id": "freesbet",
+    "storage_bucket": "freesbet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854156657139:android:7a1043ba5968a77e",
+        "android_client_info": {
+          "package_name": "com.example.freesbet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854156657139-j3296hno264eajau6p2852shnrjvf1b5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.freesbet",
+            "certificate_hash": "a4dc73408b2eb4d83261b70981d3b6539062e840"
+          }
+        },
+        {
+          "client_id": "854156657139-h40u1gj72por336i9ki0dg7b4vp93571.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlbj3guN1-vmAKM4f8K58PGZdzyRAKuKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854156657139-h40u1gj72por336i9ki0dg7b4vp93571.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

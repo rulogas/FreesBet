@@ -408,6 +408,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public static void getNivelUsuario(){
+        db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("usuarios").document(idUsuario);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

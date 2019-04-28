@@ -28,13 +28,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,9 +62,11 @@ public class HomeProximosFragment extends Fragment {
     ProgressDialog progressDialog;
     private List<EventoLista> eventos = new ArrayList<>();
     RVAdapter adapter;
+    TextView textViewNohayEventos;
 
     //Firestore
     FirebaseFirestore db;
+    ListenerRegistration registration;
 
     /*@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,41 +113,8 @@ public class HomeProximosFragment extends Fragment {
             }
         });
 
-
         rv =view.findViewById(R.id.recyclerView_eventos_proximos);
-        initializeRecyclerView();
-        //getEventos();
-
-
-        db.collection("eventos")
-                .whereEqualTo("finalizado", false)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listener EventoLista", "Listen failed.", e);
-                            return;
-                        }
-                        eventos = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : value) {
-
-                            Log.d("EventoLista", document.getId() + " => " + document.getData());
-                            Map<String, Object> eventoListaDb = document.getData();
-                            List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
-                            int numeroJugadoresDb = listaApuestasDb.size();
-                            EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
-                                    (String)eventoListaDb.get("zona"),
-                                    (String)eventoListaDb.get("urlImagen"),
-                                    (String)eventoListaDb.get("fecha"),
-                                    numeroJugadoresDb);
-                            eventos.add(eventoLista);
-                        }
-                        adapter = new RVAdapter(eventos, getContext());
-                        rv.setAdapter(adapter);
-                        Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
-                    }
-                });
+        textViewNohayEventos = view.findViewById(R.id.textView_noHayEventos);
 
 
         return view;
@@ -153,130 +126,64 @@ public class HomeProximosFragment extends Fragment {
         rv.setLayoutManager(llm);
     }
 
-    private void getEventos() {
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        initializeRecyclerView();
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Cargando eventos");
         progressDialog.setCancelable(false);
         progressDialog.show();
-
-        db.collection("eventos")
-                .whereEqualTo("finalizado", false)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //Query
+        Query query = db.collection("eventos")
+                .whereEqualTo("finalizado", false).orderBy("fecha", Query.Direction.ASCENDING);
+                registration =query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            eventos = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listener EventoLista", "Listen failed.", e);
+                            return;
+                        }
+                        if (value != null && !value.isEmpty()){
+                            textViewNohayEventos.setVisibility(View.GONE);
+                            rv.setVisibility(View.VISIBLE);
+                            eventos.clear();
+                            for (QueryDocumentSnapshot document : value) {
+
                                 Log.d("EventoLista", document.getId() + " => " + document.getData());
                                 Map<String, Object> eventoListaDb = document.getData();
-                                List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
-                                int numeroJugadoresDb = listaApuestasDb.size();
+                            /*List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
+                            int numeroJugadoresDb = listaApuestasDb.size();*/
+                                String pattern = "dd-MM-yyyy";
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+                                String fecha = simpleDateFormat.format((Date) eventoListaDb.get("fecha"));
+
                                 EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
                                         (String)eventoListaDb.get("zona"),
                                         (String)eventoListaDb.get("urlImagen"),
-                                        (String)eventoListaDb.get("fecha"),
-                                        numeroJugadoresDb);
+                                        fecha,
+                                        ((Long)eventoListaDb.get("numeroApuestas")).intValue());
                                 eventos.add(eventoLista);
                             }
-                            adapter = new RVAdapter(eventos, getContext());
+                            adapter = new RVAdapter(eventos, getActivity());
                             rv.setAdapter(adapter);
-
-                            progressDialog.dismiss();
-
-                        } else {
-                            Log.d("EventoLista", "Error getting documents: ", task.getException());
-                            Snackbar.make(getView(), "Error al cargar los eventos", Snackbar.LENGTH_LONG)
-                                    .show();
+                            Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
+                        }
+                        else{
+                            textViewNohayEventos.setVisibility(View.VISIBLE);
+                            rv.setVisibility(View.GONE);
                         }
                     }
                 });
+            progressDialog.dismiss();
     }
 
-    public class MyAsyncTasks extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String current = "";
-            try {
-                URL url;
-                HttpURLConnection urlConnection = null;
-                /*
-                // Obtener eventos y añadirlos a lista
-                try {
-                    // Imei
-                    TelephonyManager telephonyManager = (TelephonyManager) MainActivity.this.getSystemService(Context.TELEPHONY_SERVICE);
-                    String imei = telephonyManager.getDeviceId();
-
-                    url = new URL( "http://192.168.1.10/api/control/arranque?imei="+imei+"&battery="+getBatteryPercentage(MainActivity.this));
-
-                    urlConnection = (HttpURLConnection) url
-                            .openConnection();
-
-                    InputStream in = urlConnection.getInputStream();
-
-                    InputStreamReader isw = new InputStreamReader(in);
-
-                    int data = isw.read();
-                    while (data != -1) {
-                        current += (char) data;
-                        data = isw.read();
-                    }
-                    // Devolver los datos al método onPostExecute
-                    return current;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(findViewById(R.id.drawer_layout), "Error. Comprueba tu conexión a internet", Snackbar.LENGTH_INDEFINITE)
-                            .setActionTextColor(Color.RED)
-                            .setAction("Reintentar", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    getZonas();
-                                }
-                            })
-                            .show();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }*/
-                /*
-                eventos = new ArrayList<>();
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Papo vs Trueno", "FMS - Argentina", "https://pbs.twimg.com/profile_images/1102595661034385409/wkdgl8ok.png","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Azcino vs RC", "FMS - Mexico", "https://pbs.twimg.com/profile_images/1098695785976381441/KbUn_B7T_400x400.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Nitro vs Kaiser", "FMS - Chile", "https://pbs.twimg.com/profile_images/1101153365428457477/xFoTQVHK_400x400.png","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-                eventos.add(new EventoLista(1,"Chuty vs Walls", "FMS - España", "https://pbs.twimg.com/profile_images/1077019493883432960/YD_xeCQW.jpg","27/04/2019",500));
-
-*/
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-            return current;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            // Cargar eventos en lista
-            adapter = new RVAdapter(eventos, getContext());
-            rv.setAdapter(adapter);
-
-            progressDialog.dismiss();
-
-        }
+    @Override
+    public void onStop() {
+        super.onStop();
+        registration.remove();
     }
 
     private void irPerfil(){

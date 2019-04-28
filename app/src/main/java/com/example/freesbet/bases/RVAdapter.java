@@ -19,7 +19,7 @@ import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
 
-    static List<EventoLista> eventos;
+    List<EventoLista> eventos;
     private Context mContext;
     SharedPreferences sharedpreferences;
 
