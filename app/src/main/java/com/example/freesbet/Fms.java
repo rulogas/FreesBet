@@ -46,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -313,7 +314,6 @@ public class Fms extends BaseActivity
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
                         String fecha = simpleDateFormat.format((Date) eventoListaDb.get("fecha"));
-
 
                         EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
                                 (String)eventoListaDb.get("zona"),

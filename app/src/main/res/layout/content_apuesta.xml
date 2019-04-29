@@ -129,6 +129,7 @@
                             android:textColor="@android:color/white"
                             android:textSize="20dp"
                             android:textStyle="bold"
+                            android:visibility="gone"
                             />
 
                         <TextView
@@ -148,7 +149,8 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
                             android:textSize="20dp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
 
@@ -515,7 +517,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_apuesta_fecha"
                     app:layout_constraintVertical_bias="0.027"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     >
 
                     <LinearLayout
@@ -562,7 +564,7 @@
                                 android:id="@+id/textView_porcentajes_liga_competidor1_porcentaje"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="70%"
+                                android:text="0%"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:layout_alignParentRight="true"
@@ -570,12 +572,12 @@
 
                         </RelativeLayout>
                         <ProgressBar
-                            android:id="@+id/determinateBar"
+                            android:id="@+id/progressBar_porcenaje1_liga"
                             style="@android:style/Widget.ProgressBar.Horizontal"
 
                             android:layout_width="match_parent"
                             android:layout_height="8dp"
-                            android:progress="70"
+                            android:progress="0"
                             android:layout_below="@+id/textView_porcentajes_competidor1"
                             android:progressBackgroundTint="@android:color/white"
                             android:progressTint="@android:color/holo_green_light"
@@ -603,7 +605,7 @@
                                 android:id="@+id/textView_porcentajes_liga_competidor2_porcentaje"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="10%"
+                                android:text="0%"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:layout_alignParentRight="true"/>
@@ -612,12 +614,12 @@
                         </RelativeLayout>
 
                         <ProgressBar
-                            android:id="@+id/determinateBar2"
+                            android:id="@+id/progressBar_porcenaje2_liga"
                             style="@android:style/Widget.ProgressBar.Horizontal"
 
                             android:layout_width="match_parent"
                             android:layout_height="8dp"
-                            android:progress="10"
+                            android:progress="0"
                             android:layout_below="@+id/textView_porcentajes_competidor1"
                             android:progressBackgroundTint="@android:color/white"
                             android:progressTint="@android:color/holo_green_light"
@@ -1011,7 +1013,7 @@
                                 android:layout_marginRight="16dp"
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentTop="true"
-                                android:src="@drawable/ic_fms_icono_menu"
+                                android:src="@drawable/usuario"
                                 />
 
                             <TextView
@@ -1020,7 +1022,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
                                 android:layout_toRightOf="@id/circleview_image1"
-                                android:text="usuario 1"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_marginTop="5dp"
                                 android:textStyle="bold"
                                 />
@@ -1029,7 +1031,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/textView_apuesta_masChulos1_coins"
-                                android:text="100000 coins a Chuty"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_toRightOf="@+id/circleview_image1"
                                 android:layout_alignBottom="@id/circleview_image1"
                                 android:layout_marginBottom="5dp"
@@ -1060,7 +1062,7 @@
                                 android:layout_marginRight="16dp"
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentTop="true"
-                                android:src="@drawable/ic_fms_icono_menu"
+                                android:src="@drawable/usuario"
                                 />
 
                             <TextView
@@ -1069,7 +1071,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
                                 android:layout_toRightOf="@id/circleview_image2"
-                                android:text="usuario 1"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_marginTop="5dp"
                                 android:textStyle="bold"
                                 />
@@ -1078,7 +1080,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/textView_apuesta_masChulos2_coins"
-                                android:text="100000 coins a Chuty"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_toRightOf="@+id/circleview_image2"
                                 android:layout_alignBottom="@id/circleview_image2"
                                 android:layout_marginBottom="5dp"
@@ -1109,7 +1111,7 @@
                                 android:layout_marginRight="16dp"
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentTop="true"
-                                android:src="@drawable/ic_fms_icono_menu"
+                                android:src="@drawable/usuario"
                                 />
 
                             <TextView
@@ -1118,7 +1120,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
                                 android:layout_toRightOf="@id/circleview_image3"
-                                android:text="usuario 1"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_marginTop="5dp"
                                 android:textStyle="bold"
                                 />
@@ -1127,7 +1129,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/textView_apuesta_masChulos3_coins"
-                                android:text="100000 coins a Chuty"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_toRightOf="@+id/circleview_image3"
                                 android:layout_alignBottom="@id/circleview_image3"
                                 android:layout_marginBottom="5dp"
@@ -1158,7 +1160,7 @@
                                 android:layout_marginRight="16dp"
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentTop="true"
-                                android:src="@drawable/ic_fms_icono_menu"
+                                android:src="@drawable/usuario"
                                 />
 
                             <TextView
@@ -1167,7 +1169,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
                                 android:layout_toRightOf="@id/circleview_image4"
-                                android:text="usuario 1"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_marginTop="5dp"
                                 android:textStyle="bold"
                                 />
@@ -1176,7 +1178,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/textView_apuesta_masChulos4_coins"
-                                android:text="100000 coins a Chuty"
+                                android:text="Apuesta para aparecer aquí"
                                 android:layout_toRightOf="@+id/circleview_image4"
                                 android:layout_alignBottom="@id/circleview_image4"
                                 android:layout_marginBottom="5dp"

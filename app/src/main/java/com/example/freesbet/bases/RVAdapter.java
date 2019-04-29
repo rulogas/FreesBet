@@ -75,7 +75,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
             public void onClick(View v) {
 
                 Intent intent = new Intent(mContext, Apuesta.class);
-                intent.putExtra("idEevnto",eventos.get(i).id);
+                intent.putExtra("idEvento",eventos.get(i).id);
                 mContext.startActivity(intent);
 
             }

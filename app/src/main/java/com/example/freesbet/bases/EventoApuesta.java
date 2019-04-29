@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class EventoApuesta {
 
-    int id;
+    String id;
     String nombre;
     String zona;
     String fecha;
@@ -14,7 +14,7 @@ public class EventoApuesta {
     double cuota1;
     double cuota2;
 
-    public EventoApuesta(int id, String nombre, String zona, String fecha, int numeroJugadores, String tipo, ArrayList<String> competidores, double cuota1, double cuota2) {
+    public EventoApuesta(String id, String nombre, String zona, String fecha, int numeroJugadores, String tipo, ArrayList<String> competidores, double cuota1, double cuota2) {
         this.id = id;
         this.nombre = nombre;
         this.zona = zona;
@@ -26,7 +26,7 @@ public class EventoApuesta {
         this.cuota2 = cuota2;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
