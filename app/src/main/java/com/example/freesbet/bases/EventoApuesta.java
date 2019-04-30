@@ -13,8 +13,9 @@ public class EventoApuesta {
     ArrayList<String> competidores;
     double cuota1;
     double cuota2;
+    int boteAcumulado;
 
-    public EventoApuesta(String id, String nombre, String zona, String fecha, int numeroJugadores, String tipo, ArrayList<String> competidores, double cuota1, double cuota2) {
+    public EventoApuesta(String id, String nombre, String zona, String fecha, int numeroJugadores, String tipo, ArrayList<String> competidores, double cuota1, double cuota2, int boteAcumulado) {
         this.id = id;
         this.nombre = nombre;
         this.zona = zona;
@@ -24,6 +25,7 @@ public class EventoApuesta {
         this.competidores = competidores;
         this.cuota1 = cuota1;
         this.cuota2 = cuota2;
+        this.boteAcumulado = boteAcumulado;
     }
 
     public String getId() {
@@ -60,5 +62,9 @@ public class EventoApuesta {
 
     public double getCuota2() {
         return cuota2;
+    }
+
+    public int getBoteAcumulado() {
+        return boteAcumulado;
     }
 }

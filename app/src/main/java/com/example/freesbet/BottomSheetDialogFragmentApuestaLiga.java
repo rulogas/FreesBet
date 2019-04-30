@@ -19,10 +19,15 @@ import android.widget.TextView;
 
 import com.example.freesbet.widgets.General;
 
+import org.w3c.dom.Text;
+
+import static com.example.freesbet.bases.BaseActivity.coinsUsuario;
+
 
 public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragment {
     String cuota;
     String puntosUsuario;
+    String competidor;
     boolean validate ;
     ProgressDialog progressDialog;
     public BottomSheetDialogFragmentApuestaLiga(){
@@ -33,12 +38,14 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cuota = getArguments().getString("cuota");
-        puntosUsuario = getArguments().getString("puntosUsuario");
+        puntosUsuario = String.valueOf(coinsUsuario);
+        competidor = getArguments().getString("competidor");
     }
 
     @Override
     public View onCreateView( LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_apuesta_liga, container, false);
+        TextView textViewCompetidor = v.findViewById(R.id.textView_competidor);
         TextView textoCuota = v.findViewById(R.id.textView_cuota);
         TextView textoGanancia = v.findViewById(R.id.textView_ganancia);
         EditText campoCantidad = v.findViewById(R.id.editText_cantidad);
@@ -46,6 +53,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
         AppCompatButton botonMin = v.findViewById(R.id.button_min);
         AppCompatButton botonMax = v.findViewById(R.id.button_max);
         AppCompatButton botonJugar = v.findViewById(R.id.boton_jugar);
+        textViewCompetidor.setText(competidor);
         textoCuota.setText(cuota);
         // calcular ganancia potencial
         int cantidad = Integer.parseInt(campoCantidad.getText().toString());

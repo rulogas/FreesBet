@@ -32,7 +32,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,6 +48,8 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -131,29 +135,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         this.menu = menu;
 
-
             DocumentReference docRef = db.collection("usuarios").document(idUsuario);
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d("Usuario", "DocumentSnapshot data: " + document.getData());
-                            Map<String, Object> user = document.getData();
-                            coinsUsuario =((Long) user.get("coins")).intValue();
-                            menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
-                        } else {
-                            Log.d("Usuario", "No such document");
-                        }
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    if (documentSnapshot.exists()) {
+                        Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
+                        Map<String, Object> user = documentSnapshot.getData();
+                        coinsUsuario =((Long) user.get("coins")).intValue();
+                        menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
                     } else {
-                        Log.d("Usuario", "get failed with ", task.getException());
+                        Log.d("Usuario", "No such document");
                     }
                 }
             });
-
-
-
 
         return super.onPrepareOptionsMenu(menu);
     }

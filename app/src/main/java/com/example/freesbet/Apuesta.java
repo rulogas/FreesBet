@@ -151,13 +151,17 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
     TextView textViewApuestaCompeticionNumJugadores;
     @BindView(R.id.button_jugar_competicion)
     AppCompatButton mButton_jugar_competicion;
-    @BindView(R.id.cardView_porcentajes_competicion)
 
+    @BindView(R.id.cardView_porcentajes_competicion)
     CardView mCardviewPorcentajesCompeticion;
+    @BindView(R.id.textView_jugadas_generales)
+    TextView textViewJugadasGenerales;
     @BindView(R.id.grid_porcentajes_competicion)
     GridLayout mGrid_porcentajes_competicion;
 
     //USUARIOS
+    @BindView(R.id.cardView_mas_gallos)
+    CardView mCardViewMasGallos;
     @BindView(R.id.circleview_image1)
     CircleImageView fotoUsuario1Apuesta;
     @BindView(R.id.textView_apuesta_masChulos1)
@@ -188,8 +192,12 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
     @BindView(R.id.relativeLayout_apuesta_hecha_liga_advertencia)
     RelativeLayout frameLayoutLigaApuestaHecha;
+    @BindView(R.id.textView_apuesta_hecha_liga_advertencia)
+    TextView textViewApuestaHechaLigaAdvertencia;
     @BindView(R.id.relativeLayout_apuesta_competicion_hecha_advertencia)
     RelativeLayout frameLayoutCompeticionApuestaHecha;
+    @BindView(R.id.textView_apuesta_hecha_competicion_advertencia)
+    TextView textViewApuestaHechaCompeticionAdvertencia;
 
     //FINALIZADO
     @BindView(R.id.cardView_apostar_finalizado)
@@ -269,8 +277,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                         BottomSheetDialogFragmentApuestaLiga();
                 Bundle args = new Bundle();
                 args.putString("cuota",mButton_cuota1.getText().toString());
-                //Enviar puntos de usuario
-                args.putString("puntosUsuario","14500");
+                args.putString("competidor",evento.getCompetidores().get(0));
+
                 bsdFragment.setArguments(args);
                 bsdFragment.show(
                         Apuesta.this.getSupportFragmentManager(), "BSDialog");
@@ -284,8 +292,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                         BottomSheetDialogFragmentApuestaLiga();
                 Bundle args = new Bundle();
                 args.putString("cuota",mButton_cuota2.getText().toString());
-                //Enviar puntos de usuario
-                args.putString("puntosUsuario","14500");
+                args.putString("competidor",evento.getCompetidores().get(1));
                 bsdFragment.setArguments(args);
                 bsdFragment.show(
                         Apuesta.this.getSupportFragmentManager(), "BSDialog");
@@ -430,6 +437,19 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
                     competidores = (ArrayList<String>) eventoDb.get("competidores");
 
+                    Object objetoCuota1 = eventoDb.get("cuota1");
+                    Object objetoCuota2 = eventoDb.get("cuota2");
+                    double cuota1 = 0;
+                    double cuota2 = 0;
+                    if (objetoCuota1 != null && objetoCuota2 != (null)){
+                        cuota1 = (Double)objetoCuota1;
+                        cuota2 = (Double)objetoCuota2;
+                    }
+                    Object objetoBoteAcumulado = eventoDb.get("boteAcumulado");
+                    int boteAcumulado = 0;
+                    if (objetoBoteAcumulado != null){
+                        boteAcumulado = ((Long)objetoBoteAcumulado).intValue();
+                    }
                     evento = new EventoApuesta(
                             idEvento,
                             (String)eventoDb.get("nombre"),
@@ -438,8 +458,9 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             ((Long)eventoDb.get("numeroApuestas")).intValue(),
                             (String)eventoDb.get("tipo"),
                             competidores,
-                            ((Double)eventoDb.get("cuota1")),
-                            ((Double)eventoDb.get("cuota2")));
+                            cuota1,
+                            cuota2,
+                            boteAcumulado);
 
                     // Cargar interfaz
                     textViewFecha.setText(evento.getFecha());
@@ -479,12 +500,29 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
 
 
                             // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
-                            if (comprobarApuestaUsuario()){
-                                // mostrar advertencia con datos y desactivar botones
-                                /*frameLayoutLigaApuestaHecha.setVisibility(View.VISIBLE);
-                                mButton_cuota1.setEnabled(false);
-                                mButton_cuota2.setEnabled(false);*/
+                            boolean apostado = false;
+                            int coins = 0;
+                            String eleccion = "";
+                            user = FirebaseAuth.getInstance().getCurrentUser();
+                            List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+
+                            for(Map<String,Object> apuesta: listaApuestasDb){
+                                if (apuesta.containsKey("idUsuario") && apuesta.containsValue(idUsuario)){
+                                    apostado = true;
+                                    eleccion = (String)apuesta.get("elección");
+                                    coins = ((Long) apuesta.get("coins")).intValue();
+                                    break;
+                                }
                             }
+                            if (apostado){
+                                // mostrar advertencia con datos y desactivar botones
+                                frameLayoutLigaApuestaHecha.setVisibility(View.VISIBLE);
+                                mButton_cuota1.setEnabled(false);
+                                mButton_cuota2.setEnabled(false);
+                                textViewApuestaHechaLigaAdvertencia.setText("Has apostado en este evento. "+coins+" a "+eleccion);
+                            }
+
+
                             /* mostrar datos y esconder cards competicion */
                             textViewApuestaHeaderCompetidor1.setVisibility(View.VISIBLE);
                             textViewApuestaHeaderCompetidor1.setText(competidores.get(0));
@@ -498,6 +536,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             mButton_cuota1.setText(Double.toString(evento.getCuota1()));
                             mButton_cuota2.setText(Double.toString(evento.getCuota2()));
                         }else{
+                            // evento finalizado
                             cardViewApostarLiga.setVisibility(View.GONE);
                             mCardviewApostarFinalizado.setVisibility(View.VISIBLE);
                             textViewGanador.setText((String)eventoDb.get("ganador"));
@@ -515,8 +554,10 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             }
                             if (((String)eventoDb.get("ganador")).equalsIgnoreCase(eleccionUsuario)){
                                 textViewResultadoCoins.setText("Has ganado "+String.valueOf(gananciaPotencial)+" coins");
+                                textViewResultadoCoins.setTextColor(Color.GREEN);
                             }else{
                                 textViewResultadoCoins.setText("Has perdido "+String.valueOf(coins)+" coins");
+                                textViewResultadoCoins.setTextColor(Color.RED);
                             }
 
                         }
@@ -541,36 +582,130 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             textViewPorcentajesLigaCompetidor2Porcentaje.setText("0%");
                             progressBarPorcenaje2Liga.setProgress(0);
                         }
+                        mCardViewMasGallos.setVisibility(View.VISIBLE);
+                        //funcion obtener apuestas mas caras nombre, imagen, coins, competidor
+                        ArrayList<MasGallo> listaMasGallos = getMasGallos();
 
-                    }
-                    //funcion obtener apuestas mas caras nombre, imagen, coins, competidor
-                    ArrayList<MasGallo> listaMasGallos = getMasGallos();
+                        for (int i=0;i<listaMasGallos.size();i++){
+                            switch (i){
+                                case 0:
+                                    cargarImagenUsuario(fotoUsuario1Apuesta,listaMasGallos.get(0).idUsuario);
+                                    nombreUsuario1Apuesta.setText(listaMasGallos.get(0).nombreUsuario);
+                                    coinsUsuario1Apuesta.setText(String.valueOf(listaMasGallos.get(0).getCoins()+" coins a "+listaMasGallos.get(0).eleccion));
+                                    break;
+                                case 1:
+                                    cargarImagenUsuario(fotoUsuario2Apuesta,listaMasGallos.get(1).idUsuario);
+                                    nombreUsuario2Apuesta.setText(listaMasGallos.get(1).nombreUsuario);
+                                    coinsUsuario2Apuesta.setText(String.valueOf(listaMasGallos.get(1).getCoins()+" coins a "+listaMasGallos.get(1).eleccion));
+                                    break;
+                                case 2:
+                                    cargarImagenUsuario(fotoUsuario3Apuesta,listaMasGallos.get(2).idUsuario);
+                                    nombreUsuario3Apuesta.setText(listaMasGallos.get(2).nombreUsuario);
+                                    coinsUsuario3Apuesta.setText(String.valueOf(listaMasGallos.get(2).getCoins()+" coins a "+listaMasGallos.get(2).eleccion));
+                                    break;
+                                case 3:
+                                    cargarImagenUsuario(fotoUsuario4Apuesta,listaMasGallos.get(3).idUsuario);
+                                    nombreUsuario4Apuesta.setText(listaMasGallos.get(3).nombreUsuario);
+                                    coinsUsuario4Apuesta.setText(String.valueOf(listaMasGallos.get(3).getCoins()+" coins a "+listaMasGallos.get(3).eleccion));
+                                    break;
 
-                    for (int i=0;i<listaMasGallos.size();i++){
-                        switch (i){
-                            case 0:
-                                cargarImagenUsuario(fotoUsuario1Apuesta,listaMasGallos.get(0).idUsuario);
-                                nombreUsuario1Apuesta.setText(listaMasGallos.get(0).nombreUsuario);
-                                coinsUsuario1Apuesta.setText(String.valueOf(listaMasGallos.get(0).getCoins()+" coins a "+listaMasGallos.get(0).eleccion));
-                                break;
-                            case 1:
-                                cargarImagenUsuario(fotoUsuario2Apuesta,listaMasGallos.get(1).idUsuario);
-                                nombreUsuario2Apuesta.setText(listaMasGallos.get(1).nombreUsuario);
-                                coinsUsuario2Apuesta.setText(String.valueOf(listaMasGallos.get(1).getCoins()+" coins a "+listaMasGallos.get(1).eleccion));
-                                break;
-                            case 2:
-                                cargarImagenUsuario(fotoUsuario3Apuesta,listaMasGallos.get(2).idUsuario);
-                                nombreUsuario3Apuesta.setText(listaMasGallos.get(2).nombreUsuario);
-                                coinsUsuario3Apuesta.setText(String.valueOf(listaMasGallos.get(2).getCoins()+" coins a "+listaMasGallos.get(2).eleccion));
-                                break;
-                            case 3:
-                                cargarImagenUsuario(fotoUsuario4Apuesta,listaMasGallos.get(3).idUsuario);
-                                nombreUsuario4Apuesta.setText(listaMasGallos.get(3).nombreUsuario);
-                                coinsUsuario4Apuesta.setText(String.valueOf(listaMasGallos.get(3).getCoins()+" coins a "+listaMasGallos.get(3).eleccion));
-                                break;
+                            }
+                        }
 
+                    }else if(evento.getTipo().equalsIgnoreCase("competicion")){
+                        // COMPETICION
+                        // comprobar si el evento ha finalizado
+                        if (((Boolean)eventoDb.get("finalizado"))== false){
+                            mCardviewApostarFinalizado.setVisibility(View.GONE);
+                            // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
+                            // mostrar advertencia con datos y desactivar botones
+
+
+                            boolean apostado = false;
+                            String eleccion = "";
+                            user = FirebaseAuth.getInstance().getCurrentUser();
+                            List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+
+                            for(Map<String,Object> apuesta: listaApuestasDb){
+                                if (apuesta.containsKey("idUsuario") && apuesta.containsValue(idUsuario)){
+                                    apostado = true;
+                                    eleccion = (String)apuesta.get("elección");
+                                    break;
+                                }
+                            }
+                            if (apostado){
+                                // mostrar advertencia con datos y desactivar botones
+                                frameLayoutCompeticionApuestaHecha.setVisibility(View.VISIBLE);
+                                mButton_jugar_competicion.setEnabled(false);
+                                textViewApuestaHechaCompeticionAdvertencia.setText("Has jugado en este evento. Has apostado por "+eleccion);
+                            }
+
+
+                            //* esconder textos header, esconder cards liga, mostrar datos  *//*
+                            textViewTipo.setText("Competición");
+                            textViewApuestaHeaderCompetidor1.setVisibility(View.GONE);
+                            textViewApuestaHeaderCompetidor2.setVisibility(View.GONE);
+                            textViewVS.setText(evento.getNombre());
+                            //card apostar competicion
+                            mCardview_apostar_competicion.setVisibility(View.VISIBLE);
+                            textViewApuestaCompeticionNumJugadores.setText(Integer.toString(evento.getNumeroJugadores()));
+                            textViewBote.setText(String.valueOf(evento.getBoteAcumulado()));
+
+                            // spinner competidores
+                            mSpinnerCompetidores.setOnItemSelectedListener(Apuesta.this);
+                            CustomAdapterSpinnerCompetidores customAdapterSpinnerCompetidores = new CustomAdapterSpinnerCompetidores(Apuesta.this,competidores);
+                            mSpinnerCompetidores.setAdapter(customAdapterSpinnerCompetidores);
+
+                            // card porcentajes
+                            mCardviewPorcentajesCompeticion.setVisibility(View.VISIBLE);
+
+                            // función porcentajes
+                            ArrayList<Porcentaje> porcentajesApuestasCompetidores = getPorcentajesApuestasCompetidores();
+                            if (!porcentajesApuestasCompetidores.isEmpty()){
+                                mGrid_porcentajes_competicion.setVisibility(View.VISIBLE);
+                                porcentajesApuestasCompetidores.sort(Comparator.comparing(Porcentaje::getPorcentaje).reversed());
+
+                                for (int i=0;i<porcentajesApuestasCompetidores.size();i++){
+                                    if (i>=12){
+                                        break;
+                                    }
+                                    LinearLayout ll = (LinearLayout)mGrid_porcentajes_competicion.getChildAt(i);
+                                    TextView textoCompeticionPorcentaje =(TextView) ll.getChildAt(0);
+                                    TextView textoCompeticionPorcentajeCompetidor = (TextView)ll.getChildAt(1);
+                                    textoCompeticionPorcentaje.setText(porcentajesApuestasCompetidores.get(i).porcentaje+"%");
+                                    textoCompeticionPorcentajeCompetidor.setText(porcentajesApuestasCompetidores.get(i).nombreCompetidor);
+                                }
+                            }else{
+                                mGrid_porcentajes_competicion.setVisibility(View.GONE);
+                                textViewJugadasGenerales.setText("No hay jugadas todavía");
+                            }
+                        }else{
+                            // evento finalizado
+                            mCardview_apostar_competicion.setVisibility(View.GONE);
+                            mCardviewApostarFinalizado.setVisibility(View.VISIBLE);
+                            textViewGanador.setText((String)eventoDb.get("ganador"));
+                            List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+                            String eleccionUsuario = "";
+                            int coins = 0;
+                            int gananciaPotencial = 0;
+                            for (Map<String,Object> apuesta : listaApuestasDb){
+                                if (((String)apuesta.get("idUsuario")).equalsIgnoreCase(idUsuario)){
+                                    eleccionUsuario = (String)apuesta.get("elección");
+                                    coins = ((Long) apuesta.get("coins")).intValue();
+                                    gananciaPotencial = ((Long) apuesta.get("gananciaPotencial")).intValue();
+                                    break;
+                                }
+                            }
+                            if (((String)eventoDb.get("ganador")).equalsIgnoreCase(eleccionUsuario)){
+                                textViewResultadoCoins.setText("Has ganado "+String.valueOf(gananciaPotencial)+" coins");
+                                textViewResultadoCoins.setTextColor(Color.GREEN);
+                            }else{
+                                textViewResultadoCoins.setText("Has perdido "+String.valueOf(coins)+" coins");
+                                textViewResultadoCoins.setTextColor(Color.RED);
+                            }
                         }
                     }
+
 
                 } else {
                     Log.d("EVENTO", "Current data: null");
@@ -580,59 +715,11 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             }
         });
 
-
-        /*}else if(evento.getTipo().equalsIgnoreCase("competicion")){
-            // COMPETICION
-            // comprobar si el usuario ha apostado en este evento con el id de evento y las apuestas
-            // mostrar advertencia con datos y desactivar botones
-                        *//*frameLayoutCompeticionApuestaHecha.setVisibility(View.VISIBLE);
-                        mButton_jugar_competicion.setEnabled(false);*//*
-            *//* esconder textos header, esconder cards liga, mostrar datos  *//*
-            textViewTipo.setText("Competición");
-            textViewApuestaHeaderCompetidor1.setVisibility(View.GONE);
-            textViewApuestaHeaderCompetidor2.setVisibility(View.GONE);
-            textViewVS.setText(evento.getNombre());
-            //card apostar competicion
-            mCardview_apostar_competicion.setVisibility(View.VISIBLE);
-            textViewApuestaCompeticionNumJugadores.setText(Integer.toString(evento.getNumeroJugadores()));
-            textViewBote.setText("20000");
-
-            // spinner competidores
-            mSpinnerCompetidores.setOnItemSelectedListener(Apuesta.this);
-            CustomAdapterSpinnerCompetidores customAdapterSpinnerCompetidores = new CustomAdapterSpinnerCompetidores(Apuesta.this,competidores);
-            mSpinnerCompetidores.setAdapter(customAdapterSpinnerCompetidores);
-
-            // card porcentajes
-            mCardviewPorcentajesCompeticion.setVisibility(View.VISIBLE);
-            for (int i=0;i<porcentajes.size();i++){
-                LinearLayout ll = (LinearLayout)mGrid_porcentajes_competicion.getChildAt(i);
-                TextView textoCompeticionPorcentaje =(TextView) ll.getChildAt(0);
-                TextView textoCompeticionPorcentajeCompetidor = (TextView)ll.getChildAt(1);
-                textoCompeticionPorcentaje.setText(porcentajes.get(i)+"%");
-                textoCompeticionPorcentajeCompetidor.setText(competidores.get(i));
-            }
-
-
-        }*/
         // usuarios
 
 
 
         progressDialog.dismiss();
-    }
-
-    private boolean comprobarApuestaUsuario(){
-        boolean apostado = false;
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
-
-        for(Map<String,Object> apuesta: listaApuestasDb){
-            if (apuesta.containsKey("idUsuario") && apuesta.containsValue(idUsuario)){
-                apostado = true;
-                break;
-            }
-        }
-        return apostado;
     }
 
     private ArrayList<Porcentaje> getPorcentajesApuestasCompetidores(){
@@ -679,7 +766,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                 // Got the download URL for 'users/me/profile.png'
 
                 System.out.println("uri obtenida");
-                Glide.with(Apuesta.this).load(uri).into(imagenUsuario);
+                Glide.with(AppFreesBet.mContext).load(uri).into(imagenUsuario);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -759,6 +846,10 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         public Porcentaje(String nombreCompetidor, int porcentaje) {
             this.nombreCompetidor = nombreCompetidor;
             this.porcentaje = porcentaje;
+        }
+
+        public int getPorcentaje() {
+            return porcentaje;
         }
     }
 
