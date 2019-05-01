@@ -560,14 +560,17 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                     break;
                                 }
                             }
-                            if (((String)eventoDb.get("ganador")).equalsIgnoreCase(eleccionUsuario)){
-                                textViewResultadoCoins.setText("Has ganado "+String.valueOf(gananciaPotencial)+" coins");
-                                textViewResultadoCoins.setTextColor(Color.GREEN);
+                            if (eleccionUsuario.isEmpty()){
+                                textViewResultadoCoins.setText("No has apostado en este evento");
                             }else{
-                                textViewResultadoCoins.setText("Has perdido "+String.valueOf(coins)+" coins");
-                                textViewResultadoCoins.setTextColor(Color.RED);
+                                if (((String)eventoDb.get("ganador")).equalsIgnoreCase(eleccionUsuario)){
+                                    textViewResultadoCoins.setText("Has ganado "+String.valueOf(gananciaPotencial)+" coins");
+                                    textViewResultadoCoins.setTextColor(Color.GREEN);
+                                }else{
+                                    textViewResultadoCoins.setText("Has perdido "+String.valueOf(coins)+" coins");
+                                    textViewResultadoCoins.setTextColor(Color.RED);
+                                }
                             }
-
                         }
                         //card porcentajes liga
                         cardViewPorcentajesLiga.setVisibility(View.VISIBLE);
@@ -704,12 +707,16 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                     break;
                                 }
                             }
-                            if (((String)eventoDb.get("ganador")).equalsIgnoreCase(eleccionUsuario)){
-                                textViewResultadoCoins.setText("Has ganado "+String.valueOf(gananciaPotencial)+" coins");
-                                textViewResultadoCoins.setTextColor(Color.GREEN);
+                            if (eleccionUsuario.isEmpty()){
+                                textViewResultadoCoins.setText("No has apostado en este evento");
                             }else{
-                                textViewResultadoCoins.setText("Has perdido "+String.valueOf(coins)+" coins");
-                                textViewResultadoCoins.setTextColor(Color.RED);
+                                if (((String)eventoDb.get("ganador")).equalsIgnoreCase(eleccionUsuario)){
+                                    textViewResultadoCoins.setText("Has ganado "+String.valueOf(gananciaPotencial)+" coins");
+                                    textViewResultadoCoins.setTextColor(Color.GREEN);
+                                }else{
+                                    textViewResultadoCoins.setText("Has perdido "+String.valueOf(coins)+" coins");
+                                    textViewResultadoCoins.setTextColor(Color.RED);
+                                }
                             }
                         }
                     }
@@ -919,6 +926,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                     actividad.put("gananciaPotencial",gananciaCompeticion);
                     actividad.put("idEvento",evento.getId());
                     listaActividadesDb.add(actividad);
+
+                    int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
 
                     docRefUsuario.update(
                             "actividades", listaActividadesDb,
