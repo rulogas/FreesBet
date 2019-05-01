@@ -425,4 +425,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
+    public static void añadirCoinsApuestasFinalizadas(){
+
+    }
+
 }

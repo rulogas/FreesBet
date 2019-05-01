@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +20,30 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.freesbet.widgets.General;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.example.freesbet.bases.BaseActivity.coinsUsuario;
+import static com.example.freesbet.bases.BaseActivity.idUsuario;
+import static com.example.freesbet.bases.BaseActivity.nombreUsuario;
 
 
 public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragment {
     String cuota;
     String puntosUsuario;
     String competidor;
+    int ganancia;
+    String idEvento;
     boolean validate ;
     ProgressDialog progressDialog;
     public BottomSheetDialogFragmentApuestaLiga(){
@@ -40,6 +56,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
         cuota = getArguments().getString("cuota");
         puntosUsuario = String.valueOf(coinsUsuario);
         competidor = getArguments().getString("competidor");
+        idEvento = getArguments().getString("idEvento");
     }
 
     @Override
@@ -57,7 +74,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
         textoCuota.setText(cuota);
         // calcular ganancia potencial
         int cantidad = Integer.parseInt(campoCantidad.getText().toString());
-        int ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
+        ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
         textoGanancia.setText("+"+Integer.toString(+ganancia));
 
         campoCantidad.addTextChangedListener(new TextWatcher() {
@@ -71,7 +88,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 if (!s.toString().isEmpty()){
 
                     int cantidad = Integer.parseInt(campoCantidad.getText().toString());
-                    int ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
+                    ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
                     textoGanancia.setText("+"+Integer.toString(+ganancia));
                     seekBar.setProgress(Integer.parseInt(s.toString()));
                 }
@@ -159,8 +176,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 }
                 if (validate){
                     // realizar envío
-                    MyAsyncTasksApostarLiga myAsyncTasksApostarLiga = new MyAsyncTasksApostarLiga();
-                    myAsyncTasksApostarLiga.execute(campoCantidad.getText().toString());
+                    anadirApuesta(Integer.parseInt(campoCantidad.getText().toString()));
                 }
             }
         });
@@ -168,45 +184,85 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
         return v;
     }
 
-    public class MyAsyncTasksApostarLiga extends AsyncTask<String, String, String> {
+    private void anadirApuesta(int cantidad){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("Realizando apuesta");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
+        DocumentReference docRefEvento = db.collection("eventos").document(idEvento);
+        DocumentReference docRefUsuario = db.collection("usuarios").document(idUsuario);
+        docRefEvento.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.setMessage("Realizando apuesta");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
 
-        @Override
-        protected String doInBackground(String... params) {
+                    DocumentSnapshot document = task.getResult();
+                    Map<String, Object> eventoDb = document.getData();
+                    int numeroApuestas = ((Long)eventoDb.get("numeroApuestas")).intValue();
+                    numeroApuestas++;
+                    List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
 
-            int puntosApostados = Integer.parseInt(params[0]);
-            // restar puntos a usuario y guardar apuesta en base de datos
+                    Map<String,Object> apuesta = new HashMap<>();
+                    apuesta.put("coins",cantidad);
+                    apuesta.put("elección",competidor);
+                    apuesta.put("gananciaPotencial",ganancia);
+                    apuesta.put("idUsuario",idUsuario);
+                    apuesta.put("nombreUsuario",nombreUsuario);
+                    listaApuestasDb.add(apuesta);
 
-            return null;
-            //return responseString;
+                    docRefEvento.update(
+                                    "apuestas", listaApuestasDb,
+                                    "numeroApuestas",numeroApuestas);
 
-        }
+                    if (document.exists()) {
+                        Log.d("EVENTO", "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d("EVENTO", "No such document");
+                    }
+                } else {
+                    Log.d("EVENTO", "get failed with ", task.getException());
+                }
+            }
+        });
 
-        @Override
-        protected void onPostExecute(String s) {
-            progressDialog.dismiss();
-            /*
-            if (s.equalsIgnoreCase("OK")){
-                //setear puntos usuario en toolbar
 
-            }else{
-                onLoginFailed();
-            }*/
+        docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Map<String, Object> usuarioDb = document.getData();
 
-            dismiss();
-            getActivity().findViewById(R.id.button_cuota1).setEnabled(false);
-            getActivity().findViewById(R.id.button_cuota2).setEnabled(false);
-            RelativeLayout relativeLayout = getActivity().findViewById(R.id.relativeLayout_apuesta_hecha_liga_advertencia);
-            relativeLayout.setVisibility(View.VISIBLE);
+                    int coins = ((Long)usuarioDb.get("coins")).intValue();
+                    int coinsFinales = coins-cantidad;
 
-        }
+                    List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
+                    Map<String,Object> actividad = new HashMap<>();
+                    actividad.put("coins",cantidad);
+                    actividad.put("elección",competidor);
+                    actividad.put("gananciaPotencial",ganancia);
+                    actividad.put("idEvento",idEvento);
+                    listaActividadesDb.add(actividad);
+
+                    docRefUsuario.update(
+                            "actividades", listaActividadesDb,
+                            "coins",coinsFinales);
+
+                    progressDialog.dismiss();
+                    dismiss();
+
+                    if (document.exists()) {
+                        Log.d("EVENTO", "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d("EVENTO", "No such document");
+                    }
+                } else {
+                    Log.d("EVENTO", "get failed with ", task.getException());
+                }
+            }
+        });
     }
+
 }

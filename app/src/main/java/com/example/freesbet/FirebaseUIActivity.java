@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -96,10 +97,6 @@ public class FirebaseUIActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
-
-
                 // ...
             } else {
 
@@ -120,7 +117,8 @@ public class FirebaseUIActivity extends AppCompatActivity {
         user.put("experiencia", 0);
         user.put("coins",4000);
         user.put("experienciaSiguienteNivel", 400);
-
+        List<Map<String,Object>> listaActividades = new ArrayList<>();
+        user.put("actividades",listaActividades);
         // Add a new document with a generated ID
         db.collection("usuarios")
                 .document(this.user.getUid())
@@ -142,6 +140,5 @@ public class FirebaseUIActivity extends AppCompatActivity {
                         Log.w("Usuario", "Error al añadir usuario", e);
                     }
                 });
-
     }
 }

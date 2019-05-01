@@ -52,8 +52,11 @@ import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 import com.example.freesbet.widgets.General;
+import com.google.android.gms.dynamic.IFragmentWrapper;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -278,7 +281,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                 Bundle args = new Bundle();
                 args.putString("cuota",mButton_cuota1.getText().toString());
                 args.putString("competidor",evento.getCompetidores().get(0));
-
+                args.putString("idEvento",evento.getId());
                 bsdFragment.setArguments(args);
                 bsdFragment.show(
                         Apuesta.this.getSupportFragmentManager(), "BSDialog");
@@ -293,6 +296,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                 Bundle args = new Bundle();
                 args.putString("cuota",mButton_cuota2.getText().toString());
                 args.putString("competidor",evento.getCompetidores().get(1));
+                args.putString("idEvento",evento.getId());
                 bsdFragment.setArguments(args);
                 bsdFragment.show(
                         Apuesta.this.getSupportFragmentManager(), "BSDialog");
@@ -302,12 +306,16 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         mButton_jugar_competicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyAsyncTasksApostarCompeticion myAsyncTasksApostarCompeticion = new MyAsyncTasksApostarCompeticion();
-                myAsyncTasksApostarCompeticion.execute();
+                if (coinsUsuario<400){
+                    showSnackBarLong("No tienes suficientes coins",getWindow().getDecorView().findViewById(android.R.id.content));
+                }else{
+                    anadirApuesta(400);
+                }
             }
         });
 
         cargarEventoApuesta();
+
 
     }
 
@@ -788,42 +796,6 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         selecccionGanador = parent.getItemAtPosition(0).toString();
     }
 
-    public class MyAsyncTasksApostarCompeticion extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String current = "";
-            try {
-
-                // Firebase Restar 400 puntos y añadir apuesta
-
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-            return current;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            /*if (OK){
-
-            }*/
-            mButton_jugar_competicion.setEnabled(false);
-            frameLayoutCompeticionApuestaHecha.setVisibility(View.VISIBLE);
-
-        }
-    }
-
     private void cargarInfoUsuarioMenu(){
         headerView = navigationView.getHeaderView(0);
         TextView textViewNombreUsuarioHeaderMenu = headerView.findViewById(R.id.textView_nombreUsuario_headerMenu);
@@ -870,5 +842,203 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             return coins;
         }
 
+    }
+
+    private void anadirApuesta(int cantidad){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference docRefEvento = db.collection("eventos").document(evento.getId());
+        DocumentReference docRefUsuario = db.collection("usuarios").document(idUsuario);
+        docRefEvento.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        progressDialog = new ProgressDialog(Apuesta.this);
+                        progressDialog.setMessage("Realizando apuesta");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                        Log.d("EVENTO", "DocumentSnapshot data: " + document.getData());
+
+                        Map<String, Object> eventoDb = document.getData();
+                        int numeroApuestas = ((Long)eventoDb.get("numeroApuestas")).intValue();
+                        numeroApuestas++;
+                        int boteAcumulado = ((Long)eventoDb.get("boteAcumulado")).intValue();
+                        int boteAcumuladoFinal = boteAcumulado+cantidad;
+                        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+
+                        Map<String,Object> apuesta = new HashMap<>();
+                        apuesta.put("coins",cantidad);
+                        apuesta.put("elección",selecccionGanador);
+                        int gananciaCompeticion = calcularGananciaCompeticion();
+                        apuesta.put("gananciaPotencial",gananciaCompeticion);
+                        apuesta.put("idUsuario",idUsuario);
+                        apuesta.put("nombreUsuario",nombreUsuario);
+                        listaApuestasDb.add(apuesta);
+
+                        docRefEvento.update("apuestas",
+                                listaApuestasDb,
+                                "numeroApuestas",numeroApuestas,
+                                "boteAcumulado", boteAcumuladoFinal).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    actualizarGanancias();
+                                }
+                            }
+                        });
+
+                    } else {
+                        Log.d("EVENTO", "No such document");
+                    }
+                } else {
+                    Log.d("EVENTO", "get failed with ", task.getException());
+                }
+            }
+        });
+
+
+        docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Map<String, Object> usuarioDb = document.getData();
+
+                    int coins = ((Long)usuarioDb.get("coins")).intValue();
+                    int coinsFinales = coins-cantidad;
+
+                    List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
+                    Map<String,Object> actividad = new HashMap<>();
+                    actividad.put("coins",cantidad);
+                    actividad.put("elección",selecccionGanador);
+                    int gananciaCompeticion = calcularGananciaCompeticion();
+                    actividad.put("gananciaPotencial",gananciaCompeticion);
+                    actividad.put("idEvento",evento.getId());
+                    listaActividadesDb.add(actividad);
+
+                    docRefUsuario.update(
+                            "actividades", listaActividadesDb,
+                            "coins",coinsFinales);
+
+
+
+                    if (document.exists()) {
+                        Log.d("EVENTO", "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d("EVENTO", "No such document");
+                    }
+                } else {
+                    Log.d("EVENTO", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    private int calcularGananciaCompeticion(){
+        int ganancia = 0;
+        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+        if (listaApuestasDb.size()>0){
+
+                int numeroApuestasCompetidor = 1;
+                for(Map<String,Object> apuesta: listaApuestasDb){
+                    if (selecccionGanador.equalsIgnoreCase((String) apuesta.get("elección"))){
+                        numeroApuestasCompetidor++;
+                    }
+                }
+                ganancia = (evento.getBoteAcumulado()+400)/numeroApuestasCompetidor;
+
+        }else{
+            ganancia = 200000;
+        }
+        return ganancia;
+    }
+
+    private void actualizarGanancias(){
+        // CREAR LISTA DE GANANCIAS POTENCIALES POR COMPETIDOR SEGÚN EL BOTE ACUMULADO
+        List<GananciaPotencial> listaGananciasPotenciales = new ArrayList<>();
+        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+        if (listaApuestasDb.size()>0){
+            for (String competidor : competidores){
+                int numeroApuestasCompetidor = 0;
+                for(Map<String,Object> apuesta: listaApuestasDb){
+                    if (competidor.equalsIgnoreCase((String) apuesta.get("elección"))){
+                        numeroApuestasCompetidor++;
+                    }
+                }
+                int ganancia = (evento.getBoteAcumulado());
+                if (numeroApuestasCompetidor > 1 ){
+                    ganancia  = (evento.getBoteAcumulado())/numeroApuestasCompetidor;
+                }
+                listaGananciasPotenciales.add(new GananciaPotencial(competidor,ganancia));
+
+            }
+            // ACTUALIZAR GANANCIAS POTENCIALES EN APUESTAS EVENTOS
+            for (GananciaPotencial gananciaPotencial : listaGananciasPotenciales){
+
+                for(int i = 0; i < listaApuestasDb.size(); i++){
+                    if (gananciaPotencial.competidor.equalsIgnoreCase((String) listaApuestasDb.get(i).get("elección"))){
+                        // query
+                        Map<String,Object> objetoApuestaNuevo = new HashMap<>();
+                        objetoApuestaNuevo.put("coins",listaApuestasDb.get(i).get("coins"));
+                        objetoApuestaNuevo.put("elección",listaApuestasDb.get(i).get("elección"));
+                        objetoApuestaNuevo.put("gananciaPotencial",gananciaPotencial.gananciaPotencial);
+                        objetoApuestaNuevo.put("idUsuario",listaApuestasDb.get(i).get("idUsuario"));
+                        objetoApuestaNuevo.put("nombreUsuario",listaApuestasDb.get(i).get("nombreUsuario"));
+                        listaApuestasDb.set(i,objetoApuestaNuevo);
+                    }
+                }
+            }
+            // query
+            DocumentReference docRefEvento = db.collection("eventos").document(evento.getId());
+            docRefEvento.update(
+                    "apuestas", listaApuestasDb);
+
+            // ACTUALIZAR GANANCIAS POTENCIALES EN ACTIVIDAD DE USUARIO
+            for(int i = 0; i < listaApuestasDb.size(); i++){
+                String idUsuario = (String)listaApuestasDb.get(i).get("idUsuario");
+                DocumentReference docRefUsuario = db.collection("usuarios").document(idUsuario);
+                docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            Map<String, Object> usuarioDb = document.getData();
+                            List<Map<String,Object>> listaActividades = (List<Map<String,Object>>)usuarioDb.get("actividades");
+                            for (GananciaPotencial gananciaPotencial : listaGananciasPotenciales){
+
+                                for(int i = 0; i < listaActividades.size(); i++){
+                                    if (((String)listaActividades.get(i).get("idEvento")).equalsIgnoreCase(evento.getId()) && gananciaPotencial.competidor.equalsIgnoreCase((String) listaActividades.get(i).get("elección"))){
+                                        // query
+                                        Map<String,Object> objetoActividadNuevo = new HashMap<>();
+                                        objetoActividadNuevo.put("coins",listaActividades.get(i).get("coins"));
+                                        objetoActividadNuevo.put("elección",listaActividades.get(i).get("elección"));
+                                        objetoActividadNuevo.put("gananciaPotencial",gananciaPotencial.gananciaPotencial);
+                                        objetoActividadNuevo.put("idEvento",evento.getId());
+                                        listaActividades.set(i,objetoActividadNuevo);
+                                    }
+                                }
+                            }
+                            docRefUsuario.update(
+                                    "actividades", listaActividades);
+                            progressDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public class GananciaPotencial {
+        String competidor;
+        int gananciaPotencial;
+
+        public GananciaPotencial(String competidor, int gananciaPotencial) {
+            this.competidor = competidor;
+            this.gananciaPotencial = gananciaPotencial;
+        }
     }
 }
