@@ -98,7 +98,9 @@ public class Ajustes extends BaseActivity
         } else {
 
             super.onBackPressed();
-            startActivity(Ajustes.this,Home.class);
+            Intent intent = new Intent(getApplicationContext(), Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             finish();
         }
     }

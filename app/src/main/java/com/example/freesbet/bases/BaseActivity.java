@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.example.freesbet.Ajustes;
 import com.example.freesbet.Fms;
@@ -35,6 +37,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -47,6 +53,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -82,6 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         getInfoUsuario();
 
+        comprobarApuestasFinalizadas();
         invalidateOptionsMenu();
     }
 
@@ -425,8 +435,61 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
-    public static void añadirCoinsApuestasFinalizadas(){
+    public static void comprobarApuestasFinalizadas(){
+        Query query = db.collection("eventos")
+                .whereEqualTo("finalizado", true).whereEqualTo("checkEvento",false);
+        ListenerRegistration registration =query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@android.support.annotation.Nullable QuerySnapshot value,
+                                @android.support.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w("evento", "Listen failed.", e);
+                    return;
+                }
+                if (value != null && !value.isEmpty()){
+                    for (QueryDocumentSnapshot document : value) {
 
+                        Log.d("Evento", document.getId() + " => " + document.getData());
+
+                        Map<String, Object> eventoDb = document.getData();
+                        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas");
+
+                        if (!listaApuestasDb.isEmpty()){
+                            for (Map<String,Object> apuesta : listaApuestasDb){
+                                if (((String)apuesta.get("elección")).equalsIgnoreCase(((String)eventoDb.get("ganador")))){
+                                    DocumentReference docRefUsuario = db.collection("usuarios").document((String)apuesta.get("idUsuario"));
+                                    docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentSnapshot document = task.getResult();
+                                                Map<String, Object> usuarioDb = document.getData();
+                                                int coins = ((Long) usuarioDb.get("coins")).intValue();
+                                                int gananciaPotencial = ((Long) apuesta.get("gananciaPotencial")).intValue();
+                                                int coinsFinales = coins + gananciaPotencial;
+
+                                                docRefUsuario.update("coins",coinsFinales).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()){
+                                                            if (((String)apuesta.get("idUsuario")).equalsIgnoreCase(idUsuario)){
+                                                                Toast.makeText(AppFreesBet.mContext,"Has ganado "+ gananciaPotencial + " en "+((String) eventoDb.get("nombre")),Toast.LENGTH_LONG);
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        DocumentReference docRefEvento = db.collection("eventos").document(document.getId());
+                        docRefEvento.update("checkEvento",true);
+                    }
+                }
+            }
+        });
     }
 
 }
