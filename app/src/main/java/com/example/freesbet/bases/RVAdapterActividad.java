@@ -60,7 +60,7 @@ public class RVAdapterActividad extends RecyclerView.Adapter<RVAdapterActividad.
     public void onBindViewHolder(ActividadViewHolder eventoViewHolder, final int i) {
         if (actividades.get(i).tipo.equalsIgnoreCase("bonus")){
             eventoViewHolder.circleImageViewResultado.setImageResource(R.drawable.ganada);
-            eventoViewHolder.textViewTextoActividad.setText("Has ganado 200 coins por subir de nivel");
+            eventoViewHolder.textViewTextoActividad.setText("Has ganado 1000 coins por subir de nivel");
 
         }else{
             if (actividades.get(i).resultado.equalsIgnoreCase("ganado")){

@@ -18,7 +18,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.freesbet.bases.AppFreesBet;
 import com.example.freesbet.widgets.General;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +48,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
     String idEvento;
     boolean validate ;
     ProgressDialog progressDialog;
+    FirebaseFirestore db;
     public BottomSheetDialogFragmentApuestaLiga(){
 
     }
@@ -57,6 +60,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
         puntosUsuario = String.valueOf(coinsUsuario);
         competidor = getArguments().getString("competidor");
         idEvento = getArguments().getString("idEvento");
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -246,9 +250,21 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                     actividad.put("idEvento",idEvento);
                     listaActividadesDb.add(actividad);
 
+                    int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
+                    experiencia = experiencia+200;
+
                     docRefUsuario.update(
                             "actividades", listaActividadesDb,
-                            "coins",coinsFinales);
+                            "coins",coinsFinales,
+                            "experiencia",experiencia).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(AppFreesBet.mContext,"¡Has ganado 400 puntos de experiencia!",Toast.LENGTH_LONG).show();
+                                comprobarNivel(cantidad);
+                            }
+                        }
+                    });
 
                     progressDialog.dismiss();
                     dismiss();
@@ -263,6 +279,60 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 }
             }
         });
+    }
+
+    private void comprobarNivel(int cantidad){
+        DocumentReference docRefUsuario = db.collection("usuarios").document(idUsuario);
+        docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        Map<String, Object> usuarioDb = document.getData();
+                        int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
+                        int experienciaSiguienteNivel = ((Long)usuarioDb.get("experienciaSiguienteNivel")).intValue();
+                        int nivel = ((Long)usuarioDb.get("nivel")).intValue();
+                        int coins = ((Long)usuarioDb.get("coins")).intValue();
+                        if (experiencia == experienciaSiguienteNivel){
+                            nivel++;
+                            experienciaSiguienteNivel = experienciaSiguienteNivel*2;
+                            coins = coins+1000;
+
+                            docRefUsuario.update(
+                                    "coins",coins,
+                                    "experiencia",0,
+                                    "experienciaSiguienteNivel",experienciaSiguienteNivel,
+                                    "nivel",nivel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(AppFreesBet.mContext,"¡Has subido de nivel!",Toast.LENGTH_LONG).show();
+                                        // añadir campo subida de nivel para actividad
+                                        List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
+                                        for(int i = 0; i < listaActividadesDb.size(); i++){
+                                            if (((String)listaActividadesDb.get(i).get("idEvento")).equalsIgnoreCase(idEvento)){
+                                                Map<String,Object> actividadActualizada = new HashMap<>();
+                                                actividadActualizada.put("coins",cantidad);
+                                                actividadActualizada.put("elección",competidor);
+                                                actividadActualizada.put("gananciaPotencial",ganancia);
+                                                actividadActualizada.put("idEvento",idEvento);
+                                                actividadActualizada.put("coinsNivel",1000);
+                                                listaActividadesDb.set(i,actividadActualizada);
+                                            }
+                                        }
+                                        docRefUsuario.update("actividades",listaActividadesDb);
+                                    }
+                                }
+                            });
+                        }
+                    }else{
+                        Log.d("USUARIO", "No such document");
+                    }
+                }
+            }
+        });
+
     }
 
 }

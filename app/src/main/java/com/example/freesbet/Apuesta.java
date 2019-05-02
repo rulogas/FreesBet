@@ -810,7 +810,23 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
         circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
         textViewNivelUsuarioHeaderMenu = headerView.findViewById(R.id.textView_NivelUsuario_headerMenu);
-        textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivelUsuario));
+        db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("usuarios").document(idUsuario);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
+                    Map<String, Object> user = documentSnapshot.getData();
+                    int nivel =((Long) user.get("nivel")).intValue();
+                    textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivel));
+                } else {
+                    Log.d("Usuario", "No such document");
+                }
+            }
+        });
+
+
     }
 
     private void irPerfil(){
@@ -913,35 +929,46 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    Map<String, Object> usuarioDb = document.getData();
-
-                    int coins = ((Long)usuarioDb.get("coins")).intValue();
-                    int coinsFinales = coins-cantidad;
-
-                    List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
-                    Map<String,Object> actividad = new HashMap<>();
-                    actividad.put("coins",cantidad);
-                    actividad.put("elección",selecccionGanador);
-                    int gananciaCompeticion = calcularGananciaCompeticion();
-                    actividad.put("gananciaPotencial",gananciaCompeticion);
-                    actividad.put("idEvento",evento.getId());
-                    listaActividadesDb.add(actividad);
-
-                    int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
-
-                    docRefUsuario.update(
-                            "actividades", listaActividadesDb,
-                            "coins",coinsFinales);
-
-
 
                     if (document.exists()) {
-                        Log.d("EVENTO", "DocumentSnapshot data: " + document.getData());
+                        Log.d("USUARIO", "DocumentSnapshot data: " + document.getData());
+
+                        Map<String, Object> usuarioDb = document.getData();
+
+                        int coins = ((Long)usuarioDb.get("coins")).intValue();
+                        int coinsFinales = coins-cantidad;
+
+                        List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
+                        Map<String,Object> actividad = new HashMap<>();
+                        actividad.put("coins",cantidad);
+                        actividad.put("elección",selecccionGanador);
+                        int gananciaCompeticion = calcularGananciaCompeticion();
+                        actividad.put("gananciaPotencial",gananciaCompeticion);
+                        actividad.put("idEvento",evento.getId());
+                        listaActividadesDb.add(actividad);
+
+                        int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
+                        experiencia = experiencia+200;
+
+
+                        docRefUsuario.update(
+                                "actividades", listaActividadesDb,
+                                "coins",coinsFinales,
+                                "experiencia",experiencia).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    Toast.makeText(Apuesta.this,"¡Has ganado 400 puntos de experiencia!",Toast.LENGTH_LONG).show();
+                                    // pasar campos para añadir campo por si el usuario sube de nivel
+                                    comprobarNivel(cantidad, selecccionGanador,gananciaCompeticion);
+                                }
+                            }
+                        });
                     } else {
-                        Log.d("EVENTO", "No such document");
+                        Log.d("USUARIO", "No such document");
                     }
                 } else {
-                    Log.d("EVENTO", "get failed with ", task.getException());
+                    Log.d("USUARIO", "get failed with ", task.getException());
                 }
             }
         });
@@ -1049,5 +1076,59 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
             this.competidor = competidor;
             this.gananciaPotencial = gananciaPotencial;
         }
+    }
+
+    private void comprobarNivel(int cantidad, String selecccionGanador, int gananciaCompeticion){
+        DocumentReference docRefUsuario = db.collection("usuarios").document(idUsuario);
+        docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        Map<String, Object> usuarioDb = document.getData();
+                        int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
+                        int experienciaSiguienteNivel = ((Long)usuarioDb.get("experienciaSiguienteNivel")).intValue();
+                        int nivel = ((Long)usuarioDb.get("nivel")).intValue();
+                        int coins = ((Long)usuarioDb.get("coins")).intValue();
+                        if (experiencia == experienciaSiguienteNivel){
+                            nivel++;
+                            experienciaSiguienteNivel = experienciaSiguienteNivel*2;
+                            coins = coins+1000;
+
+                            docRefUsuario.update(
+                                    "coins",coins,
+                                    "experiencia",0,
+                                    "experienciaSiguienteNivel",experienciaSiguienteNivel,
+                                    "nivel",nivel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(Apuesta.this,"¡Has subido de nivel!",Toast.LENGTH_LONG).show();
+                                        // añadir campo subida de nivel para actividad
+                                        List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
+                                        for(int i = 0; i < listaActividadesDb.size(); i++){
+                                            if (((String)listaActividadesDb.get(i).get("idEvento")).equalsIgnoreCase(evento.getId())){
+                                                Map<String,Object> actividadActualizada = new HashMap<>();
+                                                actividadActualizada.put("coins",cantidad);
+                                                actividadActualizada.put("elección",selecccionGanador);
+                                                actividadActualizada.put("gananciaPotencial",gananciaCompeticion);
+                                                actividadActualizada.put("idEvento",evento.getId());
+                                                actividadActualizada.put("coinsNivel",1000);
+                                                listaActividadesDb.set(i,actividadActualizada);
+                                            }
+                                        }
+                                        docRefUsuario.update("actividades",listaActividadesDb);
+                                    }
+                                }
+                            });
+                        }
+                    }else{
+                        Log.d("USUARIO", "No such document");
+                    }
+                }
+            }
+        });
+
     }
 }

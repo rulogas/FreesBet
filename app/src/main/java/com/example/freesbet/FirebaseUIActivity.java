@@ -113,7 +113,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
         // Create a new user with a first and last name
         Map<String, Object> user = new HashMap<>();
         user.put("nombre", this.user.getDisplayName());
-        user.put("nivel", 0);
+        user.put("nivel", 1);
         user.put("experiencia", 0);
         user.put("coins",4000);
         user.put("experienciaSiguienteNivel", 400);

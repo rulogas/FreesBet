@@ -201,31 +201,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    public static void getCoinsUsuario(){
-
-        //obtener coinsUsuario
-        Fms.MyAsyncTasksGetCoinsUsuario myAsyncTasksGetCoinsUsuario = new MyAsyncTasksGetCoinsUsuario();
-        myAsyncTasksGetCoinsUsuario.execute();
-
-    }
-
-    public static class MyAsyncTasksGetCoinsUsuario extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-
-
-
-
-            return null;
-        }
-    }
 
     public static void getInfoUsuario(){
 
@@ -415,21 +390,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static void getNivelUsuario(){
         db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("usuarios").document(idUsuario);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("Usuario", "DocumentSnapshot data: " + document.getData());
-                        Map<String, Object> user = document.getData();
-                        nivelUsuario =((Long) user.get("nivel")).intValue();
-                        datosUsuarioActualizados.setBoo(true);
-                    } else {
-                        Log.d("Usuario", "No such document");
-                    }
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
+                    Map<String, Object> user = documentSnapshot.getData();
+                    nivelUsuario =((Long) user.get("nivel")).intValue();
+                    datosUsuarioActualizados.setBoo(true);
                 } else {
-                    Log.d("Usuario", "get failed with ", task.getException());
+                    Log.d("Usuario", "No such document");
                 }
             }
         });
@@ -473,7 +443,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()){
                                                             if (((String)apuesta.get("idUsuario")).equalsIgnoreCase(idUsuario)){
-                                                                Toast.makeText(AppFreesBet.mContext,"Has ganado "+ gananciaPotencial + " en "+((String) eventoDb.get("nombre")),Toast.LENGTH_LONG);
+                                                                Toast.makeText(AppFreesBet.mContext,"Has ganado "+ gananciaPotencial + " en "+((String) eventoDb.get("nombre")),Toast.LENGTH_LONG).show();
                                                             }
                                                         }
                                                     }
