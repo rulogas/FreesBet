@@ -1,10 +1,10 @@
 package com.example.freesbet.bases;
 
 public class Premio {
-    private String id;
-    private String nombre;
-    private String urlImagen;
-    private int costeCoins;
+    String id;
+    String nombre;
+    String urlImagen;
+    int costeCoins;
 
 
     public Premio(String id, String nombre, String urlImagen, int costeCoins) {

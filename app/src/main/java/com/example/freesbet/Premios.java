@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,7 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,11 +35,22 @@ import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 import com.example.freesbet.widgets.DialogFormEnviarPremio;
 import com.example.freesbet.widgets.General;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.BufferUnderflowException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,6 +69,9 @@ public class Premios extends BaseActivity
     AdapterGridPremios adapterGridPremios;
     @BindView(R.id.gridView_premios)
     GridView gridViewPremios;
+
+    FirebaseFirestore db;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +112,8 @@ public class Premios extends BaseActivity
                 irPerfil();
             }
         });
+
+        db = FirebaseFirestore.getInstance();
 
         getPremios();
 
@@ -206,66 +224,71 @@ public class Premios extends BaseActivity
     }
 
     private void getPremios(){
-        MyAsyncTasksGetPremios myAsyncTasksGetPremios = new MyAsyncTasksGetPremios();
-        myAsyncTasksGetPremios.execute();
-    }
 
-    public class MyAsyncTasksGetPremios extends AsyncTask<String, String, String> {
+        progressDialog = new ProgressDialog(Premios.this);
+        progressDialog.setMessage("Cargando Premios");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(Premios.this);
-            progressDialog.setMessage("Cargando Premios");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
+        Query query = db.collection("premios");
 
-        @Override
-        protected String doInBackground(String... params) {
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w("Listener Premios", "Listen failed.", e);
+                    return;
+                }
+                if (value != null && !value.isEmpty()){
+                    premios = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : value) {
+                        Map<String, Object> premioDb = document.getData();
+                        premios.add(new Premio(
+                                document.getId(),
+                                (String)premioDb.get("nombre"),
+                                (String)premioDb.get("urlImagen"),
+                                ((Long)premioDb.get("costeCoins")).intValue())
+                        );
+                    }
+                    premios.sort(Comparator.comparing(Premio::getCosteCoins).reversed());
 
-            String current = "";
+                    adapterGridPremios = new AdapterGridPremios(Premios.this, premios);
+                    gridViewPremios.setAdapter(adapterGridPremios);
+                    gridViewPremios.setOnItemClickListener(Premios.this);
 
-                // obtener premios ordenados por coins
+                    progressDialog.dismiss();
 
-            premios = new ArrayList<>();
+                    Log.d("Listener Premios", "Eventos actuales en: " + premios);
+                }
+                else{
 
-            premios.add(new Premio("1","Xiaomi Pocophone F1","https://images.playfulbet.com/system/uploads/prize/prize_image/325/41QXUJaM_jL.jpg",11500000));
-            premios.add(new Premio("2","PS4 Slim","https://images.playfulbet.com/system/uploads/prize/prize_image/225/prize_ps4slim.png",9900000));
-            premios.add(new Premio("3","BenQ XL2411Z 144Hz","https://images.playfulbet.com/system/uploads/prize/prize_image/168/prz_monitor_benq.png",7400000));
-            premios.add(new Premio("4","Xiaomi MI A2","https://images.playfulbet.com/system/uploads/prize/prize_image/324/Xiaomi-mi-A2-black-560x560.jpg",6000000));
-            premios.add(new Premio("5","Apple Airpods","https://images.playfulbet.com/system/uploads/prize/prize_image/299/51o9usvz11L._SL1000_.jpg",4300000));
-            premios.add(new Premio("7","Sudadera Oficial Red Bull Batalla de los Gallos","https://images.redbullshop.com/is/image/RedBullSalzburg/RB-product-detail/BDG18014_9A_1/Batalla-College-Jacket.jpg",3500000));
-            premios.add(new Premio("6","Gorra Oficial Urban Roosters","https://i2.wp.com/blog.urbanroosters.com/wp-content/uploads/2018/04/87-large_default.jpg",10000000));
-            premios.add(new Premio("8","Entradas - Proxima joranda FMS España","http://www.tedxupvalencia.com/wp-content/uploads/2015/10/ticket.png",500000));
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            progressDialog.dismiss();
-
-            // Cargar premios en grid
-            adapterGridPremios = new AdapterGridPremios(Premios.this, premios);
-            gridViewPremios.setAdapter(adapterGridPremios);
-            gridViewPremios.setOnItemClickListener(Premios.this);
-        }
+                }
+            }
+        });
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        /*if(coins >= coste){
+        Premio item = (Premio) parent.getItemAtPosition(position);
 
+        if(coinsUsuario >= item.getCosteCoins()){
+            DialogFormEnviarPremio dialogFragment = new DialogFormEnviarPremio();
+            Bundle bundle = new Bundle();
+            bundle.putString("idPremio",item.getId());
+            bundle.putString("nombrePremio",item.getNombre());
+            bundle.putInt("costeCoins",item.getCosteCoins());
+            dialogFragment.setArguments(bundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            dialogFragment.show(fragmentManager,"formEnviarPremio");
         }else{
             //error
-        }*/
-        Premio item = (Premio) parent.getItemAtPosition(position);
-        DialogFormEnviarPremio dialogFragment = new DialogFormEnviarPremio();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+            showSnackBarLong("No tienes suficientes coins para ese premio", getWindow().getDecorView().findViewById(android.R.id.content));
+        }
 
-        dialogFragment.show(fragmentManager,"formEnviarPremio");
+
     }
 
     private void cargarInfoUsuarioMenu(){
