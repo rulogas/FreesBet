@@ -31,6 +31,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import org.w3c.dom.Text;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,25 +204,26 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                     progressDialog.show();
 
                     DocumentSnapshot document = task.getResult();
-                    Map<String, Object> eventoDb = document.getData();
-                    int numeroApuestas = ((Long)eventoDb.get("numeroApuestas")).intValue();
-                    numeroApuestas++;
-                    List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
-
-                    Map<String,Object> apuesta = new HashMap<>();
-                    apuesta.put("coins",cantidad);
-                    apuesta.put("elección",competidor);
-                    apuesta.put("gananciaPotencial",ganancia);
-                    apuesta.put("idUsuario",idUsuario);
-                    apuesta.put("nombreUsuario",nombreUsuario);
-                    listaApuestasDb.add(apuesta);
-
-                    docRefEvento.update(
-                                    "apuestas", listaApuestasDb,
-                                    "numeroApuestas",numeroApuestas);
 
                     if (document.exists()) {
-                        Log.d("EVENTO", "DocumentSnapshot data: " + document.getData());
+
+                        Map<String, Object> eventoDb = document.getData();
+                        int numeroApuestas = ((Long)eventoDb.get("numeroApuestas")).intValue();
+                        numeroApuestas++;
+                        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+
+                        Map<String,Object> apuesta = new HashMap<>();
+                        apuesta.put("coins",cantidad);
+                        apuesta.put("elección",competidor);
+                        apuesta.put("gananciaPotencial",ganancia);
+                        apuesta.put("idUsuario",idUsuario);
+                        apuesta.put("nombreUsuario",nombreUsuario);
+                        apuesta.put("fechaApuesta",new Date());
+                        listaApuestasDb.add(apuesta);
+
+                        docRefEvento.update(
+                                "apuestas", listaApuestasDb,
+                                "numeroApuestas",numeroApuestas);
                     } else {
                         Log.d("EVENTO", "No such document");
                     }
@@ -248,6 +250,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                     actividad.put("elección",competidor);
                     actividad.put("gananciaPotencial",ganancia);
                     actividad.put("idEvento",idEvento);
+                    actividad.put("fechaApuesta",new Date());
                     listaActividadesDb.add(actividad);
 
                     int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
@@ -260,7 +263,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(AppFreesBet.mContext,"¡Has ganado 400 puntos de experiencia!",Toast.LENGTH_LONG).show();
+                                Toast.makeText(AppFreesBet.mContext,"¡Has ganado 200 puntos de experiencia!",Toast.LENGTH_LONG).show();
                                 comprobarNivel(cantidad);
                             }
                         }
@@ -307,7 +310,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        Toast.makeText(AppFreesBet.mContext,"¡Has subido de nivel!",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(AppFreesBet.mContext,"¡Has subido de nivel , ganas 1000 coins!",Toast.LENGTH_LONG).show();
                                         // añadir campo subida de nivel para actividad
                                         List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
                                         for(int i = 0; i < listaActividadesDb.size(); i++){
@@ -318,10 +321,43 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                                                 actividadActualizada.put("gananciaPotencial",ganancia);
                                                 actividadActualizada.put("idEvento",idEvento);
                                                 actividadActualizada.put("coinsNivel",1000);
+                                                actividadActualizada.put("fechaApuesta",new Date());
                                                 listaActividadesDb.set(i,actividadActualizada);
                                             }
                                         }
                                         docRefUsuario.update("actividades",listaActividadesDb);
+
+                                        // coinsNivel en apuestas
+                                        DocumentReference docRefEvento = db.collection("eventos").document(idEvento);
+                                        docRefEvento.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()){
+                                                        Map<String, Object> eventoDb = document.getData();
+                                                        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+                                                        for(int i = 0; i < listaApuestasDb.size(); i++){
+                                                            if (((String)listaApuestasDb.get(i).get("idUsuario")).equalsIgnoreCase(idUsuario)){
+                                                                Map<String,Object> actividadActualizada = new HashMap<>();
+                                                                actividadActualizada.put("coins",cantidad);
+                                                                actividadActualizada.put("elección",competidor);
+                                                                actividadActualizada.put("gananciaPotencial",ganancia);
+                                                                actividadActualizada.put("idUsuario",idUsuario);
+                                                                actividadActualizada.put("nombreUsuario",nombreUsuario);
+                                                                actividadActualizada.put("coinsNivel",1000);
+                                                                actividadActualizada.put("fechaApuesta",new Date());
+                                                                listaApuestasDb.set(i,actividadActualizada);
+                                                            }
+                                                        }
+                                                        docRefEvento.update("apuestas",listaApuestasDb);
+                                                    }else{
+                                                        Log.d("USUARIO", "No such document");
+                                                    }
+                                                }
+                                            }
+                                        });
+
                                     }
                                 }
                             });
@@ -332,7 +368,5 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 }
             }
         });
-
     }
-
 }

@@ -436,7 +436,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                                                 Map<String, Object> usuarioDb = document.getData();
                                                 int coins = ((Long) usuarioDb.get("coins")).intValue();
                                                 int gananciaPotencial = ((Long) apuesta.get("gananciaPotencial")).intValue();
-                                                int coinsFinales = coins + gananciaPotencial;
+                                                int coinsApostados = ((Long) apuesta.get("coins")).intValue();
+                                                int gananciaFinal = gananciaPotencial + coinsApostados;
+                                                int coinsFinales = coins + gananciaFinal;
 
                                                 docRefUsuario.update("coins",coinsFinales).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

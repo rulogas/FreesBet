@@ -1,20 +1,24 @@
 package com.example.freesbet.bases;
 
+import java.util.Date;
+
 public class Actividad {
 
-    int id;
+    String id;
     String nombre;
     String resultado;
     String tipo;
+    Date fecha;
 
-    public Actividad(int id, String nombre, String resultado, String tipo) {
+    public Actividad(String id, String nombre, String resultado, String tipo, Date fecha) {
         this.id = id;
         this.nombre = nombre;
         this.resultado = resultado;
         this.tipo = tipo;
+        this.fecha = fecha;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -30,7 +34,11 @@ public class Actividad {
         return tipo;
     }
 
-    public void setId(int id) {
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,5 +52,9 @@ public class Actividad {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 }

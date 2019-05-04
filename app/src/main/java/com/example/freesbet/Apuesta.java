@@ -545,6 +545,10 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             mButton_cuota2.setText(Double.toString(evento.getCuota2()));
                         }else{
                             // evento finalizado
+                            textViewApuestaHeaderCompetidor1.setVisibility(View.VISIBLE);
+                            textViewApuestaHeaderCompetidor1.setText(competidores.get(0));
+                            textViewApuestaHeaderCompetidor2.setVisibility(View.VISIBLE);
+                            textViewApuestaHeaderCompetidor2.setText(competidores.get(1));
                             cardViewApostarLiga.setVisibility(View.GONE);
                             mCardviewApostarFinalizado.setVisibility(View.VISIBLE);
                             textViewGanador.setText((String)eventoDb.get("ganador"));
@@ -692,6 +696,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             }
                         }else{
                             // evento finalizado
+                            textViewVS.setText(evento.getNombre());
+                            textViewTipo.setText("Competición");
                             mCardview_apostar_competicion.setVisibility(View.GONE);
                             mCardviewApostarFinalizado.setVisibility(View.VISIBLE);
                             textViewGanador.setText((String)eventoDb.get("ganador"));
@@ -719,9 +725,30 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                 }
                             }
                         }
+                        // card porcentajes
+                        mCardviewPorcentajesCompeticion.setVisibility(View.VISIBLE);
+
+                        // función porcentajes
+                        ArrayList<Porcentaje> porcentajesApuestasCompetidores = getPorcentajesApuestasCompetidores();
+                        if (!porcentajesApuestasCompetidores.isEmpty()){
+                            mGrid_porcentajes_competicion.setVisibility(View.VISIBLE);
+                            porcentajesApuestasCompetidores.sort(Comparator.comparing(Porcentaje::getPorcentaje).reversed());
+
+                            for (int i=0;i<porcentajesApuestasCompetidores.size();i++){
+                                if (i>=12){
+                                    break;
+                                }
+                                LinearLayout ll = (LinearLayout)mGrid_porcentajes_competicion.getChildAt(i);
+                                TextView textoCompeticionPorcentaje =(TextView) ll.getChildAt(0);
+                                TextView textoCompeticionPorcentajeCompetidor = (TextView)ll.getChildAt(1);
+                                textoCompeticionPorcentaje.setText(porcentajesApuestasCompetidores.get(i).porcentaje+"%");
+                                textoCompeticionPorcentajeCompetidor.setText(porcentajesApuestasCompetidores.get(i).nombreCompetidor);
+                            }
+                        }else{
+                            mGrid_porcentajes_competicion.setVisibility(View.GONE);
+                            textViewJugadasGenerales.setText("No hay jugadas todavía");
+                        }
                     }
-
-
                 } else {
                     Log.d("EVENTO", "Current data: null");
                     Toast.makeText(AppFreesBet.mContext,"No se ha encontrado el evento",Toast.LENGTH_SHORT);
@@ -900,6 +927,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                         apuesta.put("gananciaPotencial",gananciaCompeticion);
                         apuesta.put("idUsuario",idUsuario);
                         apuesta.put("nombreUsuario",nombreUsuario);
+                        apuesta.put("fechaApuesta",new Date());
                         listaApuestasDb.add(apuesta);
 
                         docRefEvento.update("apuestas",
@@ -945,6 +973,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                         int gananciaCompeticion = calcularGananciaCompeticion();
                         actividad.put("gananciaPotencial",gananciaCompeticion);
                         actividad.put("idEvento",evento.getId());
+                        actividad.put("fechaApuesta",new Date());
                         listaActividadesDb.add(actividad);
 
                         int experiencia = ((Long)usuarioDb.get("experiencia")).intValue();
@@ -958,7 +987,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
-                                    Toast.makeText(Apuesta.this,"¡Has ganado 400 puntos de experiencia!",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Apuesta.this,"¡Has ganado 200 puntos de experiencia!",Toast.LENGTH_LONG).show();
                                     // pasar campos para añadir campo por si el usuario sube de nivel
                                     comprobarNivel(cantidad, selecccionGanador,gananciaCompeticion);
                                 }
@@ -1024,6 +1053,10 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                         objetoApuestaNuevo.put("gananciaPotencial",gananciaPotencial.gananciaPotencial);
                         objetoApuestaNuevo.put("idUsuario",listaApuestasDb.get(i).get("idUsuario"));
                         objetoApuestaNuevo.put("nombreUsuario",listaApuestasDb.get(i).get("nombreUsuario"));
+                        if (listaApuestasDb.get(i).containsKey("coinsNivel")){
+                            objetoApuestaNuevo.put("coinsNivel",1000);
+                        }
+                        objetoApuestaNuevo.put("fechaApuesta",new Date());
                         listaApuestasDb.set(i,objetoApuestaNuevo);
                     }
                 }
@@ -1054,6 +1087,10 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                         objetoActividadNuevo.put("elección",listaActividades.get(i).get("elección"));
                                         objetoActividadNuevo.put("gananciaPotencial",gananciaPotencial.gananciaPotencial);
                                         objetoActividadNuevo.put("idEvento",evento.getId());
+                                        if (listaActividades.get(i).containsKey("coinsNivel")){
+                                            objetoActividadNuevo.put("coinsNivel",1000);
+                                        }
+                                        objetoActividadNuevo.put("fechaApuesta",new Date());
                                         listaActividades.set(i,objetoActividadNuevo);
                                     }
                                 }
@@ -1061,6 +1098,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             docRefUsuario.update(
                                     "actividades", listaActividades);
                             progressDialog.dismiss();
+
                         }
                     }
                 });
@@ -1104,7 +1142,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        Toast.makeText(Apuesta.this,"¡Has subido de nivel!",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Apuesta.this,"¡Has subido de nivel , ganas 1000 coins!",Toast.LENGTH_LONG).show();
                                         // añadir campo subida de nivel para actividad
                                         List<Map<String,Object>> listaActividadesDb = (List<Map<String,Object>>)usuarioDb.get("actividades") ;
                                         for(int i = 0; i < listaActividadesDb.size(); i++){
@@ -1115,10 +1153,43 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                                 actividadActualizada.put("gananciaPotencial",gananciaCompeticion);
                                                 actividadActualizada.put("idEvento",evento.getId());
                                                 actividadActualizada.put("coinsNivel",1000);
+                                                actividadActualizada.put("fechaApuesta",new Date());
                                                 listaActividadesDb.set(i,actividadActualizada);
                                             }
                                         }
                                         docRefUsuario.update("actividades",listaActividadesDb);
+
+                                        // coinsNivel en apuestasEvento
+                                        DocumentReference docRefEvento = db.collection("eventos").document(evento.getId());
+                                        docRefEvento.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()){
+                                                        Map<String, Object> eventoDb = document.getData();
+                                                        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas") ;
+                                                        for(int i = 0; i < listaApuestasDb.size(); i++){
+                                                            if (((String)listaApuestasDb.get(i).get("idUsuario")).equalsIgnoreCase(idUsuario)){
+                                                                Map<String,Object> actividadActualizada = new HashMap<>();
+                                                                actividadActualizada.put("coins",cantidad);
+                                                                actividadActualizada.put("elección",selecccionGanador);
+                                                                actividadActualizada.put("gananciaPotencial",gananciaCompeticion);
+                                                                actividadActualizada.put("idUsuario",idUsuario);
+                                                                actividadActualizada.put("nombreUsuario",nombreUsuario);
+                                                                actividadActualizada.put("coinsNivel",1000);
+                                                                actividadActualizada.put("fechaApuesta",new Date());
+                                                                listaApuestasDb.set(i,actividadActualizada);
+                                                            }
+                                                        }
+                                                        docRefEvento.update("apuestas",listaApuestasDb);
+                                                    }else{
+                                                        Log.d("USUARIO", "No such document");
+                                                    }
+                                                }
+                                            }
+                                        });
+
                                     }
                                 }
                             });
@@ -1129,6 +1200,7 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                 }
             }
         });
+
 
     }
 }

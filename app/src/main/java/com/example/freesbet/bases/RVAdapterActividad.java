@@ -57,7 +57,7 @@ public class RVAdapterActividad extends RecyclerView.Adapter<RVAdapterActividad.
     }
 
     @Override
-    public void onBindViewHolder(ActividadViewHolder eventoViewHolder, final int i) {
+    public void onBindViewHolder(ActividadViewHolder eventoViewHolder, int i) {
         if (actividades.get(i).tipo.equalsIgnoreCase("bonus")){
             eventoViewHolder.circleImageViewResultado.setImageResource(R.drawable.ganada);
             eventoViewHolder.textViewTextoActividad.setText("Has ganado 1000 coins por subir de nivel");
@@ -79,7 +79,7 @@ public class RVAdapterActividad extends RecyclerView.Adapter<RVAdapterActividad.
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, Apuesta.class);
-                    intent.putExtra("idEevnto",actividades.get(i).id);
+                    intent.putExtra("idEvento",actividades.get(i).id);
                     mContext.startActivity(intent);
 
                 }

@@ -83,13 +83,13 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/textView_ajustes_nivel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Nivel 18"
+                    android:text=""
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -133,7 +133,7 @@
 
                             android:layout_marginEnd="3dp"
                             android:layout_toStartOf="@+id/textView_porcentaje_en_juego"
-                            android:text="6500"
+                            android:text=""
                             android:textStyle="bold" />
 
                         <TextView
@@ -150,7 +150,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
 
-                            android:text="(12% en juego)" />
+                            android:text="" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -161,7 +161,7 @@
 
 
                         <TextView
-                            android:id="@+id/textView_ajustes_nivel"
+                            android:id="@+id/textView3"
                             android:layout_width="wrap_content"
 
                             android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginTop="9dp"
                             android:layout_marginRight="0dp"
-                            android:progress="70"
+                            android:progress="0"
                             android:progressBackgroundTint="@android:color/white"
                             android:progressTint="@android:color/holo_green_light" />
 
@@ -192,7 +192,7 @@
                             android:layout_below="@+id/progressBar_experiencia"
                             android:layout_alignParentLeft="true"
                             android:layout_marginLeft="100dp"
-                            android:text="18"/>
+                            android:text=""/>
                             <!-- no modificar margen -->
 
 
@@ -202,12 +202,13 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/progressBar_experiencia"
                             android:layout_alignParentRight="true"
-                            android:text="22" />
+                            android:text="" />
 
 
                     </RelativeLayout>
 
                     <RelativeLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -228,7 +229,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignParentRight="true"
-                            android:src="@drawable/ganada" />
+                            />
 
                         <ImageView
                             android:id="@+id/imageView_racha2"
@@ -236,7 +237,7 @@
                             android:layout_height="30dp"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/imageView_racha1"
-                            android:src="@drawable/ganada" />
+                            />
 
                         <ImageView
                             android:id="@+id/imageView_racha3"
@@ -244,7 +245,7 @@
                             android:layout_height="30dp"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/imageView_racha2"
-                            android:src="@drawable/ganada" />
+                            />
 
                         <ImageView
                             android:id="@+id/imageView_racha4"
@@ -252,7 +253,7 @@
                             android:layout_height="30dp"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/imageView_racha3"
-                            android:src="@drawable/perdida" />
+                           />
 
                         <ImageView
                             android:id="@+id/imageView_racha5"
@@ -260,7 +261,7 @@
                             android:layout_height="30dp"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/imageView_racha4"
-                            android:src="@drawable/perdida" />
+                            />
 
 
                     </RelativeLayout>
@@ -302,7 +303,7 @@
                             android:id="@+id/textView_porcentaje_evento_favorito1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="70%"
+                            android:text="0%"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_alignParentRight="true"
@@ -315,7 +316,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
-                        android:progress="70"
+                        android:progress="0"
                         android:progressBackgroundTint="@android:color/white"
                         android:progressTint="@android:color/holo_green_light"
                         android:layout_marginBottom="5dp"
@@ -340,7 +341,7 @@
                             android:id="@+id/textView_porcentaje_evento_favorito2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="30%"
+                            android:text="0%"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_alignParentRight="true"
@@ -353,7 +354,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
-                        android:progress="30"
+                        android:progress="0"
                         android:progressBackgroundTint="@android:color/white"
                         android:progressTint="@android:color/holo_green_light"
                         android:layout_marginBottom="5dp"
@@ -378,7 +379,7 @@
                             android:id="@+id/textView_porcentaje_evento_favorito3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="15%"
+                            android:text="0%"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_alignParentRight="true"
@@ -391,7 +392,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
-                        android:progress="15"
+                        android:progress="0"
                         android:progressBackgroundTint="@android:color/white"
                         android:progressTint="@android:color/holo_green_light"
                         android:layout_marginBottom="5dp"
@@ -416,7 +417,7 @@
                             android:id="@+id/textView_porcentaje_evento_favorito4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="8%"
+                            android:text="0%"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_alignParentRight="true"
@@ -429,7 +430,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
-                        android:progress="8"
+                        android:progress="0"
                         android:progressBackgroundTint="@android:color/white"
                         android:progressTint="@android:color/holo_green_light"
                         android:layout_marginBottom="5dp"
