@@ -527,7 +527,15 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                                 frameLayoutLigaApuestaHecha.setVisibility(View.VISIBLE);
                                 mButton_cuota1.setEnabled(false);
                                 mButton_cuota2.setEnabled(false);
-                                textViewApuestaHechaLigaAdvertencia.setText("Has apostado en este evento. "+coins+" a "+eleccion);
+                                for(Map<String,Object> apuesta: listaApuestasDb){
+                                    if (apuesta.containsKey("idUsuario") && apuesta.containsValue(idUsuario)){
+                                        coins = ((Long) apuesta.get("coins")).intValue();
+                                        int gananciaPotencial = ((Long) apuesta.get("gananciaPotencial")).intValue();
+                                        int gananciaTotal = coins + gananciaPotencial;
+                                        textViewApuestaHechaLigaAdvertencia.setText("Has apostado en este evento  "+coins+" coins a "+eleccion+", ganarías "+ gananciaTotal+ " coins en total.");
+                                        break;
+                                    }
+                                }
                             }
 
 

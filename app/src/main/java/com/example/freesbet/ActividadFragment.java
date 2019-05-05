@@ -109,7 +109,9 @@ public class ActividadFragment extends Fragment {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots.isEmpty() || queryDocumentSnapshots == null) {
-                    textViewNoHayEventos.setText("No hay eventos finalizados");
+                    rv.setVisibility(View.GONE);
+                    textViewNoHayEventos.setVisibility(View.VISIBLE);
+                    textViewNoHayEventos.setText("No hay eventos");
                 } else {
                     actividades = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
@@ -143,13 +145,21 @@ public class ActividadFragment extends Fragment {
                                 }
                             }
                         }
+                    }
+                    if (!actividades.isEmpty()){
                         actividades.sort(Comparator.comparing(Actividad::getFecha).reversed());
-
                         adapter = new RVAdapterActividad(actividades,getContext());
                         rv.setAdapter(adapter);
 
                         progressDialog.dismiss();
+
+                    }else{
+                        rv.setVisibility(View.GONE);
+                        textViewNoHayEventos.setVisibility(View.VISIBLE);
+                        textViewNoHayEventos.setText("No hay actividad en tu perfil");
+                        progressDialog.dismiss();
                     }
+
 
                 }
             }

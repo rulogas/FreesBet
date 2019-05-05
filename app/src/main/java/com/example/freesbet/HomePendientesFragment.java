@@ -1,7 +1,6 @@
 package com.example.freesbet;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,8 +26,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +36,7 @@ import butterknife.ButterKnife;
 
 import static com.example.freesbet.bases.BaseActivity.idUsuario;
 
-public class HomePopularesFragment extends Fragment {
+public class HomePendientesFragment extends Fragment {
 
     RecyclerView rv;
     ProgressDialog progressDialog;
@@ -57,14 +54,14 @@ public class HomePopularesFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_populares,container,false);
+        View view = inflater.inflate(R.layout.fragment_home_pendientes,container,false);
         ButterKnife.bind(getActivity());
 
         db = FirebaseFirestore.getInstance();
 
         navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
 
-        rv =view.findViewById(R.id.recyclerView_eventos_populares);
+        rv =view.findViewById(R.id.recyclerView_eventos_pendientes);
         textViewNohayEventos = view.findViewById(R.id.textView_noHayEventos);
 
         headerView = navigationView.getHeaderView(0);
@@ -100,7 +97,7 @@ public class HomePopularesFragment extends Fragment {
         initializeRecyclerView();
 
         Query query = db.collection("eventos")
-                .whereEqualTo("finalizado", false).orderBy("numeroApuestas", Query.Direction.DESCENDING);
+                .whereEqualTo("finalizado", false);
         registration =query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value,
@@ -117,23 +114,37 @@ public class HomePopularesFragment extends Fragment {
 
                         Log.d("EventoLista", document.getId() + " => " + document.getData());
                         Map<String, Object> eventoListaDb = document.getData();
-                            /*List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
-                            int numeroJugadoresDb = listaApuestasDb.size();*/
-                        String pattern = "dd-MM-yyyy";
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                        List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
+                        boolean pendiente = false;
+                        if (!listaApuestasDb.isEmpty()){
+                            for (Map<String,Object> apuesta : listaApuestasDb){
+                                if (((String)apuesta.get("idUsuario")).equalsIgnoreCase(idUsuario)){
+                                    pendiente = true;
+                                }
+                            }
+                            if (pendiente){
+                                String pattern = "dd-MM-yyyy";
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-                        String fecha = simpleDateFormat.format((Date) eventoListaDb.get("fecha"));
+                                String fecha = simpleDateFormat.format((Date) eventoListaDb.get("fecha"));
 
-                        EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
-                                (String)eventoListaDb.get("zona"),
-                                (String)eventoListaDb.get("urlImagen"),
-                                fecha,
-                                ((Long)eventoListaDb.get("numeroApuestas")).intValue());
-                        eventos.add(eventoLista);
+                                EventoLista eventoLista = new EventoLista(document.getId(),(String)eventoListaDb.get("nombre"),
+                                        (String)eventoListaDb.get("zona"),
+                                        (String)eventoListaDb.get("urlImagen"),
+                                        fecha,
+                                        ((Long)eventoListaDb.get("numeroApuestas")).intValue());
+                                eventos.add(eventoLista);
+                            }
+                        }
                     }
-                    adapter = new RVAdapter(eventos, getActivity());
-                    rv.setAdapter(adapter);
-                    Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
+                    if (!eventos.isEmpty()){
+                        adapter = new RVAdapter(eventos, getActivity());
+                        rv.setAdapter(adapter);
+                        Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
+                    }else{
+                        textViewNohayEventos.setVisibility(View.VISIBLE);
+                        rv.setVisibility(View.GONE);
+                    }
                 }
                 else{
                     textViewNohayEventos.setVisibility(View.VISIBLE);
@@ -142,4 +153,5 @@ public class HomePopularesFragment extends Fragment {
             }
         });
     }
+
 }

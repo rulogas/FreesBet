@@ -34,6 +34,8 @@ import com.example.freesbet.bases.CustomAdpaterSpinner;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.widgets.CheckLogout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -334,7 +336,22 @@ public class Supremacia extends BaseActivity
         circleImageViewUsuarioMenu = headerView.findViewById(R.id.circleview_header_perfil_usuario);
         Glide.with(getApplicationContext()).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
         textViewNivelUsuarioHeaderMenu = headerView.findViewById(R.id.textView_NivelUsuario_headerMenu);
-        textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivelUsuario));
+        // cargarNivel
+        db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("usuarios").document(idUsuario);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
+                    Map<String, Object> user = documentSnapshot.getData();
+                    int nivel =((Long) user.get("nivel")).intValue();
+                    textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivel));
+                } else {
+                    Log.d("Usuario", "No such document");
+                }
+            }
+        });
     }
 
     private void irPerfil(){

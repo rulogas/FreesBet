@@ -1,7 +1,6 @@
 package com.example.freesbet;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +25,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-
-import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -45,7 +40,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
     String cuota;
     String puntosUsuario;
     String competidor;
-    int ganancia;
+    int gananciaLiga;
     String idEvento;
     boolean validate ;
     ProgressDialog progressDialog;
@@ -77,10 +72,10 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
         AppCompatButton botonJugar = v.findViewById(R.id.boton_jugar);
         textViewCompetidor.setText(competidor);
         textoCuota.setText(cuota);
-        // calcular ganancia potencial
+        // calcular gananciaLiga potencial
         int cantidad = Integer.parseInt(campoCantidad.getText().toString());
-        ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
-        textoGanancia.setText("+"+Integer.toString(+ganancia));
+        gananciaLiga =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
+        textoGanancia.setText("+"+Integer.toString(+gananciaLiga));
 
         campoCantidad.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,8 +88,8 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                 if (!s.toString().isEmpty()){
 
                     int cantidad = Integer.parseInt(campoCantidad.getText().toString());
-                    ganancia =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
-                    textoGanancia.setText("+"+Integer.toString(+ganancia));
+                    gananciaLiga =(int)(((double)cantidad * Double.parseDouble(cuota))-(double)cantidad);
+                    textoGanancia.setText("+"+Integer.toString(+gananciaLiga));
                     seekBar.setProgress(Integer.parseInt(s.toString()));
                 }
             }
@@ -215,7 +210,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                         Map<String,Object> apuesta = new HashMap<>();
                         apuesta.put("coins",cantidad);
                         apuesta.put("elección",competidor);
-                        apuesta.put("gananciaPotencial",ganancia);
+                        apuesta.put("gananciaPotencial", gananciaLiga);
                         apuesta.put("idUsuario",idUsuario);
                         apuesta.put("nombreUsuario",nombreUsuario);
                         apuesta.put("fechaApuesta",new Date());
@@ -248,7 +243,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                     Map<String,Object> actividad = new HashMap<>();
                     actividad.put("coins",cantidad);
                     actividad.put("elección",competidor);
-                    actividad.put("gananciaPotencial",ganancia);
+                    actividad.put("gananciaPotencial", gananciaLiga);
                     actividad.put("idEvento",idEvento);
                     actividad.put("fechaApuesta",new Date());
                     listaActividadesDb.add(actividad);
@@ -318,7 +313,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                                                 Map<String,Object> actividadActualizada = new HashMap<>();
                                                 actividadActualizada.put("coins",cantidad);
                                                 actividadActualizada.put("elección",competidor);
-                                                actividadActualizada.put("gananciaPotencial",ganancia);
+                                                actividadActualizada.put("gananciaPotencial", gananciaLiga);
                                                 actividadActualizada.put("idEvento",idEvento);
                                                 actividadActualizada.put("coinsNivel",1000);
                                                 actividadActualizada.put("fechaApuesta",new Date());
@@ -342,7 +337,7 @@ public class BottomSheetDialogFragmentApuestaLiga extends BottomSheetDialogFragm
                                                                 Map<String,Object> actividadActualizada = new HashMap<>();
                                                                 actividadActualizada.put("coins",cantidad);
                                                                 actividadActualizada.put("elección",competidor);
-                                                                actividadActualizada.put("gananciaPotencial",ganancia);
+                                                                actividadActualizada.put("gananciaPotencial", gananciaLiga);
                                                                 actividadActualizada.put("idUsuario",idUsuario);
                                                                 actividadActualizada.put("nombreUsuario",nombreUsuario);
                                                                 actividadActualizada.put("coinsNivel",1000);

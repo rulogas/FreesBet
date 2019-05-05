@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,7 +23,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.example.freesbet.Admin;
 import com.example.freesbet.Ajustes;
+import com.example.freesbet.Apuesta;
 import com.example.freesbet.Fms;
 import com.example.freesbet.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,7 +57,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -132,11 +137,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menuToolbar_coins:
-                startActivity(BaseActivity.this, Ajustes.class);
-                finish();
-                return true;
+        if (item.getItemId()== R.id.menuToolbar_coins){
+            startActivity(BaseActivity.this, Ajustes.class);
+            finish();
+        }
+        if (item.getItemId()== 1){
+            startActivity(BaseActivity.this, Admin.class);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -145,20 +151,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         this.menu = menu;
 
-            DocumentReference docRef = db.collection("usuarios").document(idUsuario);
-            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                    if (documentSnapshot.exists()) {
-                        Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
-                        Map<String, Object> user = documentSnapshot.getData();
-                        coinsUsuario =((Long) user.get("coins")).intValue();
-                        menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
-                    } else {
-                        Log.d("Usuario", "No such document");
+        DocumentReference docRef = db.collection("usuarios").document(idUsuario);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
+                    Map<String, Object> user = documentSnapshot.getData();
+                    coinsUsuario =((Long) user.get("coins")).intValue();
+                    menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
+                    if (idUsuario.equalsIgnoreCase("UCGqcovz6oYpRxFH7Mlhreyk4Ht2")){
+                        menu.add(Menu.NONE,1,Menu.NONE,"").setIcon(R.drawable.ic_admin).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     }
+                } else {
+                    Log.d("Usuario", "No such document");
                 }
-            });
+            }
+        });
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -457,8 +466,93 @@ public abstract class BaseActivity extends AppCompatActivity {
                             }
                         }
                         DocumentReference docRefEvento = db.collection("eventos").document(document.getId());
-                        docRefEvento.update("checkEvento",true);
+                        docRefEvento.update("checkEvento",true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    comprobarCoins();
+                                }
+                            }
+                        });
                     }
+                }
+            }
+        });
+    }
+
+    public static void comprobarCoins(){
+        List<String> usuariosPosiblesSinCoins = new ArrayList<>();
+
+        Query query = db.collection("usuarios");
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for (QueryDocumentSnapshot document : querySnapshot){
+                        usuariosPosiblesSinCoins.add(document.getId());
+
+                    }
+
+                    Query query2 = db.collection("eventos").whereEqualTo("checkEvento", false);
+                    query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                for (QueryDocumentSnapshot document : querySnapshot){
+                                    Map<String, Object> eventoDb = document.getData();
+                                    List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoDb.get("apuestas");
+                                    for (Map<String,Object> apuesta : listaApuestasDb){
+                                        for (int i = 0; i<usuariosPosiblesSinCoins.size(); i++){
+                                            if (((String)apuesta.get("idUsuario")).equalsIgnoreCase(usuariosPosiblesSinCoins.get(i))){
+                                                usuariosPosiblesSinCoins.remove(i);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (!usuariosPosiblesSinCoins.isEmpty()){
+                                    for (String idUsuarioSinCoins : usuariosPosiblesSinCoins){
+                                        DocumentReference docRefUsuario = db.collection("usuarios").document(idUsuarioSinCoins);
+                                        docRefUsuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()){
+                                                        Map<String, Object> usuarioDb = document.getData();
+                                                        if (((Long) usuarioDb.get("coins")).intValue() == 0){
+                                                            if (idUsuarioSinCoins.equalsIgnoreCase(idUsuario)){
+                                                                Toast.makeText(AppFreesBet.mContext, "Has perdido todos tus coins en juego. Recargando...",Toast.LENGTH_LONG).show();
+                                                            }
+                                                            final Handler handler = new Handler();
+                                                            handler.postDelayed(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    docRefUsuario.update("coins",4000).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (task.isSuccessful()){
+                                                                                if (idUsuarioSinCoins.equalsIgnoreCase(idUsuario)){
+                                                                                    Toast.makeText(AppFreesBet.mContext, "Tus coins se han recargado",Toast.LENGTH_LONG).show();
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }, 1000);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });

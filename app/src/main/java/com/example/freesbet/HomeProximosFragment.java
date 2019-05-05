@@ -25,6 +25,8 @@ import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -46,6 +48,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.freesbet.bases.BaseActivity.datosUsuarioActualizados;
+import static com.example.freesbet.bases.BaseActivity.idUsuario;
 import static com.example.freesbet.bases.BaseActivity.nivelUsuario;
 import static com.example.freesbet.bases.BaseActivity.nombreUsuario;
 import static com.example.freesbet.bases.BaseActivity.photoUrlUsuario;
@@ -105,6 +108,22 @@ public class HomeProximosFragment extends Fragment {
             Glide.with(AppFreesBet.mContext).load(photoUrlUsuario).into(circleImageViewUsuarioMenu);
             textViewNombreUsuarioHeaderMenu.setText(nombreUsuario);
         }
+        // cargarNivel
+        db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("usuarios").document(idUsuario);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    Log.d("Usuario", "DocumentSnapshot data: " + documentSnapshot.getData());
+                    Map<String, Object> user = documentSnapshot.getData();
+                    int nivel =((Long) user.get("nivel")).intValue();
+                    textViewNivelUsuarioHeaderMenu.setText("Nivel "+Integer.toString(nivel));
+                } else {
+                    Log.d("Usuario", "No such document");
+                }
+            }
+        });
 
         circleImageViewUsuarioMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,16 +189,16 @@ public class HomeProximosFragment extends Fragment {
                             adapter = new RVAdapter(eventos, getActivity());
                             rv.setAdapter(adapter);
                             Log.d("Listener EventoLista", "Eventos actuales en: " + eventos);
+                            progressDialog.dismiss();
                         }
                         else{
                             textViewNohayEventos.setVisibility(View.VISIBLE);
                             rv.setVisibility(View.GONE);
+                            progressDialog.dismiss();
                         }
                     }
                 });
-            progressDialog.dismiss();
     }
-
 
     private void irPerfil(){
         Intent in = new Intent(getActivity(),Ajustes.class);

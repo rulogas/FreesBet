@@ -197,6 +197,7 @@ public class Home extends BaseActivity
         TabViewPagerAdapter tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
         tabViewPagerAdapter.addFragment(new HomeProximosFragment(),"Próximos");
         tabViewPagerAdapter.addFragment(new HomePopularesFragment(),"Populares");
+        tabViewPagerAdapter.addFragment(new HomePendientesFragment(),"Pendientes");
         mViewPagerEventos.setAdapter(tabViewPagerAdapter);
     }
 
