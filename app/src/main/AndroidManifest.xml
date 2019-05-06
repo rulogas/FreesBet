@@ -13,11 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".AnadirPremio"></activity>
+        <activity android:name=".AnadirEvento" />
         <activity
             android:name=".Admin"
             android:label="Admin"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FirebaseUIActivity" />
         <activity
             android:name=".Apuesta"

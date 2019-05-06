@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.freesbet.AnadirEvento;
 import com.example.freesbet.R;
 
 import java.util.ArrayList;
@@ -43,6 +44,9 @@ public class CustomAdapterSpinnerCompetidores extends ArrayAdapter {
         View row =inflater.inflate(R.layout.spinner_competidores,null);
         TextView t1 = row.findViewById(R.id.textView_spinner_competidor);
         t1.setText(nombres.get(position));
+        if ( context instanceof AnadirEvento) {
+            t1.setTextColor(Color.WHITE);
+        }
         return row;
     }
 }

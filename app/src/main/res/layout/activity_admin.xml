@@ -33,6 +33,36 @@
         android:focusableInTouchMode="true"
         android:gravity="center">
 
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_anadir_evento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Añadir evento"
+            android:background="@color/fondo"
+            android:textColor="@android:color/white"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_anadir_premio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Añadir premio"
+            android:background="@color/fondo"
+            android:textColor="@android:color/white"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_finalizar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Finalizar eventos pendientes"
+            android:background="@color/fondo"
+            android:textColor="@android:color/white"
+            android:padding="5dp"
+            />
+
 
 
     </LinearLayout>
