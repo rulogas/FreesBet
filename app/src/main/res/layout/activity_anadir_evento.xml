@@ -102,7 +102,7 @@
                     <EditText android:id="@+id/editText_zona_evento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:hint="Zona de evento"
                         android:textColor="@android:color/white"
                         android:backgroundTint="@android:color/white"
@@ -119,8 +119,8 @@
                     <EditText android:id="@+id/editText_fecha_evento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:hint="Fecha del evento: YY-MM-YYYY"
+                        android:inputType="date"
+                        android:hint="Fecha del evento: DD-MM-AAAA"
                         android:textColor="@android:color/white"
                         android:backgroundTint="@android:color/white"
                         android:padding="15dp"
@@ -131,6 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
+
 
                     <EditText android:id="@+id/editText_urlImagen_evento"
                         android:layout_width="match_parent"
@@ -143,43 +144,89 @@
                         />
                 </android.support.design.widget.TextInputLayout>
 
+
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
 
-                    <EditText android:id="@+id/editText_cp"
+                    <EditText android:id="@+id/editText_competidores"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:hint="Código Postal"
+                        android:hint="Competidores: separados por comas"
                         android:textColor="@android:color/white"
                         android:backgroundTint="@android:color/white"
                         android:padding="15dp"
                         />
+                </android.support.design.widget.TextInputLayout>
+
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayout_cuota1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
+
+                    <EditText android:id="@+id/editText_cuota1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:hint="Cuota competidor 1"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white"
+                        android:padding="15dp"
+                        />
+
+
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayout_cuota2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     >
 
-                    <EditText android:id="@+id/editText_numero_telefono"
+                    <EditText android:id="@+id/editText_cuota2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        android:hint="Número de teléfono"
+                        android:inputType="numberDecimal"
+                        android:hint="Cuota competidor 2"
                         android:textColor="@android:color/white"
                         android:backgroundTint="@android:color/white"
                         android:padding="15dp"
                         />
+
+
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayout_bote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
 
+                    <EditText android:id="@+id/editText_boteAcumulado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="Bote"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white"
+                        android:padding="15dp"
+                        />
+
+
+                </android.support.design.widget.TextInputLayout>
 
                 <android.support.v7.widget.AppCompatButton
                     android:padding="5dp"
-                    android:id="@+id/button_enviarpremio_enviar"
+                    android:id="@+id/button_anadir_evento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/fondo"
