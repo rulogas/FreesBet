@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".AnadirPremio"></activity>
+        <activity android:name=".FinalizarEvento"></activity>
+        <activity android:name=".AnadirPremio" />
         <activity android:name=".AnadirEvento" />
         <activity
             android:name=".Admin"

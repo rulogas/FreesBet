@@ -8,8 +8,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import com.example.freesbet.bases.BaseActivity;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.Premio;
 import com.example.freesbet.bases.RVAdapter;
+import com.example.freesbet.bases.TabViewPagerAdapter;
 import com.example.freesbet.widgets.CheckLogout;
 import com.example.freesbet.widgets.DialogFormEnviarPremio;
 import com.example.freesbet.widgets.General;
@@ -57,20 +60,18 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Premios extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
     View headerView;
     CircleImageView circleImageViewUsuarioMenu;
     TextView textViewNivelUsuarioHeaderMenu;
 
-    private List<Premio> premios;
+    @BindView(R.id.tabs_premios)
+    TabLayout mTabLayoutPremios;
+    @BindView(R.id.pager_premio)
+    ViewPager mViewPagerPremios;
     ProgressDialog progressDialog;
-    AdapterGridPremios adapterGridPremios;
-    @BindView(R.id.gridView_premios)
-    GridView gridViewPremios;
-
-    FirebaseFirestore db;
 
 
     @Override
@@ -113,9 +114,9 @@ public class Premios extends BaseActivity
             }
         });
 
-        db = FirebaseFirestore.getInstance();
+        mTabLayoutPremios.setupWithViewPager(mViewPagerPremios);
 
-        getPremios();
+        inicializarPager();
 
 
     }
@@ -223,73 +224,7 @@ public class Premios extends BaseActivity
         return true;
     }
 
-    private void getPremios(){
 
-        progressDialog = new ProgressDialog(Premios.this);
-        progressDialog.setMessage("Cargando Premios");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-        Query query = db.collection("premios");
-
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w("Listener Premios", "Listen failed.", e);
-                    return;
-                }
-                if (value != null && !value.isEmpty()){
-                    premios = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : value) {
-                        Map<String, Object> premioDb = document.getData();
-                        premios.add(new Premio(
-                                document.getId(),
-                                (String)premioDb.get("nombre"),
-                                (String)premioDb.get("urlImagen"),
-                                ((Long)premioDb.get("costeCoins")).intValue())
-                        );
-                    }
-                    premios.sort(Comparator.comparing(Premio::getCosteCoins).reversed());
-
-                    adapterGridPremios = new AdapterGridPremios(Premios.this, premios);
-                    gridViewPremios.setAdapter(adapterGridPremios);
-                    gridViewPremios.setOnItemClickListener(Premios.this);
-
-                    progressDialog.dismiss();
-
-                    Log.d("Listener Premios", "Eventos actuales en: " + premios);
-                }
-                else{
-
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        Premio item = (Premio) parent.getItemAtPosition(position);
-
-        if(coinsUsuario >= item.getCosteCoins()){
-            DialogFormEnviarPremio dialogFragment = new DialogFormEnviarPremio();
-            Bundle bundle = new Bundle();
-            bundle.putString("idPremio",item.getId());
-            bundle.putString("nombrePremio",item.getNombre());
-            bundle.putInt("costeCoins",item.getCosteCoins());
-            dialogFragment.setArguments(bundle);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            dialogFragment.show(fragmentManager,"formEnviarPremio");
-        }else{
-            //error
-            showSnackBarLong("No tienes suficientes coins para ese premio", getWindow().getDecorView().findViewById(android.R.id.content));
-        }
-
-
-    }
 
     private void cargarInfoUsuarioMenu(){
         headerView = navigationView.getHeaderView(0);
@@ -304,5 +239,12 @@ public class Premios extends BaseActivity
     private void irPerfil(){
         startActivity(Premios.this,Ajustes.class);
         finish();
+    }
+
+    private void inicializarPager(){
+        TabViewPagerAdapter tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
+        tabViewPagerAdapter.addFragment(new PremiosFragment(),"Premios");
+        tabViewPagerAdapter.addFragment(new PedidosFragment(),"Pedidos");
+        mViewPagerPremios.setAdapter(tabViewPagerAdapter);
     }
 }

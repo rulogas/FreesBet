@@ -2,6 +2,7 @@ package com.example.freesbet;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.net.wifi.WifiManager;
@@ -80,6 +81,8 @@ public class AnadirEvento extends AppCompatActivity {
     String selecccionEvento;
 
     FirebaseFirestore db;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +189,12 @@ public class AnadirEvento extends AppCompatActivity {
     }
 
     private void anadirEvento(){
+
+        progressDialog = new ProgressDialog(AnadirEvento.this);
+        progressDialog.setMessage("Cargando eventos");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         Map<String, Object> evento = new HashMap<>();
         evento.put("nombre", editTextNombreEvento.getText().toString());
         evento.put("evento", selecccionEvento);
@@ -223,6 +232,7 @@ public class AnadirEvento extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d("EVENTO=>", "Evento añadido con ID: " + documentReference.getId());
+                progressDialog.dismiss();
                 Toast.makeText(AnadirEvento.this,"El evento se ha añadido con éxito", Toast.LENGTH_LONG).show();
             }
         }).addOnFailureListener(new OnFailureListener() {

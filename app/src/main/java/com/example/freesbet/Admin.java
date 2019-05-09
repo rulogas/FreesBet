@@ -54,7 +54,8 @@ public class Admin extends AppCompatActivity {
         buttonFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent in = new Intent(Admin.this,FinalizarEvento.class);
+                startActivity(in);
             }
         });
 

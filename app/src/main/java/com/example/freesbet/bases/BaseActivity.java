@@ -84,6 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public static BooVariable datosUsuarioActualizados;
 
+    MenuItem itemSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -160,9 +161,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Map<String, Object> user = documentSnapshot.getData();
                     coinsUsuario =((Long) user.get("coins")).intValue();
                     menu.findItem(R.id.menuToolbar_coins).setTitle(String.valueOf(coinsUsuario)+" Coins");
-                    if (idUsuario.equalsIgnoreCase("UCGqcovz6oYpRxFH7Mlhreyk4Ht2")){
-                        menu.add(Menu.NONE,1,Menu.NONE,"").setIcon(R.drawable.ic_admin).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    }
+
+                        if (idUsuario.equalsIgnoreCase("UCGqcovz6oYpRxFH7Mlhreyk4Ht2")){
+                            itemSettings = menu.add(Menu.NONE,1,Menu.NONE,"");
+                            itemSettings.setIcon(R.drawable.ic_admin).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                        }
+
                 } else {
                     Log.d("Usuario", "No such document");
                 }

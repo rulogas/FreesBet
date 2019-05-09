@@ -18,34 +18,35 @@
 
             >
 
-
             <ImageView
                 android:id="@+id/foto"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="16dp"></ImageView>
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_fms_icono_menu"/>
 
             <TextView
                 android:id="@+id/textView_fecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="39dp"
                 android:layout_toRightOf="@id/foto"
-                android:text=""
-                android:layout_marginTop="5dp"
-                />
+                android:text="ID de pedido:"
+
+                android:textColor="@android:color/black"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_batalla"
-                android:text=""
+                android:text="Nombre del pedido:"
                 android:layout_toRightOf="@+id/foto"
-                android:layout_centerVertical="true"
-                android:textSize="22sp"
+                android:layout_below="@id/textView_fecha"
+
                 android:textColor="@android:color/black"
                 />
 
@@ -53,16 +54,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_nombre"
-                android:text=""
+                android:text="Estado:"
                 android:layout_toRightOf="@+id/foto"
-                android:layout_alignBottom="@id/foto"
-                android:layout_marginBottom="5dp"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/textView_batalla"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_numeroJugadores"
-                android:text=""
+                android:text="10000"
                 android:layout_toLeftOf="@+id/textView_icono"
                 android:layout_alignBottom="@id/foto"
                 android:layout_marginBottom="5dp"

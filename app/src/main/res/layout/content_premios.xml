@@ -12,7 +12,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,30 +21,25 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/fondo"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:elevation="10dp"/>
+            />
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs_premios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextColor="@color/color_menu"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabIndicatorColor="@android:color/white"
+        android:background="@color/fondo" />
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_premio"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:focusableInTouchMode="true"
-        android:gravity="center">
-
-        <GridView
-            android:id="@+id/gridView_premios"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:numColumns="2"
-            android:horizontalSpacing="15dp"
-            android:verticalSpacing="15dp"
-             />
-
-    </LinearLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
 </LinearLayout>
