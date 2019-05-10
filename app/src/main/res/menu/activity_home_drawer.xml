@@ -48,7 +48,8 @@
         <item
             android:id="@+id/opcion_ivita_amigos"
             android:icon="@drawable/ic_invita_amigos"
-            android:title="Invita amigos" />
+            android:title="Invita amigos"
+            android:visible="false"/>
         <item
             android:id="@+id/opcion_ajustes_cuenta"
             android:icon="@drawable/ic_ajustes_cuenta"

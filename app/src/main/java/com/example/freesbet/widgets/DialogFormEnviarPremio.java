@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.freesbet.bases.BaseActivity.coinsUsuario;
+import static com.example.freesbet.bases.BaseActivity.comprobarCoins;
 import static com.example.freesbet.bases.BaseActivity.emailUsuario;
 import static com.example.freesbet.bases.BaseActivity.idUsuario;
 
@@ -178,6 +179,7 @@ public class DialogFormEnviarPremio extends DialogFragment {
                             public void onSuccess(Void aVoid) {
                                 Log.d("USUARIO", "DocumentSnapshot successfully updated!");
                                 dismiss();
+                                comprobarCoins();
                                 progressDialog.dismiss();
                             }
                         })
