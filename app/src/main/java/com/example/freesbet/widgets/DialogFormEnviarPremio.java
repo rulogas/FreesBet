@@ -151,11 +151,11 @@ public class DialogFormEnviarPremio extends DialogFragment {
 
         pedido.put("nombre", editTextNombreYapellidos.getText().toString());
         pedido.put("email", editTextEmail.getText().toString());
-        pedido.put("dirección", editTextDireccion.getText().toString());
+        pedido.put("direccion", editTextDireccion.getText().toString());
         pedido.put("ciudad", editTextCiudad.getText().toString());
         pedido.put("provincia", editTextProvincia.getText().toString());
-        pedido.put("CP", editTextCp.getText().toString());
-        pedido.put("teléfono", editTextNumTelefono.getText().toString());
+        pedido.put("cp", editTextCp.getText().toString());
+        pedido.put("telefono", editTextNumTelefono.getText().toString());
         pedido.put("idPremio", premioId);
         pedido.put("nombrePremio", nombrePremio);
         pedido.put("idUsuario", idUsuario);

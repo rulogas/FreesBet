@@ -15,7 +15,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
 
+            >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayout_informacionPedido"
             >
 
             <ImageView
@@ -27,58 +34,126 @@
                 android:layout_marginRight="16dp"
                 android:src="@drawable/ic_fms_icono_menu"/>
 
-            <TextView
-                android:id="@+id/textView_fecha"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="39dp"
                 android:layout_toRightOf="@id/foto"
-                android:text="ID de pedido:"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
 
-                android:textColor="@android:color/black"/>
+                <TextView
+                    android:id="@+id/textView_idPedido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/foto"
+                    android:text="ID de pedido:"
 
+                    android:textColor="@android:color/black"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView_nombrePedido"
+                    android:text="Nombre del pedido:"
+                    android:layout_toRightOf="@+id/foto"
+                    android:layout_below="@id/textView_idPedido"
+
+                    android:textColor="@android:color/black"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView_estado"
+                    android:text="Estado:"
+                    android:layout_toRightOf="@+id/foto"
+                    android:textColor="@android:color/black"
+                    android:layout_below="@id/textView_nombrePedido"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_margin="5dp"
+                android:layout_below="@id/relativeLayout_informacionPedido"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_batalla"
-                android:text="Nombre del pedido:"
-                android:layout_toRightOf="@+id/foto"
-                android:layout_below="@id/textView_fecha"
-
+                android:layout_margin="10dp"
+                android:id="@+id/textView_textoDireccion"
+                android:text="Dirección de envío"
                 android:textColor="@android:color/black"
+                android:layout_below="@id/relativeLayout_informacionPedido"
+                android:textSize="18sp"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+
                 android:id="@+id/textView_nombre"
-                android:text="Estado:"
-                android:layout_toRightOf="@+id/foto"
-                android:textColor="@android:color/black"
-                android:layout_below="@id/textView_batalla"
+                android:text="A nombre de: "
+                android:layout_below="@id/textView_textoDireccion"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_numeroJugadores"
-                android:text="10000"
-                android:layout_toLeftOf="@+id/textView_icono"
-                android:layout_alignBottom="@id/foto"
-                android:layout_marginBottom="5dp"
-
+                android:layout_marginLeft="10dp"
+                android:id="@+id/textView_email"
+                android:text="Correo electrónico:"
+                android:layout_below="@id/textView_nombre"
                 />
 
             <TextView
-                android:id="@+id/textView_icono"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/foto"
-                android:layout_alignParentRight="true"
-                android:drawableRight="@drawable/ic_jugadores"
-                android:text=""
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginLeft="10dp"
+                android:id="@+id/textView_direccionPostal"
+                android:text="Dirección postal:"
+                android:layout_below="@id/textView_email"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/textView_ciudad"
+                android:text="Ciudad:"
+                android:layout_below="@id/textView_direccionPostal"
+
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/textView_provincia"
+                android:text="Provinicia/Región:"
+                android:layout_below="@id/textView_ciudad"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/textView_cp"
+                android:text="Código postal:"
+                android:layout_below="@id/textView_provincia"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/textView_telefono"
+                android:text="Número de teléfono:"
+                android:layout_below="@id/textView_cp"
+                />
 
         </RelativeLayout>
 
