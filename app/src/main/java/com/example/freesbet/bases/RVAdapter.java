@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -148,7 +149,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.EventoViewHolder>{
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 String elecciónGanador = listaCompetidores.get(i);
-                docRefEvento.update("ganador",elecciónGanador,
+                docRefEvento.update("ganador",elecciónGanador,"fechaFinalizacion",new Date(),
                         "finalizado", true).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

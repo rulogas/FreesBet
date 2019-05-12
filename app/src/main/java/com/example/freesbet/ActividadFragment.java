@@ -59,6 +59,8 @@ public class ActividadFragment extends Fragment {
 
     List<Actividad> actividades;
 
+    ListenerRegistration registration;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +107,7 @@ public class ActividadFragment extends Fragment {
 
         Query query = db.collection("eventos");
 
-         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots.isEmpty() || queryDocumentSnapshots == null) {
@@ -126,14 +128,14 @@ public class ActividadFragment extends Fragment {
                                                 (String)eventoDb.get("nombre"),
                                                 "ganado",
                                                 (String)eventoDb.get("tipo"),
-                                                (Date)apuesta.get("fechaApuesta")));
+                                                (Date)eventoDb.get("fechaFinalizacion")));
                                     } else {
                                         actividades.add(new Actividad(
                                                 document.getId(),
                                                 (String)eventoDb.get("nombre"),
                                                 "perdido",
                                                 (String)eventoDb.get("tipo"),
-                                                (Date)apuesta.get("fechaApuesta")));
+                                                (Date)eventoDb.get("fechaFinalizacion")));
                                     }
                                     if (apuesta.containsKey("coinsNivel")){
                                         actividades.add(new Actividad("-1","Subida de nivel", "ganado", "bonus", (Date)apuesta.get("fechaApuesta")));

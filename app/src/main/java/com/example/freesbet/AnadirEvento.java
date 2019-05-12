@@ -128,13 +128,20 @@ public class AnadirEvento extends AppCompatActivity {
                     editTextCompetidores.setError("Introduce datos");
                     validate = false;
                 }
-                if (editTextCuota1.getText().toString().isEmpty()){
-                    editTextCuota1.setError("Introduce datos");
-                    validate = false;
-                }
-                if (editTextCuota2.getText().toString().isEmpty()){
-                    editTextCuota2.setError("Introduce datos");
-                    validate = false;
+                if (selecccionEvento.equalsIgnoreCase("FMS")){
+                    if (editTextCuota1.getText().toString().isEmpty()){
+                        editTextCuota1.setError("Introduce datos");
+                        validate = false;
+                    }
+                    if (editTextCuota2.getText().toString().isEmpty()){
+                        editTextCuota2.setError("Introduce datos");
+                        validate = false;
+                    }
+                }else{
+                    if (editTextBote.getText().toString().isEmpty()){
+                        editTextBote.setError("Introduce datos");
+                        validate = false;
+                    }
                 }
                 if (validate){
                     anadirEvento();

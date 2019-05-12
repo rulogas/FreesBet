@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.example.freesbet.bases.AppFreesBet;
 import com.example.freesbet.bases.BooVariable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -140,9 +141,9 @@ public class PerfilFragment extends Fragment {
             @Override
             public void onChange() {
                 if (datosUsuarioActualizados.isBoo()) {
-                    Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewUsuario);
+                    Glide.with(AppFreesBet.mContext).load(photoUrlUsuario).into(circleImageViewUsuario);
 
-                    Glide.with(getContext()).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
+                    Glide.with(AppFreesBet.mContext).load(photoUrlUsuario).into(circleImageViewMenuUsuario);
 
                     progressDialog.dismiss();
                 }
@@ -233,7 +234,6 @@ public class PerfilFragment extends Fragment {
                     // setear porcentajes ordenados con zona de evento
                     getEventosFavoritos();
 
-                    progressDialog.dismiss();
 
 
                 } else {
@@ -336,7 +336,7 @@ public class PerfilFragment extends Fragment {
                         if (listaResultados.isEmpty()){
                             textViewRacha.setText("Racha: No has apostado todavía o no ha finalizado ningún evento de los que has apostado.");
                         }else{
-
+                            textViewRacha.setText("Racha:");
                             for (int i=0;i<listaResultados.size();i++){
                                 switch (i){
                                     case 0:
@@ -431,7 +431,7 @@ public class PerfilFragment extends Fragment {
                             textViewPorcentajeEventoFavorito4.setText(String.valueOf((100 * listaPorcentajesFavoritos.get(3).numeroApuestas)/numeroTotalApuestas)+"%");
                             progressBarEventoFavorito4.setMax(numeroTotalApuestas);
                             progressBarEventoFavorito4.setProgress(listaPorcentajesFavoritos.get(3).numeroApuestas);
-
+                            progressDialog.dismiss();
                         }
                     }
                 }
