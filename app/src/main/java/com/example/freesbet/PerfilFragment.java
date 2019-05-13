@@ -26,6 +26,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.freesbet.bases.AppFreesBet;
 import com.example.freesbet.bases.BooVariable;
+import com.example.freesbet.widgets.ProgressBarAnimation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -224,7 +225,9 @@ public class PerfilFragment extends Fragment {
                     int experiencia = ((Long) usuarioDb.get("experiencia")).intValue();
                     int experienciaSiguienteNivel = ((Long) usuarioDb.get("experienciaSiguienteNivel")).intValue();
                     progressBarNivelExperiencia.setMax(experienciaSiguienteNivel);
-                    progressBarNivelExperiencia.setProgress(experiencia);
+                    ProgressBarAnimation anim = new ProgressBarAnimation(progressBarNivelExperiencia, 0, experiencia);
+                    anim.setDuration(1000);
+                    progressBarNivelExperiencia.startAnimation(anim);
                     textViewNivelActualExperiencia.setText(String.valueOf(nivel));
                     textViewNivelObjetivoExperiencia.setText(String.valueOf(nivel + 1));
 
@@ -417,20 +420,34 @@ public class PerfilFragment extends Fragment {
                         }
                         if (numeroTotalApuestas != 0){
                             textViewPorcentajeEventoFavorito1.setText(String.valueOf((100 * listaPorcentajesFavoritos.get(0).numeroApuestas)/numeroTotalApuestas)+"%");
-                            progressBarEventoFavorito1.setMax(numeroTotalApuestas);
-                            progressBarEventoFavorito1.setProgress(listaPorcentajesFavoritos.get(0).numeroApuestas);
+                            progressBarEventoFavorito1.setMax(numeroTotalApuestas*100);
+                            ProgressBarAnimation anim = new ProgressBarAnimation(progressBarEventoFavorito1, 0, listaPorcentajesFavoritos.get(0).numeroApuestas*100);
+                            anim.setDuration(1000);
+                            progressBarEventoFavorito1.startAnimation(anim);
+
+                            //progressBarEventoFavorito1.setProgress(listaPorcentajesFavoritos.get(0).numeroApuestas);
 
                             textViewPorcentajeEventoFavorito2.setText(String.valueOf((100 * listaPorcentajesFavoritos.get(1).numeroApuestas)/numeroTotalApuestas)+"%");
-                            progressBarEventoFavorito2.setMax(numeroTotalApuestas);
-                            progressBarEventoFavorito2.setProgress(listaPorcentajesFavoritos.get(1).numeroApuestas);
+                            progressBarEventoFavorito2.setMax(numeroTotalApuestas*100);
+                            ProgressBarAnimation anim2 = new ProgressBarAnimation(progressBarEventoFavorito2, 0, listaPorcentajesFavoritos.get(1).numeroApuestas*100);
+                            anim2.setDuration(1000);
+                            progressBarEventoFavorito2.startAnimation(anim2);
+
+                            //progressBarEventoFavorito2.setProgress(listaPorcentajesFavoritos.get(1).numeroApuestas);
 
                             textViewPorcentajeEventoFavorito3.setText(String.valueOf((100 * listaPorcentajesFavoritos.get(2).numeroApuestas)/numeroTotalApuestas)+"%");
-                            progressBarEventoFavorito3.setMax(numeroTotalApuestas);
-                            progressBarEventoFavorito3.setProgress(listaPorcentajesFavoritos.get(2).numeroApuestas);
+                            progressBarEventoFavorito3.setMax(numeroTotalApuestas*100);
+                            ProgressBarAnimation anim3 = new ProgressBarAnimation(progressBarEventoFavorito3, 0, listaPorcentajesFavoritos.get(2).numeroApuestas*100);
+                            anim3.setDuration(1000);
+                            progressBarEventoFavorito3.startAnimation(anim3);
+                            //progressBarEventoFavorito3.setProgress(listaPorcentajesFavoritos.get(2).numeroApuestas);
 
                             textViewPorcentajeEventoFavorito4.setText(String.valueOf((100 * listaPorcentajesFavoritos.get(3).numeroApuestas)/numeroTotalApuestas)+"%");
-                            progressBarEventoFavorito4.setMax(numeroTotalApuestas);
-                            progressBarEventoFavorito4.setProgress(listaPorcentajesFavoritos.get(3).numeroApuestas);
+                            progressBarEventoFavorito4.setMax(numeroTotalApuestas*100);
+                            ProgressBarAnimation anim4 = new ProgressBarAnimation(progressBarEventoFavorito4, 0, listaPorcentajesFavoritos.get(3).numeroApuestas*100);
+                            anim4.setDuration(1000);
+                            progressBarEventoFavorito4.startAnimation(anim4);
+                            //progressBarEventoFavorito4.setProgress(listaPorcentajesFavoritos.get(3).numeroApuestas);
                             progressDialog.dismiss();
                         }
                     }

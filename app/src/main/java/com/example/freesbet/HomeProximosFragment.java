@@ -152,6 +152,7 @@ public class HomeProximosFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Cargando eventos");
         progressDialog.setCancelable(false);
+
         progressDialog.show();
         //Query
         Query query = db.collection("eventos")
