@@ -15,6 +15,7 @@ public class PrefManager {
     private static final String PREF_NAME = "androidhive-welcome";
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+    private static final String CARGA_ACTIVIDAD_CACHE = "cargaActividadCache";
 
     public PrefManager(Context context) {
         this._context = context;
@@ -29,5 +30,14 @@ public class PrefManager {
 
     public boolean isFirstTimeLaunch() {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+    }
+
+    public void setCargaCacheActividad(boolean isFirstTime) {
+        editor.putBoolean(CARGA_ACTIVIDAD_CACHE, isFirstTime);
+        editor.commit();
+    }
+
+    public boolean isFirstTimeCargaActividad() {
+        return pref.getBoolean(CARGA_ACTIVIDAD_CACHE, true);
     }
 }

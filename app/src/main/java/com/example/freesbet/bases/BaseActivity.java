@@ -93,6 +93,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         /*requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
+
         datosUsuarioActualizados = new BooVariable();
         db = FirebaseFirestore.getInstance();
         getInfoUsuario();
@@ -216,7 +217,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     public static void getInfoUsuario(){
-
+        datosUsuarioActualizados = new BooVariable();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             for (UserInfo profile : user.getProviderData()){
@@ -242,6 +243,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public static void getInfoUsuarioNuevo(){
+        datosUsuarioActualizados = new BooVariable();
+        db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             for (UserInfo profile : user.getProviderData()){
@@ -458,7 +461,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()){
                                                             if (((String)apuesta.get("idUsuario")).equalsIgnoreCase(idUsuario)){
-                                                                Toast.makeText(AppFreesBet.mContext,"Has ganado "+ gananciaPotencial + " en "+((String) eventoDb.get("nombre")),Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(AppFreesBet.mContext,"Has ganado "+ gananciaPotencial
+                                                                        + " en "+((String) eventoDb.get("nombre")),Toast.LENGTH_LONG).show();
                                                             }
                                                         }
                                                     }
@@ -529,18 +533,21 @@ public abstract class BaseActivity extends AppCompatActivity {
                                                         Map<String, Object> usuarioDb = document.getData();
                                                         if (((Long) usuarioDb.get("coins")).intValue() == 0){
                                                             if (idUsuarioSinCoins.equalsIgnoreCase(idUsuario)){
-                                                                Toast.makeText(AppFreesBet.mContext, "Has perdido todos tus coins en juego. Recargando...",Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(AppFreesBet.mContext, "Has perdido todos tus coins en juego. Recargando...",
+                                                                        Toast.LENGTH_LONG).show();
                                                             }
                                                             final Handler handler = new Handler();
                                                             handler.postDelayed(new Runnable() {
                                                                 @Override
                                                                 public void run() {
-                                                                    docRefUsuario.update("coins",4000).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    docRefUsuario.update("coins",4000)
+                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if (task.isSuccessful()){
                                                                                 if (idUsuarioSinCoins.equalsIgnoreCase(idUsuario)){
-                                                                                    Toast.makeText(AppFreesBet.mContext, "Tus coins se han recargado",Toast.LENGTH_LONG).show();
+                                                                                    Toast.makeText(AppFreesBet.mContext, "Tus coins se han recargado",
+                                                                                            Toast.LENGTH_LONG).show();
                                                                                 }
                                                                             }
                                                                         }

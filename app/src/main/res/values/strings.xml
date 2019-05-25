@@ -9,7 +9,7 @@
     <string name="slide_1_desc">Apuesta puntos en batallas de rap de las mejores ligas y competiciones del mundo!</string>
 
     <string name="slide_2_title">Sube de nivel!</string>
-    <string name="slide_2_desc">Gana experiencia y sube de nivel apostando e invitando a tus amigos para ganar más puntos!</string>
+    <string name="slide_2_desc">Gana experiencia y sube de nivel apostando para ganar más puntos!</string>
 
     <string name="slide_3_title">Gana premios!</string>
     <string name="slide_3_desc">Canjea tus puntos y recibe fabulosos premios!</string>
@@ -25,14 +25,14 @@
     <string name="title_activity_bdm">Bdm</string>
     <string name="title_activity_supremacia">Supremacía MC</string>
     <string name="title_activity_invita">Invita</string>
-    <string name="title_activity_ajustes">Ajustes</string>
+    <string name="title_activity_ajustes">Perfil</string>
 
     <!--<string name="facebook_app_id">2549215305309010</string>
     <string name="fb_login_protocol_scheme">fb2549215305309010</string>-->
     <string name="enlace_registro"><u>Regístrate con FreesBet</u></string>
     <string name="enlace_login"><u>¿Ya tienes una cuenta? Inicia sesión</u></string>
 
-    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>º
     <string name="si">Sí</string>
     <string name="no">No</string>
     <string name="check_cerrarSesion">¿Quieres cerrar sesión?</string>

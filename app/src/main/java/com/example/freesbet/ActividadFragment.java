@@ -24,6 +24,7 @@ import com.example.freesbet.bases.Actividad;
 import com.example.freesbet.bases.EventoLista;
 import com.example.freesbet.bases.RVAdapter;
 import com.example.freesbet.bases.RVAdapterActividad;
+import com.example.freesbet.intro.PrefManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,10 +32,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -59,13 +63,11 @@ public class ActividadFragment extends Fragment {
 
     List<Actividad> actividades;
 
-    ListenerRegistration registration;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-
     }
 
     @Override
@@ -75,7 +77,7 @@ public class ActividadFragment extends Fragment {
 
         // setear imagen fondo con glide para aumentar rendimiento
 
-        Glide.with(this).load(R.drawable.fondo_login).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(this).load(R.drawable.fondo_login_v2).asBitmap().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 Drawable drawable = new BitmapDrawable(getContext().getResources(), resource);
@@ -86,7 +88,9 @@ public class ActividadFragment extends Fragment {
         });
         textViewNoHayEventos = view.findViewById(R.id.textView_noHayEventos);
         rv =view.findViewById(R.id.recyclerView_actividad);
-        getActividad();
+
+
+        //getActividad();
         initializeRecyclerView();
 
         return view;
@@ -107,14 +111,17 @@ public class ActividadFragment extends Fragment {
 
         Query query = db.collection("eventos");
 
-        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        query.addSnapshotListener(MetadataChanges.INCLUDE,new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+
                 if (queryDocumentSnapshots.isEmpty() || queryDocumentSnapshots == null) {
                     rv.setVisibility(View.GONE);
                     textViewNoHayEventos.setVisibility(View.VISIBLE);
                     textViewNoHayEventos.setText("No hay eventos");
+                    progressDialog.dismiss();
                 } else {
+
                     actividades = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Map<String, Object> eventoDb = document.getData();
@@ -149,10 +156,11 @@ public class ActividadFragment extends Fragment {
                         }
                     }
                     if (!actividades.isEmpty()){
+                        rv.setVisibility(View.VISIBLE);
+                        textViewNoHayEventos.setVisibility(View.GONE);
                         actividades.sort(Comparator.comparing(Actividad::getFecha).reversed());
                         adapter = new RVAdapterActividad(actividades,getContext());
                         rv.setAdapter(adapter);
-
                         progressDialog.dismiss();
 
                     }else{
@@ -160,6 +168,7 @@ public class ActividadFragment extends Fragment {
                         textViewNoHayEventos.setVisibility(View.VISIBLE);
                         textViewNoHayEventos.setText("No hay actividad en tu perfil");
                         progressDialog.dismiss();
+
                     }
 
 
@@ -169,4 +178,9 @@ public class ActividadFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActividad();
+    }
 }

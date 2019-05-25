@@ -1088,7 +1088,8 @@ public class Apuesta extends BaseActivity implements NavigationView.OnNavigation
                             for (GananciaPotencial gananciaPotencial : listaGananciasPotenciales){
 
                                 for(int i = 0; i < listaActividades.size(); i++){
-                                    if (((String)listaActividades.get(i).get("idEvento")).equalsIgnoreCase(evento.getId()) && gananciaPotencial.competidor.equalsIgnoreCase((String) listaActividades.get(i).get("elección"))){
+                                    if (((String)listaActividades.get(i).get("idEvento")).equalsIgnoreCase(evento.getId()) &&
+                                            gananciaPotencial.competidor.equalsIgnoreCase((String) listaActividades.get(i).get("elección"))){
                                         // query
                                         Map<String,Object> objetoActividadNuevo = new HashMap<>();
                                         objetoActividadNuevo.put("coins",listaActividades.get(i).get("coins"));

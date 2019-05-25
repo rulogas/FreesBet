@@ -344,23 +344,23 @@ public class PerfilFragment extends Fragment {
                                 switch (i){
                                     case 0:
                                         if (listaResultados.get(i).equalsIgnoreCase("ganado")){
-                                            Glide.with(getContext()).load(R.drawable.ganada).into(imageViewRacha1);
+                                            Glide.with(AppFreesBet.mContext).load(R.drawable.ganada).into(imageViewRacha1);
                                         }else{
-                                            Glide.with(getContext()).load(R.drawable.perdida).into(imageViewRacha1);
+                                            Glide.with(AppFreesBet.mContext).load(R.drawable.perdida).into(imageViewRacha1);
                                         }
                                         break;
                                     case 1:
                                         if (listaResultados.get(i).equalsIgnoreCase("ganado")){
-                                            Glide.with(getContext()).load(R.drawable.ganada).into(imageViewRacha2);
+                                            Glide.with(AppFreesBet.mContext).load(R.drawable.ganada).into(imageViewRacha2);
                                         }else{
-                                            Glide.with(getContext()).load(R.drawable.perdida).into(imageViewRacha2);
+                                            Glide.with(AppFreesBet.mContext).load(R.drawable.perdida).into(imageViewRacha2);
                                         }
                                         break;
                                     case 2:
                                         if (listaResultados.get(i).equalsIgnoreCase("ganado")){
-                                            Glide.with(getContext()).load(R.drawable.ganada).into(imageViewRacha3);
+                                            Glide.with(AppFreesBet.mContext).load(R.drawable.ganada).into(imageViewRacha3);
                                         }else{
-                                            Glide.with(getContext()).load(R.drawable.perdida).into(imageViewRacha3);
+                                            Glide.with(AppFreesBet.mContext).load(R.drawable.perdida).into(imageViewRacha3);
                                         }
                                         break;
                                     case 3:

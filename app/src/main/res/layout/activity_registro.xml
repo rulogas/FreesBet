@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Registro"
-    android:background="@drawable/fondo_login"
+    android:background="@drawable/fondo_login_v2"
     android:gravity="center"
     android:theme="@style/AppTheme.NoActionBar">
 

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Redbull"
-    android:background="@drawable/fondo_login"
+    android:background="@drawable/fondo_login_v2"
     >
 
     <android.support.design.widget.AppBarLayout

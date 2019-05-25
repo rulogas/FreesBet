@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LaunchCheckUsuario"
-    android:background="@drawable/fondo_login"
+    android:background="@drawable/fondo_login_v2"
     android:layout_gravity="center_horizontal"
     app:layout_gravity="center_horizontal">
 

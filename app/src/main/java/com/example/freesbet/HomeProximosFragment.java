@@ -173,8 +173,7 @@ public class HomeProximosFragment extends Fragment {
 
                                 Log.d("EventoLista", document.getId() + " => " + document.getData());
                                 Map<String, Object> eventoListaDb = document.getData();
-                            /*List<Map<String,Object>> listaApuestasDb = (List<Map<String,Object>>)eventoListaDb.get("apuestas") ;
-                            int numeroJugadoresDb = listaApuestasDb.size();*/
+
                                 String pattern = "dd-MM-yyyy";
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
